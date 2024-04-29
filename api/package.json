@@ -1,0 +1,9 @@
+{
+  "name": "ComuFeed",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^5.13.0",
+    "prisma": "^5.13.0"
+  }
+}

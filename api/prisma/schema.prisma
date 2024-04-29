@@ -1,0 +1,61 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id            String   @id @default(uuid())
+    created_at    DateTime @default(now())
+    email         String   @unique
+    name          String
+    password_hash String
+    communities  Community[]
+    posts Post[]
+    comments Comment[]
+
+  
+
+    @@map("users")
+}
+model Community {
+    id            String   @id @default(uuid())
+    created_at    DateTime @default(now())
+    name          String
+    user          User      @relation(fields: [founder_id], references: [id])
+    founder_id    String
+    posts Post[]
+    key_acess    String?
+  
+
+    @@map("communities")
+}
+model Post {
+    id            String   @id @default(uuid())
+    created_at    DateTime @default(now())
+    user          User      @relation(fields: [user_id], references: [id])
+    user_id       String
+    title          String
+    community     Community      @relation(fields: [community_id], references: [id])
+    community_id  String
+    comments      Comment[]
+    content       String?
+
+
+    @@map("posts")
+}
+model Comment {
+    id            String   @id @default(uuid())
+    created_at    DateTime @default(now())
+    user          User      @relation(fields: [user_id], references: [id])
+    user_id       String
+    post          Post     @relation(fields: [post_id], references: [id])
+    post_id       String
+    content       String
+
+
+    @@map("comments")
+}
