@@ -8,9 +8,34 @@ import { PrismaUserMapper } from "../mappers/prismaUserMapper";
 export class PrismaUserRepository implements UserRepository {
   constructor(private prisma: PrismaService) {}
 
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return PrismaUserMapper.toDomain(user);
+  }
+
   async create(user: User): Promise<void> {
+    const existingUser = await this.prisma.user.findFirst({
+      where: {
+        email: user.email,
+      },
+    });
+
+    if (existingUser) {
+      throw new Error("E-mail already in use");
+    }
+
     const userRaw = PrismaUserMapper.toPrisma(user);
-    this.prisma.user.create({
+
+    await this.prisma.user.create({
       data: userRaw,
     });
   }
