@@ -1,6 +1,6 @@
 ### RFs (Requisitos funcionais)
 
-- [] Deve ser possível se cadastrar/logar.
+- [X] Deve ser possível se cadastrar/logar.
 - [] Deve ser possível criar um post se estiver logado
 - [] Deve ser possível visualizar comunidades somente se ela for publica ou tiver acesso a elas.
 - [] Deve ser possível se cadastrar/entrar uma comunidade se estiver logado.
