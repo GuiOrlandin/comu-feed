@@ -12,7 +12,6 @@ export class SignInUseCase {
   constructor(private jwtService: JwtService) {}
 
   async execute({ user }: SignInRequest) {
-    console.log(user);
     const payload: UserPayload = {
       created_at: user.created_at,
       email: user.email,

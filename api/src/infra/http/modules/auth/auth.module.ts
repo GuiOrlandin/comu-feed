@@ -1,12 +1,13 @@
-import { Module, MiddlewareConsumer } from "@nestjs/common";
-import { LocalStrategy } from "src/modules/auth/strategies/local.strategies";
+import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { AuthController } from "./auth.controller";
-import { ValidateUserUseCase } from "src/modules/auth/useCases/validateUserUseCase";
 import { UserModule } from "../user/user.module";
-import { DatabaseModule } from "src/infra/database/database.module";
-import { SignInDTOValidateMiddleware } from "./middleware/singInDTOValidade.middleware";
-import { SignInUseCase } from "src/modules/auth/useCases/signInUseCase";
+import { DatabaseModule } from "../../../database/database.module";
 import { JwtModule } from "@nestjs/jwt";
+import { ValidateUserUseCase } from "src/modules/auth/useCases/validateUserUseCase";
+import { SignInUseCase } from "src/modules/auth/useCases/signInUseCase";
+import { SignInDTOValidateMiddleware } from "./middleware/singInDTOValidade.middleware";
+import { LocalStrategy } from "src/modules/auth/strategies/local.strategy";
+import { JwtStrategy } from "src/modules/auth/strategies/jwt.strategy";
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { JwtModule } from "@nestjs/jwt";
     }),
   ],
   controllers: [AuthController],
-  providers: [LocalStrategy, ValidateUserUseCase, SignInUseCase],
+  providers: [LocalStrategy, ValidateUserUseCase, SignInUseCase, JwtStrategy],
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {

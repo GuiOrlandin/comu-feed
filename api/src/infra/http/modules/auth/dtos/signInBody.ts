@@ -8,5 +8,5 @@ export class SignInBody {
 
   @IsString()
   @MinLength(6)
-  password: string;
+  password_hash: string;
 }

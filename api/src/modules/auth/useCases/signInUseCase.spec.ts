@@ -1,8 +1,5 @@
-import { UserRepositoryInMemory } from "src/modules/user/repositories/userRepositoryInMemory";
-import { ValidateUserUseCase } from "./validateUserUseCase";
 import { hash } from "bcrypt";
 import { makeUser } from "src/modules/user/factories/userFactory";
-import { UnauthorizedException } from "@nestjs/common";
 import { SignInUseCase } from "./signInUseCase";
 import { JwtService } from "@nestjs/jwt";
 import { UserPayload } from "../models/userPayload";
