@@ -1,14 +1,19 @@
 import { CreateCommunityUseCase } from "./createCommunityUseCase";
 import { CommunityRepositoryInMemory } from "../repositories/communityRepositoryInMemory";
 import { makeUser } from "src/modules/user/factories/userFactory";
+import { DeleteCommunityUseCase } from "./deleteCommunityUseCase";
 
 let createCommunityUseCase: CreateCommunityUseCase;
 let communityRepositoryInMemory: CommunityRepositoryInMemory;
+let deleteCommunityUseCase: DeleteCommunityUseCase;
 
-describe("Create User", () => {
+describe("Delete Community", () => {
   beforeEach(() => {
     communityRepositoryInMemory = new CommunityRepositoryInMemory();
     createCommunityUseCase = new CreateCommunityUseCase(
+      communityRepositoryInMemory,
+    );
+    deleteCommunityUseCase = new DeleteCommunityUseCase(
       communityRepositoryInMemory,
     );
   });
@@ -24,6 +29,11 @@ describe("Create User", () => {
       name: "GuiiosCommunity",
     });
 
-    expect(communityRepositoryInMemory.communities).toEqual([community]);
+    await deleteCommunityUseCase.execute({
+      community_id: community.id,
+      user_id: user.id,
+    });
+
+    expect(communityRepositoryInMemory.communities).toEqual([]);
   });
 });

@@ -3,6 +3,8 @@ import { Community } from "src/modules/community/entities/community";
 export abstract class CommunityRepository {
   abstract create(post: Community): Promise<void>;
   abstract delete(id: string): Promise<void>;
+  abstract findByName(email: string): Promise<Community | null>;
+  abstract findById(id: string): Promise<Community | null>;
   abstract enterInCommunity(
     userId: string,
     communityId: string,

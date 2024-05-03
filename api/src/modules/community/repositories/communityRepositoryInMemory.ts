@@ -4,12 +4,36 @@ import { CommunityRepository } from "./communityRepository";
 export class CommunityRepositoryInMemory implements CommunityRepository {
   public communities: Community[] = [];
 
+  async findById(id: string): Promise<Community | null> {
+    const community = this.communities.find((community) => community.id === id);
+
+    if (!community) {
+      return null;
+    }
+
+    return community;
+  }
+
+  async findByName(name: string): Promise<Community | null> {
+    const community = this.communities.find(
+      (community) => community.name === name,
+    );
+
+    if (!community) {
+      return null;
+    }
+
+    return community;
+  }
+
   async create(community: Community): Promise<void> {
     this.communities.push(community);
   }
 
   async delete(id: string): Promise<void> {
-    this.communities.filter((community) => community.id !== id);
+    this.communities = this.communities.filter(
+      (community) => community.id !== id,
+    );
   }
 
   async enterInCommunity(
