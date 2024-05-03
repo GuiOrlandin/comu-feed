@@ -13,7 +13,8 @@ model User {
     email         String   @unique
     name          String
     password_hash String
-    communities  Community[]
+    Community_Founder Community[]
+    Community_Member  Community[] @relation("CommunityMembers")
     posts Post[]
     comments Comment[]
 
@@ -25,11 +26,12 @@ model Community {
     id            String   @id @default(uuid())
     created_at    DateTime @default(now())
     name          String
-    user          User      @relation(fields: [founder_id], references: [id])
-    founder_id    String
+    User_Founder   User     @relation(fields: [founder_id], references: [id])
+    founder_id      String
     posts Post[]
-    key_acess    String?
-  
+    key_access    Boolean?
+    password      String?
+    User_Members   User[]    @relation("CommunityMembers")
 
     @@map("communities")
 }
@@ -43,7 +45,7 @@ model Post {
     community_id  String
     comments      Comment[]
     content       String?
-
+    love           Int?
 
     @@map("posts")
 }
