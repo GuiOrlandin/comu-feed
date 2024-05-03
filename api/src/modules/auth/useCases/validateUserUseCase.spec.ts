@@ -2,7 +2,7 @@ import { UserRepositoryInMemory } from "src/modules/user/repositories/userReposi
 import { ValidateUserUseCase } from "./validateUserUseCase";
 import { hash } from "bcrypt";
 import { makeUser } from "src/modules/user/factories/userFactory";
-import { UnauthorizedException } from "@nestjs/common";
+import { AuthValueIncorrectException } from "../exceptions/authValueIncorrectException";
 
 let validateUserUseCase: ValidateUserUseCase;
 let userRepositoryInMemory: UserRepositoryInMemory;
@@ -24,7 +24,7 @@ describe("Validate User", () => {
 
     const result = await validateUserUseCase.execute({
       email: "guiorlandin@gmail.com",
-      password: userPasswordWithoutEncryption,
+      password_hash: userPasswordWithoutEncryption,
     });
 
     expect(result).toEqual(user);
@@ -42,15 +42,15 @@ describe("Validate User", () => {
     expect(async () => {
       await validateUserUseCase.execute({
         email: "incorrect@gmail.com",
-        password: userPasswordWithoutEncryption,
+        password_hash: userPasswordWithoutEncryption,
       });
-    }).rejects.toThrow(UnauthorizedException);
+    }).rejects.toThrow(AuthValueIncorrectException);
 
     expect(async () => {
       await validateUserUseCase.execute({
         email: user.email,
-        password: "incorrect password",
+        password_hash: "incorrect password",
       });
-    }).rejects.toThrow(UnauthorizedException);
+    }).rejects.toThrow(AuthValueIncorrectException);
   });
 });
