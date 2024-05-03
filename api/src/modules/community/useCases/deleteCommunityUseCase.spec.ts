@@ -18,7 +18,7 @@ describe("Delete Community", () => {
     );
   });
 
-  it("Should be able to create an user", async () => {
+  it("Should be able to delete an community", async () => {
     const user = makeUser({
       password_hash: "123456",
     });

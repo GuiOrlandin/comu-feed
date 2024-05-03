@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { CommunityRepository } from "../repositories/communityRepository";
 
 interface DeleteCommunityRequest {
@@ -14,7 +18,7 @@ export class DeleteCommunityUseCase {
     const community = await this.communityRepository.findById(community_id);
 
     if (!community) {
-      throw new UnauthorizedException();
+      throw new NotFoundException();
     }
 
     if (community.founder_id !== user_id) {
