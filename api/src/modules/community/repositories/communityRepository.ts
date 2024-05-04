@@ -5,10 +5,10 @@ export abstract class CommunityRepository {
   abstract delete(id: string): Promise<void>;
   abstract findByName(email: string): Promise<Community | Community[] | null>;
   abstract findById(id: string): Promise<Community | null>;
-  abstract enterInCommunity(
+  abstract joinTheCommunity(
     userId: string,
     communityId: string,
-    password: string,
+    password?: string,
   ): Promise<void>;
   //   abstract findManyPostsByCommunity(
   //     communityId: string,

@@ -18,6 +18,7 @@ export class Community {
       ...props,
       created_at: props.created_at || new Date(),
       id: props.id || randomUUID(),
+      User_Members: props.User_Members || [],
     };
   }
 

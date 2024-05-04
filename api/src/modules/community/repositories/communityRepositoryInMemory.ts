@@ -38,10 +38,10 @@ export class CommunityRepositoryInMemory implements CommunityRepository {
     );
   }
 
-  async enterInCommunity(
+  async joinTheCommunity(
     userId: string,
     communityId: string,
-    password: string,
+    password?: string,
   ): Promise<void> {
     const community = this.communities.find(
       (community) => community.id === communityId,
@@ -51,10 +51,7 @@ export class CommunityRepositoryInMemory implements CommunityRepository {
       throw new Error("A comunidade não existe!");
     }
 
-    if (
-      community.key_access &&
-      (!password || community.password !== password)
-    ) {
+    if (community.key_access && community.password !== password) {
       throw new Error("Senha incorreta!");
     }
 
@@ -65,6 +62,10 @@ export class CommunityRepositoryInMemory implements CommunityRepository {
     }
 
     if (community.key_access && community.password === password) {
+      community.User_Members.push(userId);
+    }
+
+    if (!community.key_access && !password) {
       community.User_Members.push(userId);
     }
   }
