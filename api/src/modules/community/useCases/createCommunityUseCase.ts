@@ -1,7 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { hash } from "bcrypt";
-import { User } from "src/modules/user/entities/User";
-import { UserRepository } from "src/modules/user/repositories/userRepository";
 import { CommunityRepository } from "../repositories/communityRepository";
 import { Community } from "../entities/community";
 
