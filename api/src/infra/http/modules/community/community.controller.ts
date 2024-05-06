@@ -53,6 +53,7 @@ export class CommunityController {
       password,
     });
   }
+
   @Delete(":id")
   async deleteNote(
     @Request() request: AuthRequestModel,
