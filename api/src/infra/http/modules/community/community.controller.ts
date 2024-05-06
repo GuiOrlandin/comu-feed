@@ -1,17 +1,26 @@
-import { Body, Controller, Post, Put, Request, Param } from "@nestjs/common";
-import { Public } from "../auth/decorators/isPublic";
+import {
+  Body,
+  Controller,
+  Post,
+  Put,
+  Request,
+  Param,
+  Delete,
+} from "@nestjs/common";
 import { CreateCommunityUseCase } from "src/modules/community/useCases/createCommunityUseCase";
 import { CreateCommunityBody } from "./dtos/createCommunityBody";
 import { CommunityViewModel } from "./viewModel/communityViewModel";
 import { JoinTheCommunityUseCase } from "src/modules/community/useCases/joinTheCommunityUseCase";
 import { JoinTheCommunityBody } from "./dtos/joinTheCommunityBody";
 import { AuthRequestModel } from "../auth/models/authRequestModel";
+import { DeleteCommunityUseCase } from "src/modules/community/useCases/deleteCommunityUseCase";
 
 @Controller("community")
 export class CommunityController {
   constructor(
     private createCommunityUseCase: CreateCommunityUseCase,
     private joinTheCommunityUseCase: JoinTheCommunityUseCase,
+    private deleteTheCommunityUseCase: DeleteCommunityUseCase,
   ) {}
 
   @Post()
@@ -42,6 +51,16 @@ export class CommunityController {
       communityId,
       userId: request.user.id,
       password,
+    });
+  }
+  @Delete(":id")
+  async deleteNote(
+    @Request() request: AuthRequestModel,
+    @Param("id") community_id: string,
+  ) {
+    await this.deleteTheCommunityUseCase.execute({
+      community_id,
+      user_id: request.user.id,
     });
   }
 }

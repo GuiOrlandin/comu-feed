@@ -7,8 +7,12 @@ import { PrismaCommunityMapper } from "../mappers/prismaCommunityMapper";
 @Injectable()
 export class PrismaCommunityRepository implements CommunityRepository {
   constructor(private prisma: PrismaService) {}
-  delete(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async delete(id: string): Promise<void> {
+    await this.prisma.community.delete({
+      where: {
+        id,
+      },
+    });
   }
   async findById(id: string): Promise<Community> {
     const community = await this.prisma.community.findFirst({
