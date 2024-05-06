@@ -24,24 +24,28 @@ describe("Join the Community", () => {
       password_hash: "123456",
     });
 
+    await communityRepositoryInMemory.createUser(user);
+
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
       key_access: false,
       name: "GuiiosCommunity",
     });
 
-    const joinTheCommunity = await joinTheCommunityUseCase.execute({
+    await joinTheCommunityUseCase.execute({
       communityId: community.id,
       userId: user.id,
     });
 
-    expect(community.User_Members).toEqual([user.id]);
+    expect(community.User_Members).toEqual([user]);
   });
 
   it("Should be able to join the community with password", async () => {
     const user = makeUser({
       password_hash: "123456",
     });
+
+    await communityRepositoryInMemory.createUser(user);
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
@@ -56,6 +60,6 @@ describe("Join the Community", () => {
       password: "123456",
     });
 
-    expect(community.User_Members).toEqual([user.id]);
+    expect(community.User_Members).toEqual([user]);
   });
 });

@@ -10,15 +10,75 @@ export class PrismaCommunityRepository implements CommunityRepository {
   delete(id: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  findById(id: string): Promise<Community> {
-    throw new Error("Method not implemented.");
+  async findById(id: string): Promise<Community> {
+    const community = await this.prisma.community.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!community) {
+      return null;
+    }
+
+    return PrismaCommunityMapper.toDomain(community);
   }
-  joinTheCommunity(
+
+  async joinTheCommunity(
     userId: string,
     communityId: string,
     password?: string,
   ): Promise<void> {
-    throw new Error("Method not implemented.");
+    const community = await this.prisma.community.findFirst({
+      where: {
+        id: communityId,
+      },
+      include: {
+        User_Members: true,
+      },
+    });
+
+    if (!community) {
+      throw new Error("A comunidade não existe!");
+    }
+
+    if (community.key_access && community.password !== password) {
+      throw new Error("Senha incorreta!");
+    }
+
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+    const isMember = await this.prisma.community.findFirst({
+      where: {
+        User_Members: {
+          some: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
+    if (isMember) {
+      throw new Error("Já é membro da comunidade!");
+    }
+
+    if (!isMember) {
+      await this.prisma.community.update({
+        where: {
+          id: communityId,
+        },
+        data: {
+          User_Members: {
+            set: [...community.User_Members, user],
+          },
+        },
+      });
+      console.log("foi");
+    }
   }
 
   async findByName(name: string): Promise<Community | Community[] | null> {

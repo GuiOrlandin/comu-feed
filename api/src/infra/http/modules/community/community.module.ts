@@ -2,10 +2,11 @@ import { Module } from "@nestjs/common";
 import { DatabaseModule } from "src/infra/database/database.module";
 import { CommunityController } from "./community.controller";
 import { CreateCommunityUseCase } from "src/modules/community/useCases/createCommunityUseCase";
+import { JoinTheCommunityUseCase } from "src/modules/community/useCases/joinTheCommunityUseCase";
 
 @Module({
   imports: [DatabaseModule],
   controllers: [CommunityController],
-  providers: [CreateCommunityUseCase],
+  providers: [CreateCommunityUseCase, JoinTheCommunityUseCase],
 })
 export class CommunityModule {}

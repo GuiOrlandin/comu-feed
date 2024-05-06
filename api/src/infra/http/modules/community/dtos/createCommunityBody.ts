@@ -9,10 +9,6 @@ import {
 export class CreateCommunityBody {
   @IsString()
   @IsNotEmpty()
-  founder_id: string;
-
-  @IsString()
-  @IsNotEmpty()
   name: string;
 
   @IsBoolean()

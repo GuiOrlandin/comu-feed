@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import { User } from "src/modules/user/entities/User";
 
 interface CommunitySchema {
   name: string;
@@ -7,7 +8,7 @@ interface CommunitySchema {
   key_access: boolean;
   created_at?: Date;
   password?: string;
-  User_Members?: string[];
+  User_Members?: User[];
 }
 
 export class Community {
@@ -57,12 +58,12 @@ export class Community {
     this.props.name = name;
   }
 
-  get User_Members(): string[] {
+  get User_Members(): User[] {
     return this.props.User_Members;
   }
 
-  set User_Members(User_Member: string) {
-    this.props.User_Members.push(...User_Member);
+  set User_Members(User_Member: User) {
+    this.props.User_Members.push(User_Member);
   }
 
   get created_at(): Date {
