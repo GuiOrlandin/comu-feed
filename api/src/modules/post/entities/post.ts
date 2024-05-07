@@ -3,8 +3,8 @@ import { randomUUID } from "crypto";
 interface PostSchema {
   title: string;
   user_id: string;
-  comments: string;
-  love: number;
+  comments?: string;
+  love?: number;
   content: string | File;
   id?: string;
   created_at?: Date;

@@ -4,6 +4,16 @@ import { PostRepository } from "./postRepository";
 export class PostRepositoryInMemory implements PostRepository {
   public post: Post[] = [];
 
+  async findById(id: string): Promise<Post | null> {
+    const community = this.post.find((community) => community.id === id);
+
+    if (!community) {
+      return null;
+    }
+
+    return community;
+  }
+
   async delete(id: string): Promise<void> {
     this.post = this.post.filter((community) => community.id !== id);
   }
