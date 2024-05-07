@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 interface PostSchema {
   title: string;
   user_id: string;
+  community_id: string;
   comments?: string;
   love?: number;
   content: string | File;
@@ -43,6 +44,14 @@ export class Post {
 
   get comments(): string {
     return this.props.comments;
+  }
+
+  set community_id(community_id: string) {
+    this.props.community_id = community_id;
+  }
+
+  get community_id(): string {
+    return this.props.community_id;
   }
 
   set comments(comments: string) {

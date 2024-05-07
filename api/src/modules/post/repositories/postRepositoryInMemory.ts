@@ -1,21 +1,22 @@
 import { Post } from "../entities/post";
+import { PostNotFoundException } from "../exceptions/postNotFoundException";
 import { PostRepository } from "./postRepository";
 
 export class PostRepositoryInMemory implements PostRepository {
   public post: Post[] = [];
 
   async findById(id: string): Promise<Post | null> {
-    const community = this.post.find((community) => community.id === id);
+    const post = this.post.find((post) => post.id === id);
 
-    if (!community) {
+    if (!post) {
       return null;
     }
 
-    return community;
+    return post;
   }
 
   async delete(id: string): Promise<void> {
-    this.post = this.post.filter((community) => community.id !== id);
+    this.post = this.post.filter((post) => post.id !== id);
   }
 
   async create(post: Post): Promise<void> {

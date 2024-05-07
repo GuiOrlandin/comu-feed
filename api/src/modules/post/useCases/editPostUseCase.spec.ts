@@ -2,22 +2,23 @@ import { makeUser } from "src/modules/user/factories/userFactory";
 import { PostRepositoryInMemory } from "../repositories/postRepositoryInMemory";
 import { CreatePostUseCase } from "./createPostUseCase";
 import { DeletePostUseCase } from "./deletePostUseCase";
-import { CreateCommunityUseCase } from "src/modules/community/useCases/createCommunityUseCase";
+import { EditPostUseCase } from "./editPostUseCase";
 import { CommunityRepositoryInMemory } from "src/modules/community/repositories/communityRepositoryInMemory";
+import { CreateCommunityUseCase } from "src/modules/community/useCases/createCommunityUseCase";
 import { postWithoutPermissionException } from "../exceptions/postWithoutPermissionException";
-import { PostNotFoundException } from "../exceptions/postNotFoundException";
 
 let deletePostUseCase: DeletePostUseCase;
 let createPostUseCase: CreatePostUseCase;
-let communityRepositoryInMemory: CommunityRepositoryInMemory;
+let editPostUseCase: EditPostUseCase;
 let postRepositoryInMemory: PostRepositoryInMemory;
+let communityRepositoryInMemory: CommunityRepositoryInMemory;
 let createCommunityUseCase: CreateCommunityUseCase;
 
-describe("Delete post", () => {
+describe("Edit post", () => {
   beforeEach(() => {
-    communityRepositoryInMemory = new CommunityRepositoryInMemory();
     postRepositoryInMemory = new PostRepositoryInMemory();
     deletePostUseCase = new DeletePostUseCase(postRepositoryInMemory);
+    communityRepositoryInMemory = new CommunityRepositoryInMemory();
     createCommunityUseCase = new CreateCommunityUseCase(
       communityRepositoryInMemory,
     );
@@ -25,9 +26,10 @@ describe("Delete post", () => {
       postRepositoryInMemory,
       communityRepositoryInMemory,
     );
+    editPostUseCase = new EditPostUseCase(postRepositoryInMemory);
   });
 
-  it("Should be able to delete post", async () => {
+  it("Should be able to edit post", async () => {
     const user = makeUser({
       password_hash: "123456",
     });
@@ -45,15 +47,17 @@ describe("Delete post", () => {
       user_id: user.id,
     });
 
-    await deletePostUseCase.execute({
+    const editedPost = await editPostUseCase.execute({
+      content: "conteudo editado",
       post_id: post.id,
-      userId: user.id,
+      title: "Titulo editado",
+      user_id: user.id,
     });
 
-    expect(postRepositoryInMemory.post).toEqual([]);
+    expect(postRepositoryInMemory.post).toEqual([editedPost]);
   });
 
-  it("Should not be able to delete post if the user is not the creator", async () => {
+  it("Should not be able to edit post if the user is not the creator", async () => {
     const user = makeUser({
       password_hash: "123456",
     });
@@ -72,14 +76,16 @@ describe("Delete post", () => {
     });
 
     await expect(
-      deletePostUseCase.execute({
+      editPostUseCase.execute({
+        content: "conteudo editado",
         post_id: post.id,
-        userId: "user.id",
+        title: "Titulo editado",
+        user_id: "user.id",
       }),
     ).rejects.toThrow(postWithoutPermissionException);
   });
 
-  it("Should not be able to delete post if the post id is not the correct", async () => {
+  it("Should not be able to edit post if the user is not the creator", async () => {
     const user = makeUser({
       password_hash: "123456",
     });
@@ -98,10 +104,12 @@ describe("Delete post", () => {
     });
 
     await expect(
-      deletePostUseCase.execute({
-        post_id: "post.id",
-        userId: user.id,
+      editPostUseCase.execute({
+        content: "conteudo editado",
+        post_id: post.id,
+        title: "Titulo editado",
+        user_id: "user.id",
       }),
-    ).rejects.toThrow(PostNotFoundException);
+    ).rejects.toThrow(postWithoutPermissionException);
   });
 });

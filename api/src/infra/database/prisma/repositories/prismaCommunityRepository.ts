@@ -81,7 +81,6 @@ export class PrismaCommunityRepository implements CommunityRepository {
           },
         },
       });
-      console.log("foi");
     }
   }
 
