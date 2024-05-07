@@ -15,7 +15,8 @@ model User {
     password_hash String
     Community_Founder Community[]
     Community_Member  Community[] @relation("CommunityMembers")
-    posts Post[]
+    textPosts       TextPost[]  
+    mediaPosts      MediaPost[]
     comments Comment[]
 
   
@@ -28,34 +29,55 @@ model Community {
     name          String
     User_Founder   User     @relation(fields: [founder_id], references: [id])
     founder_id      String
-    posts Post[]
+    textPosts       TextPost[]  
+    mediaPosts      MediaPost[]  
     key_access    Boolean?
     password      String?
     User_Members   User[]    @relation("CommunityMembers")
 
     @@map("communities")
 }
-model Post {
-    id            String   @id @default(uuid())
-    created_at    DateTime @default(now())
+
+model TextPost {
+    id            String    @id @default(uuid())
+    created_at    DateTime  @default(now())
     user          User      @relation(fields: [user_id], references: [id])
     user_id       String
-    title          String
-    community     Community      @relation(fields: [community_id], references: [id])
+    title         String
+    community     Community @relation(fields: [community_id], references: [id])
     community_id  String
+    content       String
+    love          Int?      @default(0)
     comments      Comment[]
-    content       String?
-    love           Int?
 
-    @@map("posts")
+    @@map("text_posts")
 }
+
+model MediaPost {
+    id            String    @id @default(uuid())
+    created_at    DateTime  @default(now())
+    user          User      @relation(fields: [user_id], references: [id])
+    user_id       String
+    title         String
+    community     Community @relation(fields: [community_id], references: [id])
+    community_id  String
+    media         String    
+    love          Int?      @default(0)
+    comments      Comment[]
+
+    @@map("media_posts")
+}
+
+
 model Comment {
     id            String   @id @default(uuid())
     created_at    DateTime @default(now())
     user          User      @relation(fields: [user_id], references: [id])
     user_id       String
-    post          Post     @relation(fields: [post_id], references: [id])
-    post_id       String
+    text_post          TextPost     @relation(fields: [text_post_id], references: [id])
+    media_post          MediaPost     @relation(fields: [media_post_id], references: [id])
+    text_post_id       String
+    media_post_id       String
     content       String
 
 

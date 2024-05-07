@@ -1,4 +1,4 @@
-import { Post } from "../entities/post";
+import { Post } from "../entities/textPost";
 import { PostNotFoundException } from "../exceptions/postNotFoundException";
 import { PostRepository } from "./postRepository";
 

@@ -1,0 +1,63 @@
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { PostRepository } from "src/modules/post/repositories/postRepository";
+import { postWithoutPermissionException } from "src/modules/post/exceptions/postWithoutPermissionException";
+import { TextPost } from "src/modules/post/entities/textPost";
+import { MediaPost } from "src/modules/post/entities/mediaPost";
+
+@Injectable()
+export class PrismaPostRepository implements PostRepository {
+  constructor(private prisma: PrismaService) {}
+
+  async create(post: TextPost | MediaPost): Promise<void> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: post.user_id,
+      },
+    });
+
+    if (!user) {
+      throw new postWithoutPermissionException({
+        actionName: "acessar",
+      });
+    }
+
+    const userInTheCommunity = await this.prisma.community.findFirst({
+      where: {
+        OR: [
+          {
+            User_Members: {
+              some: {
+                id: user.id,
+              },
+            },
+          },
+          {
+            founder_id: user.id,
+          },
+        ],
+      },
+    });
+
+    if (!userInTheCommunity) {
+      throw new postWithoutPermissionException({
+        actionName: "acessar",
+      });
+    }
+
+    // const communityRaw = PrismaCommunityMapper.toPrisma(community);
+
+    // await this.prisma.community.create({
+    //   data: communityRaw,
+    // });
+  }
+  delete(id: string): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  findById(id: string): Promise<TextPost | MediaPost> {
+    throw new Error("Method not implemented.");
+  }
+  save(post: TextPost | MediaPost): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+}

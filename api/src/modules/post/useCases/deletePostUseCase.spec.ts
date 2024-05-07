@@ -90,7 +90,7 @@ describe("Delete post", () => {
       name: "GuiiosCommunity",
     });
 
-    const post = await createPostUseCase.execute({
+    await createPostUseCase.execute({
       community_id: community.id,
       content: "conteudo do post",
       title: "titulo do post",

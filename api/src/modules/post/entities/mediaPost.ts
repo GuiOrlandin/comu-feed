@@ -6,12 +6,12 @@ interface PostSchema {
   community_id: string;
   comments?: string;
   love?: number;
-  content: string | File;
+  media: string;
   id?: string;
   created_at?: Date;
 }
 
-export class Post {
+export class MediaPost {
   private props: PostSchema;
 
   constructor(props: PostSchema) {
@@ -58,12 +58,12 @@ export class Post {
     this.props.comments = comments;
   }
 
-  get content(): string | File {
-    return this.props.content;
+  get media(): string {
+    return this.props.media;
   }
 
-  set content(content: string | File) {
-    this.props.content = content;
+  set media(media: string) {
+    this.props.media = media;
   }
 
   get love(): number {

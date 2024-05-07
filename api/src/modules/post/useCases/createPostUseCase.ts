@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { Post } from "../entities/post";
+import { Post } from "../entities/textPost";
 import { PostRepository } from "../repositories/postRepository";
 import { CommunityRepository } from "src/modules/community/repositories/communityRepository";
 import { postWithoutPermissionException } from "../exceptions/postWithoutPermissionException";
