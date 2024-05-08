@@ -1,51 +1,50 @@
 import { Injectable } from "@nestjs/common";
 
-import { Post } from "../entities/textPost";
 import { PostRepository } from "../repositories/postRepository";
-import { CommunityRepository } from "src/modules/community/repositories/communityRepository";
-import { postWithoutPermissionException } from "../exceptions/postWithoutPermissionException";
-import { PostNotFoundException } from "../exceptions/postNotFoundException";
+import { TextPost } from "../entities/textPost";
+import { MediaPost } from "../entities/mediaPost";
 
 interface CreatedPostRequest {
   title: string;
   user_id: string;
-  content: string;
+  content?: string;
+  media?: string;
   community_id: string;
+  postType: "textPost" | "mediaPost";
 }
 
 @Injectable()
 export class CreatePostUseCase {
-  constructor(
-    private postRepository: PostRepository,
-    private communityRepository: CommunityRepository,
-  ) {}
+  constructor(private postRepository: PostRepository) {}
 
-  async execute({ content, title, user_id, community_id }: CreatedPostRequest) {
-    const community = await this.communityRepository.findById(community_id);
-
-    if (!community) {
-      throw new PostNotFoundException();
-    }
-
-    const userInTheCommunity = community.User_Members.filter(
-      (user) => user.id === user_id,
-    );
-
-    if (!userInTheCommunity || user_id !== community.founder_id) {
-      throw new postWithoutPermissionException({
-        actionName: "criar",
+  async execute({
+    content,
+    title,
+    user_id,
+    community_id,
+    postType,
+    media,
+  }: CreatedPostRequest) {
+    if (postType === "textPost") {
+      const post = new TextPost({
+        content,
+        title,
+        user_id,
+        community_id,
       });
+
+      await this.postRepository.create(post);
+      return post;
+    } else {
+      const post = new MediaPost({
+        media,
+        title,
+        user_id,
+        community_id,
+      });
+
+      await this.postRepository.create(post);
+      return post;
     }
-
-    const post = new Post({
-      content,
-      title,
-      user_id,
-      community_id,
-    });
-
-    await this.postRepository.create(post);
-
-    return post;
   }
 }

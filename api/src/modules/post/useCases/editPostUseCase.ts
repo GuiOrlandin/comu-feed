@@ -3,9 +3,11 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { PostRepository } from "../repositories/postRepository";
 import { PostNotFoundException } from "../exceptions/postNotFoundException";
 import { postWithoutPermissionException } from "../exceptions/postWithoutPermissionException";
+import { TextPost } from "../entities/textPost";
 
 interface EditPostRequest {
-  content: string | File;
+  content?: string;
+  media?: string;
   title: string;
   user_id: string;
   post_id: string;
@@ -15,7 +17,7 @@ interface EditPostRequest {
 export class EditPostUseCase {
   constructor(private postRepository: PostRepository) {}
 
-  async execute({ post_id, content, user_id, title }: EditPostRequest) {
+  async execute({ post_id, content, user_id, title, media }: EditPostRequest) {
     const post = await this.postRepository.findById(post_id);
 
     if (!post) {
@@ -28,11 +30,20 @@ export class EditPostUseCase {
       });
     }
 
-    post.content = content;
-    post.title = title;
+    if (post instanceof TextPost) {
+      post.content = content;
+      post.title = title;
 
-    await this.postRepository.save(post);
+      await this.postRepository.save(post);
 
-    return post;
+      return post;
+    } else {
+      post.media = media;
+      post.title = title;
+
+      await this.postRepository.save(post);
+
+      return post;
+    }
   }
 }

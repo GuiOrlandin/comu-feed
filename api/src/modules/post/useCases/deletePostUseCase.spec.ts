@@ -42,6 +42,7 @@ describe("Delete post", () => {
       community_id: community.id,
       content: "conteudo do post",
       title: "titulo do post",
+      postType: "textPost",
       user_id: user.id,
     });
 
@@ -69,6 +70,7 @@ describe("Delete post", () => {
       content: "conteudo do post",
       title: "titulo do post",
       user_id: user.id,
+      postType: "textPost",
     });
 
     await expect(
@@ -95,6 +97,7 @@ describe("Delete post", () => {
       content: "conteudo do post",
       title: "titulo do post",
       user_id: user.id,
+      postType: "textPost",
     });
 
     await expect(

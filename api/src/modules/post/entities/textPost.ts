@@ -6,7 +6,7 @@ interface PostSchema {
   community_id: string;
   comments?: string;
   love?: number;
-  content: string;
+  content?: string;
   id?: string;
   created_at?: Date;
 }

@@ -1,11 +1,12 @@
-import { Post } from "../entities/textPost";
+import { MediaPost } from "../entities/mediaPost";
+import { TextPost } from "../entities/textPost";
 import { PostNotFoundException } from "../exceptions/postNotFoundException";
 import { PostRepository } from "./postRepository";
 
 export class PostRepositoryInMemory implements PostRepository {
-  public post: Post[] = [];
+  public post: (TextPost | MediaPost)[] = [];
 
-  async findById(id: string): Promise<Post | null> {
+  async findById(id: string): Promise<TextPost | MediaPost | null> {
     const post = this.post.find((post) => post.id === id);
 
     if (!post) {
@@ -19,11 +20,11 @@ export class PostRepositoryInMemory implements PostRepository {
     this.post = this.post.filter((post) => post.id !== id);
   }
 
-  async create(post: Post): Promise<void> {
+  async create(post: TextPost | MediaPost): Promise<void> {
     this.post.push(post);
   }
 
-  async save(post: Post): Promise<void> {
+  async save(post: TextPost | MediaPost): Promise<void> {
     const postIndex = this.post.findIndex(
       (currentNote) => currentNote.id === post.id,
     );

@@ -5,9 +5,16 @@ import { UserModule } from "./infra/http/modules/user/user.module";
 import { AuthModule } from "./infra/http/modules/auth/auth.module";
 import { JwtAuthGuard } from "./infra/http/modules/auth/guards/jwt-auth.guard";
 import { CommunityModule } from "./infra/http/modules/community/community.module";
+import { PostModule } from "./infra/http/modules/post/post.module";
 
 @Module({
-  imports: [DatabaseModule, UserModule, AuthModule, CommunityModule],
+  imports: [
+    DatabaseModule,
+    UserModule,
+    AuthModule,
+    CommunityModule,
+    PostModule,
+  ],
   controllers: [],
   providers: [
     {

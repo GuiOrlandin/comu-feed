@@ -1,23 +1,75 @@
-// import { Body, Controller, Post } from "@nestjs/common";
-// import { CreateUserUseCase } from "src/modules/user/useCases/createUserUseCase";
-// import { CreateUserBody } from "./dtos/createUserBody";
-// import { UserViewModel } from "./viewModel/viewModel";
-// import { Public } from "../auth/decorators/isPublic";
+import {
+  Body,
+  Controller,
+  Post,
+  UseInterceptors,
+  Request,
+  UploadedFile,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { extname } from "path";
+import { diskStorage } from "multer";
+import { CreatePostBody } from "./dtos/createPostBody";
+import { AuthRequestModel } from "../auth/models/authRequestModel";
+import { CreatePostUseCase } from "src/modules/post/useCases/createPostUseCase";
+import { MediaPostViewModel, TextPostViewModel } from "./view/postViewModel";
+import { TextPost } from "src/modules/post/entities/textPost";
+import { MediaPost } from "src/modules/post/entities/mediaPost";
 
-// @Controller("users")
-// export class UserController {
-//   constructor(private createUserUseCase: CreateUserUseCase) {}
+@Controller("post")
+export class PostController {
+  constructor(private createPostUseCase: CreatePostUseCase) {}
 
-//   @Post()
-//   @Public()
-//   async createPost(@Body() body: CreateUserBody) {
-//     const { email, name, password_hash, created_at, id } = body;
-//     const user = await this.createUserUseCase.execute({
-//       email,
-//       name,
-//       password_hash,
-//     });
+  @Post("textPost")
+  async createPost(
+    @Request() request: AuthRequestModel,
+    @Body() body: CreatePostBody,
+  ) {
+    const { community_id, content, title } = body;
+    const post = await this.createPostUseCase.execute({
+      community_id,
+      content,
+      title,
+      user_id: request.user.id,
+      postType: "textPost",
+    });
 
-//     return UserViewModel.toHttp(user);
-//   }
-// }
+    if (post instanceof TextPost) {
+      return TextPostViewModel.toHttp(post);
+    }
+  }
+
+  @Post("mediaPost")
+  @UseInterceptors(
+    FileInterceptor("file", {
+      storage: diskStorage({
+        destination: "./uploads",
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + "-" + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${uniqueSuffix}${ext}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
+  async handleUpload(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() request: AuthRequestModel,
+    @Body() body: CreatePostBody,
+  ) {
+    const { community_id, title } = body;
+    const post = await this.createPostUseCase.execute({
+      community_id,
+      media: file.filename,
+      title,
+      user_id: request.user.id,
+      postType: "mediaPost",
+    });
+
+    if (post instanceof MediaPost) {
+      return MediaPostViewModel.toHttp(post);
+    }
+  }
+}

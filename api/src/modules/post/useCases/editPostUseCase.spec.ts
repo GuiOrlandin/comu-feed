@@ -45,6 +45,7 @@ describe("Edit post", () => {
       content: "conteudo do post",
       title: "titulo do post",
       user_id: user.id,
+      postType: "textPost",
     });
 
     const editedPost = await editPostUseCase.execute({
@@ -73,6 +74,7 @@ describe("Edit post", () => {
       content: "conteudo do post",
       title: "titulo do post",
       user_id: user.id,
+      postType: "textPost",
     });
 
     await expect(
@@ -101,6 +103,7 @@ describe("Edit post", () => {
       content: "conteudo do post",
       title: "titulo do post",
       user_id: user.id,
+      postType: "textPost",
     });
 
     await expect(

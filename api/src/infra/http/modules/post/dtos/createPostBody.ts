@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreatePostBody {
   @IsString()
@@ -7,13 +7,13 @@ export class CreatePostBody {
 
   @IsString()
   @IsNotEmpty()
-  user_id: string;
-
-  @IsString()
-  @IsNotEmpty()
   community_id: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   content: string;
+
+  @IsString()
+  @IsOptional()
+  media: string;
 }

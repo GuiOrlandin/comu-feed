@@ -14,10 +14,7 @@ describe("Create post", () => {
   beforeEach(() => {
     postRepositoryInMemory = new PostRepositoryInMemory();
     communityRepositoryInMemory = new CommunityRepositoryInMemory();
-    createPostUseCase = new CreatePostUseCase(
-      postRepositoryInMemory,
-      communityRepositoryInMemory,
-    );
+    createPostUseCase = new CreatePostUseCase(postRepositoryInMemory);
     createCommunityUseCase = new CreateCommunityUseCase(
       communityRepositoryInMemory,
     );
@@ -39,6 +36,7 @@ describe("Create post", () => {
       content: "conteudo do post",
       title: "titulo do post",
       user_id: user.id,
+      postType: "textPost",
     });
 
     expect(postRepositoryInMemory.post).toEqual([post]);
@@ -61,6 +59,7 @@ describe("Create post", () => {
         content: "conteudo do post",
         title: "titulo do post",
         user_id: "user.id",
+        postType: "textPost",
       }),
     ).rejects.toThrow(postWithoutPermissionException);
   });
