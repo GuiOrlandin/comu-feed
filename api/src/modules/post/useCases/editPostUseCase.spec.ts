@@ -22,10 +22,7 @@ describe("Edit post", () => {
     createCommunityUseCase = new CreateCommunityUseCase(
       communityRepositoryInMemory,
     );
-    createPostUseCase = new CreatePostUseCase(
-      postRepositoryInMemory,
-      communityRepositoryInMemory,
-    );
+    createPostUseCase = new CreatePostUseCase(postRepositoryInMemory);
     editPostUseCase = new EditPostUseCase(postRepositoryInMemory);
   });
 

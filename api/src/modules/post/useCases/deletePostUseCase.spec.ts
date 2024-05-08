@@ -23,7 +23,6 @@ describe("Delete post", () => {
     );
     createPostUseCase = new CreatePostUseCase(
       postRepositoryInMemory,
-      communityRepositoryInMemory,
     );
   });
 

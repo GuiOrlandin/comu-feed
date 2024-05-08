@@ -5,6 +5,8 @@ import {
   UseInterceptors,
   Request,
   UploadedFile,
+  Delete,
+  Param,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { extname } from "path";
@@ -15,10 +17,14 @@ import { CreatePostUseCase } from "src/modules/post/useCases/createPostUseCase";
 import { MediaPostViewModel, TextPostViewModel } from "./view/postViewModel";
 import { TextPost } from "src/modules/post/entities/textPost";
 import { MediaPost } from "src/modules/post/entities/mediaPost";
+import { DeletePostUseCase } from "src/modules/post/useCases/deletePostUseCase";
 
 @Controller("post")
 export class PostController {
-  constructor(private createPostUseCase: CreatePostUseCase) {}
+  constructor(
+    private createPostUseCase: CreatePostUseCase,
+    private deletePostUseCase: DeletePostUseCase,
+  ) {}
 
   @Post("textPost")
   async createPost(
@@ -71,5 +77,16 @@ export class PostController {
     if (post instanceof MediaPost) {
       return MediaPostViewModel.toHttp(post);
     }
+  }
+
+  @Delete(":id")
+  async deleteNote(
+    @Request() request: AuthRequestModel,
+    @Param("id") post_id: string,
+  ) {
+    await this.deletePostUseCase.execute({
+      post_id,
+      userId: request.user.id,
+    });
   }
 }

@@ -1,14 +1,33 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
+import * as fs from "fs";
+import * as path from "path";
 import { PostRepository } from "src/modules/post/repositories/postRepository";
 import { postWithoutPermissionException } from "src/modules/post/exceptions/postWithoutPermissionException";
 import { TextPost } from "src/modules/post/entities/textPost";
 import { MediaPost } from "src/modules/post/entities/mediaPost";
 import { PrismaPostMapper } from "../mappers/prismaPostMapper";
+import { PostNotFoundException } from "src/modules/post/exceptions/postNotFoundException";
 
 @Injectable()
 export class PrismaPostRepository implements PostRepository {
   constructor(private prisma: PrismaService) {}
+
+  private async deleteFile(filePath: string): Promise<void> {
+    const fullPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "..",
+      "..",
+      "uploads",
+      filePath,
+    );
+    if (fs.existsSync(fullPath)) {
+      fs.unlinkSync(fullPath);
+    }
+  }
 
   async create(post: TextPost | MediaPost): Promise<void> {
     const user = await this.prisma.user.findFirst({
@@ -61,11 +80,87 @@ export class PrismaPostRepository implements PostRepository {
       });
     }
   }
-  delete(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async delete(id: string): Promise<void> {
+    const textPost = await this.prisma.textPost.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    const mediaPost = await this.prisma.mediaPost.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!textPost && !mediaPost) {
+      throw new PostNotFoundException();
+    }
+
+    if (textPost) {
+      const user = await this.prisma.textPost.findFirst({
+        where: {
+          user_id: textPost.user_id,
+        },
+      });
+
+      if (!user) {
+        throw new postWithoutPermissionException({
+          actionName: "acessar",
+        });
+      }
+
+      await this.prisma.textPost.delete({
+        where: {
+          id,
+        },
+      });
+    }
+
+    if (mediaPost) {
+      const user = await this.prisma.mediaPost.findFirst({
+        where: {
+          user_id: mediaPost.user_id,
+        },
+      });
+
+      if (!user) {
+        throw new postWithoutPermissionException({
+          actionName: "acessar",
+        });
+      }
+
+      await this.deleteFile(mediaPost.media);
+      await this.prisma.mediaPost.delete({
+        where: {
+          id,
+        },
+      });
+    }
   }
-  findById(id: string): Promise<TextPost | MediaPost> {
-    throw new Error("Method not implemented.");
+
+  async findById(id: string): Promise<TextPost | MediaPost> {
+    const textPostData = await this.prisma.textPost.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    const mediaPostData = await this.prisma.mediaPost.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (textPostData) {
+      return new TextPost(textPostData);
+    }
+    if (mediaPostData) {
+      return new MediaPost(mediaPostData);
+    }
+
+    throw new PostNotFoundException();
   }
   save(post: TextPost | MediaPost): Promise<void> {
     throw new Error("Method not implemented.");
