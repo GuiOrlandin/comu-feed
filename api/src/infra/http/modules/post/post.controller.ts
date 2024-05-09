@@ -7,6 +7,7 @@ import {
   UploadedFile,
   Delete,
   Param,
+  Put,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { extname } from "path";
@@ -18,12 +19,15 @@ import { MediaPostViewModel, TextPostViewModel } from "./view/postViewModel";
 import { TextPost } from "src/modules/post/entities/textPost";
 import { MediaPost } from "src/modules/post/entities/mediaPost";
 import { DeletePostUseCase } from "src/modules/post/useCases/deletePostUseCase";
+import { EditPostUseCase } from "src/modules/post/useCases/editPostUseCase";
+import { EditPostBody } from "./dtos/editPostBody";
 
 @Controller("post")
 export class PostController {
   constructor(
     private createPostUseCase: CreatePostUseCase,
     private deletePostUseCase: DeletePostUseCase,
+    private editPostUseCase: EditPostUseCase,
   ) {}
 
   @Post("textPost")
@@ -79,8 +83,48 @@ export class PostController {
     }
   }
 
+  @Put(":id")
+  @UseInterceptors(
+    FileInterceptor("file", {
+      storage: diskStorage({
+        destination: "./uploads",
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + "-" + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${uniqueSuffix}${ext}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
+  async editPost(
+    @Request() request: AuthRequestModel,
+    @Param("id") post_id: string,
+    @Body() body: EditPostBody,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const { content, title } = body;
+
+    if (content) {
+      await this.editPostUseCase.execute({
+        post_id,
+        user_id: request.user.id,
+        title,
+        content,
+      });
+    } else {
+      await this.editPostUseCase.execute({
+        post_id,
+        user_id: request.user.id,
+        title,
+        media: file.filename,
+      });
+    }
+  }
+
   @Delete(":id")
-  async deleteNote(
+  async deletePost(
     @Request() request: AuthRequestModel,
     @Param("id") post_id: string,
   ) {

@@ -162,7 +162,34 @@ export class PrismaPostRepository implements PostRepository {
 
     throw new PostNotFoundException();
   }
-  save(post: TextPost | MediaPost): Promise<void> {
-    throw new Error("Method not implemented.");
+  async save(post: TextPost | MediaPost): Promise<void> {
+    if (post instanceof TextPost) {
+      const noteRaw = PrismaPostMapper.toPrismaTextPost(post);
+
+      await this.prisma.textPost.update({
+        data: noteRaw,
+        where: {
+          id: noteRaw.id,
+        },
+      });
+    }
+    if (post instanceof MediaPost) {
+      const noteRaw = PrismaPostMapper.toPrismaMediaPost(post);
+
+      const postWithUnmodifiedMedia = await this.prisma.mediaPost.findFirst({
+        where: {
+          id: post.id,
+        },
+      });
+
+      await this.deleteFile(postWithUnmodifiedMedia.media);
+
+      await this.prisma.mediaPost.update({
+        data: noteRaw,
+        where: {
+          id: noteRaw.id,
+        },
+      });
+    }
   }
 }

@@ -38,9 +38,6 @@ export class EditPostUseCase {
 
       return post;
     } else {
-      post.media = media;
-      post.title = title;
-
       await this.postRepository.save(post);
 
       return post;

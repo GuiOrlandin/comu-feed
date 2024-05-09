@@ -1,6 +1,5 @@
 import { MediaPost } from "../entities/mediaPost";
 import { TextPost } from "../entities/textPost";
-import { PostNotFoundException } from "../exceptions/postNotFoundException";
 import { PostRepository } from "./postRepository";
 
 export class PostRepositoryInMemory implements PostRepository {
@@ -26,7 +25,7 @@ export class PostRepositoryInMemory implements PostRepository {
 
   async save(post: TextPost | MediaPost): Promise<void> {
     const postIndex = this.post.findIndex(
-      (currentNote) => currentNote.id === post.id,
+      (currentPost) => currentPost.id === post.id,
     );
 
     if (postIndex >= 0) {
