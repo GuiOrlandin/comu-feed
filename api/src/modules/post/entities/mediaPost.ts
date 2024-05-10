@@ -19,6 +19,7 @@ export class MediaPost {
       ...props,
       created_at: props.created_at || new Date(),
       id: props.id || randomUUID(),
+      love: props.love || 0,
     };
   }
 
