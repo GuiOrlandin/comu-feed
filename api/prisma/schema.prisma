@@ -18,8 +18,7 @@ model User {
     textPosts       TextPost[]  
     mediaPosts      MediaPost[]
     comments Comment[]
-
-  
+    love Love[]
 
     @@map("users")
 }
@@ -47,7 +46,8 @@ model TextPost {
     community     Community @relation(fields: [community_id], references: [id])
     community_id  String
     content       String
-    love          Int?      @default(0)
+    love Love[]
+
     comments      Comment[]
 
     @@map("text_posts")
@@ -62,10 +62,22 @@ model MediaPost {
     community     Community @relation(fields: [community_id], references: [id])
     community_id  String
     media         String    
-    love          Int?      @default(0)
+    love Love[]
     comments      Comment[]
 
     @@map("media_posts")
+}
+
+model Love {
+    id            String    @id @default(uuid())
+    user          User      @relation(fields: [user_id], references: [id])
+    user_id       String
+    text_post          TextPost?     @relation(fields: [text_post_id], references: [id])
+    media_post          MediaPost?     @relation(fields: [media_post_id], references: [id])
+    text_post_id       String?
+    media_post_id       String?
+
+    @@map("love")
 }
 
 
@@ -74,10 +86,10 @@ model Comment {
     created_at    DateTime @default(now())
     user          User      @relation(fields: [user_id], references: [id])
     user_id       String
-    text_post          TextPost     @relation(fields: [text_post_id], references: [id])
-    media_post          MediaPost     @relation(fields: [media_post_id], references: [id])
-    text_post_id       String
-    media_post_id       String
+    text_post          TextPost?     @relation(fields: [text_post_id], references: [id])
+    media_post          MediaPost?     @relation(fields: [media_post_id], references: [id])
+    text_post_id       String?
+    media_post_id       String?
     content       String
 
 

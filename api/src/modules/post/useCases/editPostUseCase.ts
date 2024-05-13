@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { PostRepository } from "../repositories/postRepository";
 import { PostNotFoundException } from "../exceptions/postNotFoundException";

@@ -4,8 +4,6 @@ interface PostSchema {
   title: string;
   user_id: string;
   community_id: string;
-  comments?: string;
-  love?: number;
   content?: string;
   id?: string;
   created_at?: Date;
@@ -19,7 +17,6 @@ export class TextPost {
       ...props,
       created_at: props.created_at || new Date(),
       id: props.id || randomUUID(),
-      love: props.love || 0,
     };
   }
 
@@ -43,10 +40,6 @@ export class TextPost {
     this.props.user_id = user_id;
   }
 
-  get comments(): string {
-    return this.props.comments;
-  }
-
   set community_id(community_id: string) {
     this.props.community_id = community_id;
   }
@@ -55,24 +48,12 @@ export class TextPost {
     return this.props.community_id;
   }
 
-  set comments(comments: string) {
-    this.props.comments = comments;
-  }
-
   get content(): string {
     return this.props.content;
   }
 
   set content(content: string) {
     this.props.content = content;
-  }
-
-  get love(): number {
-    return this.props.love;
-  }
-
-  set love(love: number) {
-    this.props.love = love;
   }
 
   get created_at(): Date {

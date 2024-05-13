@@ -13,6 +13,52 @@ import { PostNotFoundException } from "src/modules/post/exceptions/postNotFoundE
 export class PrismaPostRepository implements PostRepository {
   constructor(private prisma: PrismaService) {}
 
+  async unLove(post: TextPost | MediaPost): Promise<void> {
+    if (post instanceof TextPost) {
+      const postRaw = PrismaPostMapper.toPrismaTextPost(post);
+
+      await this.prisma.textPost.update({
+        where: {
+          id: postRaw.id,
+        },
+        data: { ...postRaw, love: postRaw.love >= 1 ? postRaw.love - 1 : 0 },
+      });
+    }
+    if (post instanceof MediaPost) {
+      const postRaw = PrismaPostMapper.toPrismaMediaPost(post);
+
+      await this.prisma.mediaPost.update({
+        where: {
+          id: postRaw.id,
+        },
+        data: { ...postRaw, love: postRaw.love >= 1 ? postRaw.love - 1 : 0 },
+      });
+    }
+  }
+
+  async love(post: TextPost | MediaPost): Promise<void> {
+    if (post instanceof TextPost) {
+      const postRaw = PrismaPostMapper.toPrismaTextPost(post);
+
+      await this.prisma.textPost.update({
+        where: {
+          id: postRaw.id,
+        },
+        data: { ...postRaw, love: postRaw.love + 1 },
+      });
+    }
+    if (post instanceof MediaPost) {
+      const postRaw = PrismaPostMapper.toPrismaMediaPost(post);
+
+      await this.prisma.mediaPost.update({
+        where: {
+          id: postRaw.id,
+        },
+        data: { ...postRaw, love: postRaw.love + 1 },
+      });
+    }
+  }
+
   private async deleteFile(filePath: string): Promise<void> {
     const fullPath = path.join(
       __dirname,
@@ -164,17 +210,17 @@ export class PrismaPostRepository implements PostRepository {
   }
   async save(post: TextPost | MediaPost): Promise<void> {
     if (post instanceof TextPost) {
-      const noteRaw = PrismaPostMapper.toPrismaTextPost(post);
+      const postRaw = PrismaPostMapper.toPrismaTextPost(post);
 
       await this.prisma.textPost.update({
-        data: noteRaw,
+        data: postRaw,
         where: {
-          id: noteRaw.id,
+          id: postRaw.id,
         },
       });
     }
     if (post instanceof MediaPost) {
-      const noteRaw = PrismaPostMapper.toPrismaMediaPost(post);
+      const postRaw = PrismaPostMapper.toPrismaMediaPost(post);
 
       const postWithUnmodifiedMedia = await this.prisma.mediaPost.findFirst({
         where: {
@@ -185,9 +231,9 @@ export class PrismaPostRepository implements PostRepository {
       await this.deleteFile(postWithUnmodifiedMedia.media);
 
       await this.prisma.mediaPost.update({
-        data: noteRaw,
+        data: postRaw,
         where: {
-          id: noteRaw.id,
+          id: postRaw.id,
         },
       });
     }

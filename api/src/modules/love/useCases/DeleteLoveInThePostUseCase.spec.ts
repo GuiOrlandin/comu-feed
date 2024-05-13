@@ -1,34 +1,38 @@
 import { makeUser } from "src/modules/user/factories/userFactory";
-import { PostRepositoryInMemory } from "../repositories/postRepositoryInMemory";
-import { CreatePostUseCase } from "./createPostUseCase";
-import { DeletePostUseCase } from "./deletePostUseCase";
 import { CommunityRepositoryInMemory } from "src/modules/community/repositories/communityRepositoryInMemory";
 import { CreateCommunityUseCase } from "src/modules/community/useCases/createCommunityUseCase";
-import { LoveThePostUseCase } from "./loveThePostUseCase";
-import { UnLoveThePostUseCase } from "./unLoveThePostUseCase";
+import { DeleteLoveInThePostUseCase } from "./DeleteLoveInThePostUseCase";
+import { CreatePostUseCase } from "src/modules/post/useCases/createPostUseCase";
+import { PostRepositoryInMemory } from "src/modules/post/repositories/postRepositoryInMemory";
+import { LoveRepositoryInMemory } from "../repositories/loveRepositoryInMemory";
+import { CreateLoveInThePostUseCase } from "./createLoveInThePostUseCase";
 
-let deletePostUseCase: DeletePostUseCase;
 let createPostUseCase: CreatePostUseCase;
 let postRepositoryInMemory: PostRepositoryInMemory;
 let communityRepositoryInMemory: CommunityRepositoryInMemory;
 let createCommunityUseCase: CreateCommunityUseCase;
-let loveThePostUseCase: LoveThePostUseCase;
-let unloveThePostUseCase: UnLoveThePostUseCase;
+let loveRepositoryInMemory: LoveRepositoryInMemory;
+let createLoveInThePostUseCase: CreateLoveInThePostUseCase;
+let deleteLoveInThePostUseCase: DeleteLoveInThePostUseCase;
 
-describe("'UnLove' the post", () => {
+describe("Delete The the post", () => {
   beforeEach(() => {
     postRepositoryInMemory = new PostRepositoryInMemory();
-    deletePostUseCase = new DeletePostUseCase(postRepositoryInMemory);
+    loveRepositoryInMemory = new LoveRepositoryInMemory();
     communityRepositoryInMemory = new CommunityRepositoryInMemory();
     createCommunityUseCase = new CreateCommunityUseCase(
       communityRepositoryInMemory,
     );
     createPostUseCase = new CreatePostUseCase(postRepositoryInMemory);
-    loveThePostUseCase = new LoveThePostUseCase(postRepositoryInMemory);
-    unloveThePostUseCase = new UnLoveThePostUseCase(postRepositoryInMemory);
+    createLoveInThePostUseCase = new CreateLoveInThePostUseCase(
+      loveRepositoryInMemory,
+    );
+    deleteLoveInThePostUseCase = new DeleteLoveInThePostUseCase(
+      loveRepositoryInMemory,
+    );
   });
 
-  it("Should be able to 'unlove' the post", async () => {
+  it("Should be able to love the post", async () => {
     const user = makeUser({
       password_hash: "123456",
     });
@@ -47,18 +51,16 @@ describe("'UnLove' the post", () => {
       postType: "textPost",
     });
 
-    await loveThePostUseCase.execute({
+    console.log(post);
+    const love = await createLoveInThePostUseCase.execute({
       post_id: post.id,
+      user_id: user.id,
     });
 
-    await loveThePostUseCase.execute({
-      post_id: post.id,
+    await deleteLoveInThePostUseCase.execute({
+      love_id: love.id,
     });
 
-    await unloveThePostUseCase.execute({
-      post_id: post.id,
-    });
-
-    expect(post.love).toEqual(1);
+    expect(loveRepositoryInMemory.love).toEqual([]);
   });
 });
