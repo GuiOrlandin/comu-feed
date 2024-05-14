@@ -1,10 +1,10 @@
 import { HttpStatus } from "@nestjs/common";
 import { AppException } from "src/exceptions/appException";
 
-export class PostNotFoundException extends AppException {
+export class LoveNotFoundException extends AppException {
   constructor() {
     super({
-      message: "Post não encontrado",
+      message: "Love não foi encontrado!",
       status: HttpStatus.NOT_FOUND,
     });
   }

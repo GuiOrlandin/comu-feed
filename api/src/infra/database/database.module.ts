@@ -6,6 +6,8 @@ import { CommunityRepository } from "src/modules/community/repositories/communit
 import { PrismaCommunityRepository } from "./prisma/repositories/prismaCommunityRepository";
 import { PostRepository } from "src/modules/post/repositories/postRepository";
 import { PrismaPostRepository } from "./prisma/repositories/prismaPostRepository";
+import { LoveRepository } from "src/modules/love/repositories/loveRepository";
+import { PrismaLoveRepository } from "./prisma/repositories/prismaLoveRepository";
 
 @Module({
   providers: [
@@ -22,7 +24,16 @@ import { PrismaPostRepository } from "./prisma/repositories/prismaPostRepository
       provide: PostRepository,
       useClass: PrismaPostRepository,
     },
+    {
+      provide: LoveRepository,
+      useClass: PrismaLoveRepository,
+    },
   ],
-  exports: [UserRepository, CommunityRepository, PostRepository],
+  exports: [
+    UserRepository,
+    CommunityRepository,
+    PostRepository,
+    LoveRepository,
+  ],
 })
 export class DatabaseModule {}

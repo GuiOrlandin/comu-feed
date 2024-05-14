@@ -13,52 +13,6 @@ import { PostNotFoundException } from "src/modules/post/exceptions/postNotFoundE
 export class PrismaPostRepository implements PostRepository {
   constructor(private prisma: PrismaService) {}
 
-  async unLove(post: TextPost | MediaPost): Promise<void> {
-    if (post instanceof TextPost) {
-      const postRaw = PrismaPostMapper.toPrismaTextPost(post);
-
-      await this.prisma.textPost.update({
-        where: {
-          id: postRaw.id,
-        },
-        data: { ...postRaw, love: postRaw.love >= 1 ? postRaw.love - 1 : 0 },
-      });
-    }
-    if (post instanceof MediaPost) {
-      const postRaw = PrismaPostMapper.toPrismaMediaPost(post);
-
-      await this.prisma.mediaPost.update({
-        where: {
-          id: postRaw.id,
-        },
-        data: { ...postRaw, love: postRaw.love >= 1 ? postRaw.love - 1 : 0 },
-      });
-    }
-  }
-
-  async love(post: TextPost | MediaPost): Promise<void> {
-    if (post instanceof TextPost) {
-      const postRaw = PrismaPostMapper.toPrismaTextPost(post);
-
-      await this.prisma.textPost.update({
-        where: {
-          id: postRaw.id,
-        },
-        data: { ...postRaw, love: postRaw.love + 1 },
-      });
-    }
-    if (post instanceof MediaPost) {
-      const postRaw = PrismaPostMapper.toPrismaMediaPost(post);
-
-      await this.prisma.mediaPost.update({
-        where: {
-          id: postRaw.id,
-        },
-        data: { ...postRaw, love: postRaw.love + 1 },
-      });
-    }
-  }
-
   private async deleteFile(filePath: string): Promise<void> {
     const fullPath = path.join(
       __dirname,

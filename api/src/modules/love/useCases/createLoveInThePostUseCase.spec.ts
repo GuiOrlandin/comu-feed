@@ -51,10 +51,11 @@ describe("Create Love in the post", () => {
     });
 
     const love = await createLoveInThePostUseCase.execute({
-      post_id: post.id,
+      text_post_id: post.id,
       user_id: user.id,
+      postType: "textPost",
     });
 
-    expect(love.post_id).toEqual(post.id);
+    expect(love.text_post_id).toEqual(post.id);
   });
 });

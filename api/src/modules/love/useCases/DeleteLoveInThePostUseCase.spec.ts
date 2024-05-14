@@ -51,10 +51,10 @@ describe("Delete The the post", () => {
       postType: "textPost",
     });
 
-    console.log(post);
     const love = await createLoveInThePostUseCase.execute({
-      post_id: post.id,
+      text_post_id: post.id,
       user_id: user.id,
+      postType: "textPost",
     });
 
     await deleteLoveInThePostUseCase.execute({

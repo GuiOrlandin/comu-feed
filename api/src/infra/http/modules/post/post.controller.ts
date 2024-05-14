@@ -21,9 +21,6 @@ import { MediaPost } from "src/modules/post/entities/mediaPost";
 import { DeletePostUseCase } from "src/modules/post/useCases/deletePostUseCase";
 import { EditPostUseCase } from "src/modules/post/useCases/editPostUseCase";
 import { EditPostBody } from "./dtos/editPostBody";
-import { Public } from "../auth/decorators/isPublic";
-import { LoveThePostUseCase } from "src/modules/post/useCases/loveThePostUseCase";
-import { UnLoveThePostUseCase } from "src/modules/post/useCases/unLoveThePostUseCase";
 
 @Controller("post")
 export class PostController {
@@ -31,8 +28,6 @@ export class PostController {
     private createPostUseCase: CreatePostUseCase,
     private deletePostUseCase: DeletePostUseCase,
     private editPostUseCase: EditPostUseCase,
-    private loveThePost: LoveThePostUseCase,
-    private unLoveThePost: UnLoveThePostUseCase,
   ) {}
 
   @Post("textPost")
@@ -126,16 +121,6 @@ export class PostController {
         media: file.filename,
       });
     }
-  }
-
-  @Put("love/:id")
-  async love(@Param("id") post_id: string) {
-    await this.loveThePost.execute({ post_id });
-  }
-
-  @Put("unlove/:id")
-  async unLove(@Param("id") post_id: string) {
-    await this.unLoveThePost.execute({ post_id });
   }
 
   @Delete(":id")

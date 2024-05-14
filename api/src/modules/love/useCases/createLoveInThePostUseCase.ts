@@ -2,31 +2,65 @@ import { Injectable } from "@nestjs/common";
 
 import { LoveRepository } from "../repositories/loveRepository";
 import { Love } from "../entities/love";
+import { AlreadyLovedException } from "../exceptions/alreadyLovedException";
 
 interface CreateLoveInThePostUseCaseRequest {
-  post_id: string;
   user_id: string;
+  postType: string;
+  media_post_id?: string;
+  text_post_id?: string;
 }
 
 @Injectable()
 export class CreateLoveInThePostUseCase {
   constructor(private loveRepository: LoveRepository) {}
 
-  async execute({ post_id, user_id }: CreateLoveInThePostUseCaseRequest) {
-    const lovedThePost =
-      await this.loveRepository.checkUserLikedThePostByUserId(user_id);
+  async execute({
+    user_id,
+    postType,
+    media_post_id,
+    text_post_id,
+  }: CreateLoveInThePostUseCaseRequest) {
+    if (postType === "textPost") {
+      const lovedThePost =
+        await this.loveRepository.checkUserLikedThePostByUserId(
+          user_id,
+          text_post_id,
+        );
 
-    if (lovedThePost) {
-      throw new Error("Ja curtiu o post!");
+      if (lovedThePost) {
+        throw new AlreadyLovedException();
+      }
+
+      const love = new Love({
+        user_id,
+        media_post_id: null,
+        text_post_id,
+      });
+
+      await this.loveRepository.create(love);
+      return love;
     }
 
-    const love = new Love({
-      user_id,
-      post_id,
-    });
+    if (postType === "mediaPost") {
+      const lovedThePost =
+        await this.loveRepository.checkUserLikedThePostByUserId(
+          user_id,
+          media_post_id,
+        );
 
-    await this.loveRepository.create(love, user_id);
+      if (lovedThePost) {
+        throw new AlreadyLovedException();
+      }
 
-    return love;
+      const love = new Love({
+        user_id,
+        media_post_id,
+        text_post_id: null,
+      });
+
+      await this.loveRepository.create(love);
+      return love;
+    }
   }
 }

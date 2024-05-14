@@ -9,9 +9,9 @@ export class LoveRepositoryInMemory implements LoveRepository {
   }
 
   async checkUserLikedThePostByUserId(user_id: string): Promise<boolean> {
-    const love = await this.love.find((love) => love.user_id === user_id);
+    const userLoved = await this.love.find((love) => love.user_id === user_id);
 
-    if (love) {
+    if (userLoved) {
       return true;
     }
 

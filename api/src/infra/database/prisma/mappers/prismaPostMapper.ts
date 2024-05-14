@@ -11,7 +11,6 @@ export class PrismaPostMapper {
     user_id,
     created_at,
     id,
-    love,
   }: TextPost): TextPostRaw {
     return {
       community_id,
@@ -20,7 +19,6 @@ export class PrismaPostMapper {
       user_id,
       created_at,
       id,
-      love,
     };
   }
 
@@ -31,7 +29,6 @@ export class PrismaPostMapper {
     user_id,
     created_at,
     id,
-    love,
   }: MediaPost): MediaPostRaw {
     return {
       community_id,
@@ -40,43 +37,6 @@ export class PrismaPostMapper {
       user_id,
       created_at,
       id,
-      love,
     };
-  }
-
-  static toDomainTextPost({
-    community_id,
-    content,
-    title,
-    user_id,
-    created_at,
-    id,
-  }: TextPostRaw): TextPost {
-    return new TextPost({
-      community_id,
-      content,
-      title,
-      user_id,
-      created_at,
-      id,
-    });
-  }
-
-  static toDomainMediaPost({
-    community_id,
-    media,
-    title,
-    user_id,
-    created_at,
-    id,
-  }: MediaPostRaw): MediaPost {
-    return new MediaPost({
-      community_id,
-      media,
-      title,
-      user_id,
-      created_at,
-      id,
-    });
   }
 }
