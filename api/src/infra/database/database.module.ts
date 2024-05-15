@@ -8,6 +8,8 @@ import { PostRepository } from "src/modules/post/repositories/postRepository";
 import { PrismaPostRepository } from "./prisma/repositories/prismaPostRepository";
 import { LoveRepository } from "src/modules/love/repositories/loveRepository";
 import { PrismaLoveRepository } from "./prisma/repositories/prismaLoveRepository";
+import { CommentRepository } from "src/modules/comments/repositories/commentRepository";
+import { PrismaCommentRepository } from "./prisma/repositories/prismaCommentRepository";
 
 @Module({
   providers: [
@@ -28,12 +30,18 @@ import { PrismaLoveRepository } from "./prisma/repositories/prismaLoveRepository
       provide: LoveRepository,
       useClass: PrismaLoveRepository,
     },
+
+    {
+      provide: CommentRepository,
+      useClass: PrismaCommentRepository,
+    },
   ],
   exports: [
     UserRepository,
     CommunityRepository,
     PostRepository,
     LoveRepository,
+    CommentRepository,
   ],
 })
 export class DatabaseModule {}

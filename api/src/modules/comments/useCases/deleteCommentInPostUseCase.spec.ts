@@ -5,6 +5,7 @@ import { CreatePostUseCase } from "src/modules/post/useCases/createPostUseCase";
 import { makeUser } from "src/modules/user/factories/userFactory";
 import { CreateCommentInThePostUseCase } from "./createCommentUseCase";
 import { CommentRepositoryInMemory } from "../repositories/commentRepositoryInMemory";
+import { DeleteCommentInThePostUseCase } from "./deleteCommentInPostUseCase";
 
 let createPostUseCase: CreatePostUseCase;
 let postRepositoryInMemory: PostRepositoryInMemory;
@@ -12,8 +13,9 @@ let communityRepositoryInMemory: CommunityRepositoryInMemory;
 let commentRepositoryInMemory: CommentRepositoryInMemory;
 let createCommunityUseCase: CreateCommunityUseCase;
 let createCommentInThePostUseCase: CreateCommentInThePostUseCase;
+let deleteCommentInThePostUseCase: DeleteCommentInThePostUseCase;
 
-describe("Create comment in the post", () => {
+describe("Delete comment in the post", () => {
   beforeEach(() => {
     postRepositoryInMemory = new PostRepositoryInMemory();
     communityRepositoryInMemory = new CommunityRepositoryInMemory();
@@ -23,6 +25,9 @@ describe("Create comment in the post", () => {
     );
     createPostUseCase = new CreatePostUseCase(postRepositoryInMemory);
     createCommentInThePostUseCase = new CreateCommentInThePostUseCase(
+      commentRepositoryInMemory,
+    );
+    deleteCommentInThePostUseCase = new DeleteCommentInThePostUseCase(
       commentRepositoryInMemory,
     );
   });
@@ -53,6 +58,8 @@ describe("Create comment in the post", () => {
       content: "Muito bom post!",
     });
 
-    expect(comment.media_post_id).toEqual(post.id);
+    await deleteCommentInThePostUseCase.execute({ comment_id: comment.id });
+
+    expect(commentRepositoryInMemory.comments).toEqual([]);
   });
 });

@@ -7,6 +7,7 @@ import { JwtAuthGuard } from "./infra/http/modules/auth/guards/jwt-auth.guard";
 import { CommunityModule } from "./infra/http/modules/community/community.module";
 import { PostModule } from "./infra/http/modules/post/post.module";
 import { LoveModule } from "./infra/http/modules/love/love.module";
+import { CommentModule } from "./infra/http/modules/comment/comment.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LoveModule } from "./infra/http/modules/love/love.module";
     CommunityModule,
     PostModule,
     LoveModule,
+    CommentModule,
   ],
   controllers: [],
   providers: [
