@@ -62,5 +62,6 @@ export const ButtonOnBarContainer = styled.button`
 
   &:hover {
     background: #cf6161;
+    cursor: pointer;
   }
 `;

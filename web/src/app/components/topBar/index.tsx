@@ -9,6 +9,8 @@ import {
   TwoOptionsRedirectOnBarContainerInOthersPages,
 } from "./styles";
 import { useRouter } from "next/navigation";
+import CreatePostModal from "./components/createPostModal";
+import * as Dialog from "@radix-ui/react-dialog";
 
 interface TopBarProps {
   page: string;
@@ -32,7 +34,12 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInHome>
           {isLoged ? (
             <ButtonsOnBarContainer>
-              <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                </Dialog.Trigger>
+                <CreatePostModal />
+              </Dialog.Root>
               <ButtonOnBarContainer>Sair</ButtonOnBarContainer>
             </ButtonsOnBarContainer>
           ) : (
