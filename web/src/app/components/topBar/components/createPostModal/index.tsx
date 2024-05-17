@@ -2,16 +2,42 @@ import * as Dialog from "@radix-ui/react-dialog";
 import {
   Close,
   Content,
-  CreatePostalButton,
   CreatePostalModalContainer,
   MediaPost,
+  MediaPostContainer,
   OptionsOfPostContainer,
   Overlay,
+  SendPostButton,
   TextPost,
   TextPostContainer,
+  UploadMediaContainer,
+  UploadMediaContainerOnHover,
 } from "./styles";
 
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { IoCloudUploadOutline } from "react-icons/io5";
+
 export default function CreatePostModal() {
+  const [postType, setPostType] = useState("textPost");
+  const [media, setMedia] = useState<File[]>();
+
+  function onDrop(media: File[]) {
+    setMedia(media);
+  }
+
+  const dropzone = useDropzone({
+    onDrop,
+    accept: {
+      "image/*": [],
+      "video/*": [],
+    },
+  });
+
+  function handleSetPostType(postType: string) {
+    return setPostType(postType);
+  }
+
   return (
     <Dialog.Portal>
       <Overlay />
@@ -19,13 +45,50 @@ export default function CreatePostModal() {
         <CreatePostalModalContainer>
           <Close>X</Close>
           <OptionsOfPostContainer>
-            <TextPost>Texto</TextPost>
-            <MediaPost>Imagem & Video</MediaPost>
+            <TextPost
+              variant={postType}
+              onClick={() => handleSetPostType("textPost")}
+            >
+              Texto
+            </TextPost>
+            <MediaPost
+              variant={postType}
+              onClick={() => handleSetPostType("mediaPost")}
+            >
+              Imagem & Video
+            </MediaPost>
           </OptionsOfPostContainer>
-          <TextPostContainer>
-            <input type="text" placeholder="Title" />
-            <textarea name="" id=""></textarea>
-          </TextPostContainer>
+
+          {postType === "textPost" ? (
+            <TextPostContainer>
+              <input type="text" placeholder="Titulo" />
+              <textarea name="" id="" placeholder="Conteudo do post"></textarea>
+              <SendPostButton>Enviar</SendPostButton>
+            </TextPostContainer>
+          ) : (
+            <MediaPostContainer>
+              <input type="text" placeholder="Titulo" />
+
+              {dropzone.isDragActive ? (
+                <UploadMediaContainerOnHover {...dropzone.getRootProps()}>
+                  <label>
+                    <IoCloudUploadOutline height={24} />
+                    <p>Arraste e solte o arquivo</p>
+                  </label>
+                  <input type="" {...dropzone.getInputProps()} />
+                </UploadMediaContainerOnHover>
+              ) : (
+                <UploadMediaContainer {...dropzone.getRootProps()}>
+                  <label>
+                    <IoCloudUploadOutline height={24} />
+                    <p>Arraste e solte o arquivo</p>
+                  </label>
+                  <input type="" {...dropzone.getInputProps()} />
+                </UploadMediaContainer>
+              )}
+              <SendPostButton>Enviar</SendPostButton>
+            </MediaPostContainer>
+          )}
         </CreatePostalModalContainer>
       </Content>
     </Dialog.Portal>

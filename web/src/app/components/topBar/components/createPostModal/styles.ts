@@ -3,6 +3,10 @@
 import styled from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
 
+interface PostType {
+  variant: string;
+}
+
 export const CreatePostalModalContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -48,14 +52,16 @@ export const Close = styled(Dialog.Close)`
   margin-left: 30rem;
 `;
 
-export const TextPost = styled.button`
+export const TextPost = styled.button<PostType>`
   display: flex;
   margin-left: 1rem;
   font-size: 1.2rem;
   width: 2.9rem;
+  color: #2f1b7e;
   height: 1.6rem;
   border: none;
-  border-bottom: 2px solid #160548;
+  border-bottom: ${({ variant }) =>
+    variant === "textPost" ? "2px solid #160548" : ""};
 `;
 export const TextPostContainer = styled.div`
   display: flex;
@@ -73,6 +79,7 @@ export const TextPostContainer = styled.div`
   textarea {
     margin-top: 1rem;
     resize: vertical;
+    min-height: 10rem;
     border-radius: 5px;
     border: 1px solid #160548;
     padding: 1rem;
@@ -84,12 +91,93 @@ export const OptionsOfPostContainer = styled.div`
   display: flex;
 `;
 
-export const MediaPost = styled.button`
+export const MediaPost = styled.button<PostType>`
   display: flex;
   margin-left: 1rem;
   font-size: 1.2rem;
   width: 9rem;
+  color: #2f1b7e;
   height: 1.6rem;
   border: none;
-  border-bottom: 2px solid #160548;
+  border-bottom: ${({ variant }) =>
+    variant === "mediaPost" ? "2px solid #160548" : ""};
+`;
+
+export const SendPostButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #cb4444;
+  color: #f5f5f5;
+  padding: 1rem;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  width: 5rem;
+  height: 1.6rem;
+  border: none;
+  border-radius: 5px;
+  margin: 1rem 0 0 26rem;
+
+  &:hover {
+    background: #cf6161;
+  }
+`;
+
+export const MediaPostContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  input {
+    margin-top: 1rem;
+    font-size: 1rem;
+    height: 2.5rem;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid #160548;
+  }
+`;
+
+export const UploadMediaContainerOnHover = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #0d3b66;
+  border-radius: 10px;
+  background: #d3e2e5;
+  text-align: center;
+  height: 9.5rem;
+
+  p {
+    font-size: 1.125rem;
+  }
+
+  input {
+    display: none;
+  }
+`;
+
+export const UploadMediaContainer = styled.div`
+  display: flex;
+  margin-top: 1rem;
+  min-height: 10rem;
+  justify-content: center;
+  align-items: center;
+  color: #2f1b7e;
+  border-radius: 10px;
+  background: #f5f5f5;
+  text-align: center;
+  height: 9.5rem;
+
+  &:hover {
+    background: #c3b9de;
+    cursor: pointer;
+  }
+
+  p {
+    font-size: 1.125rem;
+  }
+
+  input {
+    display: none;
+  }
 `;
