@@ -8,3 +8,11 @@ export const HomeContainer = styled.div`
   height: 100vh;
   background: linear-gradient(to bottom, #160548 50%, #f0edf6 50%);
 `;
+
+export const CardsOfPostContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 22%;
+`;

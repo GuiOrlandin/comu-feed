@@ -9,7 +9,7 @@ import {
   TwoOptionsRedirectOnBarContainerInOthersPages,
 } from "./styles";
 import { useRouter } from "next/navigation";
-import CreatePostModal from "./components/createPostModal";
+import CreatePostModal from "../createPostModal";
 import * as Dialog from "@radix-ui/react-dialog";
 
 interface TopBarProps {
