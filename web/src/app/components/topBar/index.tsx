@@ -72,8 +72,8 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
             <Link href="home">Home</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           <ButtonsOnBarContainer>
-            <ButtonOnBarContainer onClick={() => handleRedirect("login")}>
-              Entrar
+            <ButtonOnBarContainer onClick={() => handleRedirect("register")}>
+              Cadastrar
             </ButtonOnBarContainer>
           </ButtonsOnBarContainer>
         </>
