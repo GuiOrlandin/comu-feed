@@ -10,7 +10,7 @@ export class UserController {
 
   @Post()
   @Public()
-  async createPost(@Body() body: CreateUserBody) {
+  async createUser(@Body() body: CreateUserBody) {
     const { email, name, password_hash, created_at, id } = body;
     const user = await this.createUserUseCase.execute({
       email,

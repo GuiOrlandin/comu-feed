@@ -14,5 +14,5 @@ export const CardsOfPostContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 2rem;
-  margin-top: 22%;
+  margin-top: 15%;
 `;

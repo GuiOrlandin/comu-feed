@@ -1,3 +1,5 @@
+"use client";
+
 import TopBar from "../components/topBar";
 import {
   EmailInputContainer,
@@ -11,8 +13,9 @@ import {
 } from "./styles";
 
 import { FcGoogle } from "react-icons/fc";
+import { signIn } from "next-auth/react";
 
-export default function Login() {
+export default async function Login() {
   return (
     <LoginPageContainer>
       <TopBar page="login" isLoged={false} />
@@ -29,7 +32,9 @@ export default function Login() {
           <LoginButtonContainer>
             <LoginButton>Entrar</LoginButton>
           </LoginButtonContainer>
-          <LoginWithGoogleButton>
+          <LoginWithGoogleButton
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+          >
             <FcGoogle />
             Entrar com Google
           </LoginWithGoogleButton>

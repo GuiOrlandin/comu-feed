@@ -6,7 +6,7 @@ import { hash } from "bcrypt";
 interface CreatedUserRequest {
   email: string;
   name: string;
-  password_hash: string;
+  password_hash?: string | null;
 }
 
 @Injectable()

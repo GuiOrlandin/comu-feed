@@ -11,6 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import CreatePostModal from "../createPostModal";
 import * as Dialog from "@radix-ui/react-dialog";
+import { signOut } from "next-auth/react";
 
 interface TopBarProps {
   page: string;
@@ -40,7 +41,9 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
                 </Dialog.Trigger>
                 <CreatePostModal />
               </Dialog.Root>
-              <ButtonOnBarContainer>Sair</ButtonOnBarContainer>
+              <ButtonOnBarContainer onClick={() => signOut()}>
+                Sair
+              </ButtonOnBarContainer>
             </ButtonsOnBarContainer>
           ) : (
             <ButtonsOnBarContainer>
@@ -88,7 +91,9 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           {isLoged ? (
             <ButtonsOnBarContainer>
               <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-              <ButtonOnBarContainer>Sair</ButtonOnBarContainer>
+              <ButtonOnBarContainer onClick={() => signOut()}>
+                Sair
+              </ButtonOnBarContainer>
             </ButtonsOnBarContainer>
           ) : (
             <ButtonsOnBarContainer>
@@ -111,7 +116,9 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           {isLoged ? (
             <ButtonsOnBarContainer>
               <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-              <ButtonOnBarContainer>Sair</ButtonOnBarContainer>
+              <ButtonOnBarContainer onClick={() => signOut()}>
+                Sair
+              </ButtonOnBarContainer>
             </ButtonsOnBarContainer>
           ) : (
             <ButtonsOnBarContainer>

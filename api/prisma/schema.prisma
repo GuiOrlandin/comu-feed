@@ -12,7 +12,7 @@ model User {
     created_at    DateTime @default(now())
     email         String   @unique
     name          String
-    password_hash String
+    password_hash String?
     Community_Founder Community[]
     Community_Member  Community[] @relation("CommunityMembers")
     textPosts       TextPost[]  
