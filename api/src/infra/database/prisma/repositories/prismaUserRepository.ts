@@ -3,6 +3,7 @@ import { User } from "src/modules/user/entities/User";
 import { UserRepository } from "src/modules/user/repositories/userRepository";
 import { PrismaService } from "../prisma.service";
 import { PrismaUserMapper } from "../mappers/prismaUserMapper";
+import { EmailAlreadyInUseException } from "src/modules/user/exceptions/emailAlreadyInUse";
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -30,7 +31,7 @@ export class PrismaUserRepository implements UserRepository {
     });
 
     if (existingUser) {
-      throw new Error("E-mail already in use");
+      throw new EmailAlreadyInUseException();
     }
 
     const userRaw = PrismaUserMapper.toPrisma(user);

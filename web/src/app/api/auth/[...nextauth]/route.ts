@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import type { NextAuthOptions } from "next-auth";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { randomUUID } from "crypto";
 
 export const authOptions: NextAuthOptions = {
@@ -27,6 +27,13 @@ export const authOptions: NextAuthOptions = {
           password_hash: randomUUID(),
         });
       } catch (error) {
+        if (
+          error instanceof AxiosError &&
+          error.response?.data.message === "Email ja em uso"
+        ) {
+          return true;
+        }
+
         console.error("Erro ao salvar usuário no banco de dados:", error);
         return false;
       }
