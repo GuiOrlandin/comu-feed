@@ -30,7 +30,6 @@ export class AuthController {
     return { access_token };
   }
 
-  @Get("test")
   @UseGuards(JwtAuthGuard)
   async test(@Request() request: AuthenticatedRequestModel) {
     return request.user;

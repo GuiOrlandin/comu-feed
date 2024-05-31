@@ -5,7 +5,7 @@ export class EmailAlreadyInUseException extends AppException {
   constructor() {
     super({
       message: "Email ja em uso",
-      status: HttpStatus.BAD_REQUEST,
+      status: HttpStatus.UNAUTHORIZED,
     });
   }
 }

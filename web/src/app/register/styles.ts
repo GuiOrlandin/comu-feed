@@ -63,6 +63,11 @@ export const RegisterButtonContainer = styled.div`
   border-bottom: 1px solid #f0edf6;
 `;
 export const RegisterButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
   width: 18.25rem;
   height: 3.75rem;
   background: #cb4444;
@@ -71,6 +76,12 @@ export const RegisterButton = styled.button`
   border: none;
   border-radius: 8px;
   margin: 2rem 7rem;
+`;
+export const ErrorContainer = styled.div`
+  display: flex;
+  position: absolute;
+  bottom: 12rem;
+  color: #cb4444;
 `;
 
 export const RegisterWithGoogleButton = styled.button`

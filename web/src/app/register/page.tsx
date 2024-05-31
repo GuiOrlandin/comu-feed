@@ -2,13 +2,15 @@
 
 import TopBar from "../components/topBar";
 
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import {
   EmailInputContainer,
+  ErrorContainer,
   NameInputContainer,
   PasswordInputContainer,
   RegisterButton,
@@ -23,8 +25,10 @@ import {
   useUserRegisterMutate,
 } from "@/hooks/createUserHook";
 
-export default async function Register() {
-  const { mutate } = useUserRegisterMutate();
+export default function Register() {
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
+  const { mutate, isSuccess, status, error, isError } = useUserRegisterMutate();
   const [userRegisterDetails, setUserRegisterDetails] =
     useState<UserRegisterDetails>({
       name: "",
@@ -33,18 +37,40 @@ export default async function Register() {
     });
 
   function handleChangeUserDetailsForRegister(
-    value: ChangeEvent<HTMLInputElement>,
+    event: ChangeEvent<HTMLInputElement>,
     inputTitle: string
   ) {
-    setUserRegisterDetails({
-      ...userRegisterDetails!,
+    const { value } = event.target;
+    setUserRegisterDetails((prevDetails) => ({
+      ...prevDetails!,
       [inputTitle]: value,
-    });
+    }));
   }
 
   function handleRegister(userRegisterDetails: UserRegisterDetails) {
+    if (userRegisterDetails.name === "") {
+      setErrorMessage("insira o Nome!");
+    }
+    if (userRegisterDetails.email === "") {
+      setErrorMessage("insira o Email!");
+    }
+    if (userRegisterDetails.password_hash === "") {
+      setErrorMessage("insira a Senha!");
+    }
+
     mutate(userRegisterDetails);
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(isSuccess, "oi");
+      router.push("/login");
+    }
+
+    if (error?.message === "Request failed with status code 401") {
+      setErrorMessage("Email ja em uso!");
+    }
+  }, [error, isSuccess]);
 
   return (
     <RegisterPageContainer>
@@ -55,13 +81,14 @@ export default async function Register() {
             <span>E-mail</span>
             <input
               type="text"
-              onChange={(value) =>
-                handleChangeUserDetailsForRegister(value, "email")
+              onChange={(event) =>
+                handleChangeUserDetailsForRegister(event, "email")
               }
             />
+            {errorMessage && <ErrorContainer>{errorMessage}</ErrorContainer>}
           </EmailInputContainer>
           <NameInputContainer>
-            <span>Name</span>
+            <span>Nome</span>
             <input
               type="text"
               onChange={(value) =>
@@ -78,6 +105,7 @@ export default async function Register() {
               }
             />
           </PasswordInputContainer>
+          {errorMessage && <ErrorContainer>{errorMessage}</ErrorContainer>}
           <RegisterButtonContainer>
             <RegisterButton onClick={() => handleRegister(userRegisterDetails)}>
               Cadastrar
