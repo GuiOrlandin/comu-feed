@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import CreatePostModal from "../createPostModal";
 import * as Dialog from "@radix-ui/react-dialog";
 import { signOut } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { tokenStore } from "@/store/tokenStore";
 
 interface TopBarProps {
   page: string;
@@ -20,10 +22,19 @@ interface TopBarProps {
 
 export default function TopBar({ page, isLoged }: TopBarProps) {
   const router = useRouter();
+  const [userAuthenticated, setUserAuthenticated] = useState(isLoged);
+  const storeToken = localStorage.getItem("storeToken");
+  const token = tokenStore((state) => state.token);
 
   function handleRedirect(page: string) {
     router.push(`/${page}`);
   }
+
+  useEffect(() => {
+    if (storeToken || token) {
+      setUserAuthenticated(true);
+    }
+  }, [storeToken, token]);
 
   return (
     <TopBarContainer>
@@ -33,7 +44,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
             <Link href="/news">Novidades</Link>
             <Link href="/mostLoved">Mais Amados</Link>
           </TwoOptionsRedirectOnBarContainerInHome>
-          {isLoged ? (
+          {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <Dialog.Root>
                 <Dialog.Trigger asChild>
@@ -88,7 +99,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
             <Link href="home">Home</Link>
             <Link href="news">Novidades</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
-          {isLoged ? (
+          {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
               <ButtonOnBarContainer onClick={() => signOut()}>
@@ -113,7 +124,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
             <Link href="home">Home</Link>
             <Link href="mostLoved">Mais amados</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
-          {isLoged ? (
+          {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
               <ButtonOnBarContainer onClick={() => signOut()}>

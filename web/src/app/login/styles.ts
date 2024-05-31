@@ -56,8 +56,18 @@ export const PasswordInputContainer = styled(EmailInputContainer)`
   margin-top: 2rem;
 `;
 export const LoginButtonContainer = styled.div`
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
   margin-top: 0.6rem;
   border-bottom: 1px solid #f0edf6;
+`;
+export const ErrorContainer = styled.div`
+  display: flex;
+  position: absolute;
+  bottom: 20rem;
+  color: #cb4444;
 `;
 export const LoginButton = styled.button`
   width: 18.25rem;

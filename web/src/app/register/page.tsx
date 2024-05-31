@@ -28,7 +28,7 @@ import {
 export default function Register() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
-  const { mutate, isSuccess, status, error, isError } = useUserRegisterMutate();
+  const { mutate, isSuccess, error } = useUserRegisterMutate();
   const [userRegisterDetails, setUserRegisterDetails] =
     useState<UserRegisterDetails>({
       name: "",
@@ -49,13 +49,13 @@ export default function Register() {
 
   function handleRegister(userRegisterDetails: UserRegisterDetails) {
     if (userRegisterDetails.name === "") {
-      setErrorMessage("insira o Nome!");
+      return setErrorMessage("insira o Nome!");
     }
     if (userRegisterDetails.email === "") {
-      setErrorMessage("insira o Email!");
+      return setErrorMessage("insira o Email!");
     }
     if (userRegisterDetails.password_hash === "") {
-      setErrorMessage("insira a Senha!");
+      return setErrorMessage("insira a Senha!");
     }
 
     mutate(userRegisterDetails);
@@ -63,7 +63,6 @@ export default function Register() {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(isSuccess, "oi");
       router.push("/login");
     }
 
