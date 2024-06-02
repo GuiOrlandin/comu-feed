@@ -11,6 +11,7 @@ import {
   LoginPageContainer,
   LoginWithGoogleButton,
   PasswordInputContainer,
+  ShowPasswordContentButton,
 } from "./styles";
 
 import { FcGoogle } from "react-icons/fc";
@@ -20,6 +21,9 @@ import {
   UserAuthenticationDetails,
   useAuthenticateMutate,
 } from "@/hooks/userAuthenticateHook";
+
+import { FiEyeOff } from "react-icons/fi";
+import { FaRegEye } from "react-icons/fa6";
 
 import { useRouter } from "next/navigation";
 import { tokenStore } from "@/store/tokenStore";
@@ -33,6 +37,8 @@ export default function Login() {
     });
   const [errorMessage, setErrorMessage] = useState("");
   const saveToken = tokenStore((state) => state.setToken);
+  const [inputType, setInputType] = useState("password");
+  const [showPassword, setShowPassword] = useState(true);
 
   const { mutate, isSuccess, error, data } = useAuthenticateMutate();
 
@@ -46,11 +52,21 @@ export default function Login() {
       [inputTitle]: value,
     }));
   }
+  function handleChangeShowPassword() {
+    setShowPassword(!showPassword);
+    setInputType((prevInputType) =>
+      prevInputType === "password" ? "text" : "password"
+    );
+  }
 
   useEffect(() => {
     if (isSuccess) {
       saveToken(data);
-      localStorage.setItem("storeToken", data);
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("storeToken", data);
+      }
+
       router.push("/");
     }
 
@@ -89,11 +105,20 @@ export default function Login() {
           <PasswordInputContainer>
             <span>Senha</span>
             <input
-              type="text"
+              type={inputType}
               onChange={(event) =>
                 handleChangeUserDetailsForRegister(event, "password_hash")
               }
             />
+            <ShowPasswordContentButton
+              onClick={() => handleChangeShowPassword()}
+            >
+              {showPassword ? (
+                <FiEyeOff size={24} color="#2f1b7e" />
+              ) : (
+                <FaRegEye size={24} color="#2f1b7e" />
+              )}
+            </ShowPasswordContentButton>
           </PasswordInputContainer>
           {errorMessage && <ErrorContainer>{errorMessage}</ErrorContainer>}
           <LoginButtonContainer>

@@ -17,24 +17,38 @@ import { tokenStore } from "@/store/tokenStore";
 
 interface TopBarProps {
   page: string;
-  isLoged: boolean;
+  isLoged?: boolean;
 }
 
 export default function TopBar({ page, isLoged }: TopBarProps) {
   const router = useRouter();
   const [userAuthenticated, setUserAuthenticated] = useState(isLoged);
-  const storeToken = localStorage.getItem("storeToken");
   const token = tokenStore((state) => state.token);
+  const setToken = tokenStore((state) => state.setToken);
 
   function handleRedirect(page: string) {
     router.push(`/${page}`);
   }
+  function handleLogout() {
+    signOut();
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("storeToken");
+    }
+  }
 
   useEffect(() => {
-    if (storeToken || token) {
-      setUserAuthenticated(true);
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("storeToken");
+      setToken(token!);
+      setUserAuthenticated(!!token || !!token);
     }
-  }, [storeToken, token]);
+
+    if (token) {
+      setUserAuthenticated(true);
+    } else {
+      setUserAuthenticated(false);
+    }
+  }, [token]);
 
   return (
     <TopBarContainer>
@@ -52,7 +66,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
                 </Dialog.Trigger>
                 <CreatePostModal />
               </Dialog.Root>
-              <ButtonOnBarContainer onClick={() => signOut()}>
+              <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
             </ButtonsOnBarContainer>
@@ -102,7 +116,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-              <ButtonOnBarContainer onClick={() => signOut()}>
+              <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
             </ButtonsOnBarContainer>
@@ -127,7 +141,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-              <ButtonOnBarContainer onClick={() => signOut()}>
+              <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
             </ButtonsOnBarContainer>
