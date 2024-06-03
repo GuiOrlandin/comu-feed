@@ -9,6 +9,7 @@ export class PrismaCommunityMapper {
     key_access,
     name,
     password,
+    community_image,
   }: Community): CommunityRaw {
     return {
       key_access,
@@ -17,6 +18,7 @@ export class PrismaCommunityMapper {
       id,
       name,
       password,
+      community_image,
     };
   }
 

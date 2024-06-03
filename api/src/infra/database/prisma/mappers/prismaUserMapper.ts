@@ -8,6 +8,7 @@ export class PrismaUserMapper {
     password_hash,
     created_at,
     id,
+    avatar,
   }: User): UserRaw {
     return {
       email,
@@ -15,6 +16,7 @@ export class PrismaUserMapper {
       password_hash,
       created_at,
       id,
+      avatar,
     };
   }
 

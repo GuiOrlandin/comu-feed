@@ -6,10 +6,16 @@ import {
   Request,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from "@nestjs/common";
+import { diskStorage } from "multer";
+import { extname } from "path";
 import { CreateCommunityUseCase } from "src/modules/community/useCases/createCommunityUseCase";
 import { CreateCommunityBody } from "./dtos/createCommunityBody";
 import { CommunityViewModel } from "./viewModel/communityViewModel";
+import { FileInterceptor } from "@nestjs/platform-express";
+
 import { JoinTheCommunityUseCase } from "src/modules/community/useCases/joinTheCommunityUseCase";
 import { JoinTheCommunityBody } from "./dtos/joinTheCommunityBody";
 import { AuthRequestModel } from "../auth/models/authRequestModel";
@@ -24,7 +30,22 @@ export class CommunityController {
   ) {}
 
   @Post()
+  @UseInterceptors(
+    FileInterceptor("file", {
+      storage: diskStorage({
+        destination: "./uploads/communityImage",
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + "-" + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${uniqueSuffix}${ext}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
   async createCommunity(
+    @UploadedFile() file: Express.Multer.File,
     @Request() request: AuthRequestModel,
     @Body() body: CreateCommunityBody,
   ) {
@@ -34,6 +55,7 @@ export class CommunityController {
       founder_id: request.user.id,
       name,
       password,
+      community_image: file.filename,
     });
 
     return CommunityViewModel.toHttp(user);

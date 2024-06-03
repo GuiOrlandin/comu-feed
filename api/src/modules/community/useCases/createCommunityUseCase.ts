@@ -7,6 +7,7 @@ interface CreatedCommunityRequest {
   name: string;
   password?: string;
   key_access: boolean;
+  community_image?: string | null;
 }
 
 @Injectable()
@@ -18,12 +19,14 @@ export class CreateCommunityUseCase {
     name,
     key_access,
     password,
+    community_image,
   }: CreatedCommunityRequest) {
     const community = new Community({
       founder_id,
       key_access,
       name,
       password,
+      community_image,
     });
 
     await this.communityRepository.create(community);

@@ -8,6 +8,7 @@ interface CommunitySchema {
   key_access: boolean;
   created_at?: Date;
   password?: string;
+  community_image?: string | null;
   User_Members?: User[];
 }
 
@@ -20,6 +21,7 @@ export class Community {
       created_at: props.created_at || new Date(),
       id: props.id || randomUUID(),
       User_Members: props.User_Members || [],
+      community_image: props.community_image || null,
     };
   }
 
@@ -64,6 +66,13 @@ export class Community {
 
   set User_Members(User_Member: User) {
     this.props.User_Members.push(User_Member);
+  }
+  get community_image(): string {
+    return this.props.community_image;
+  }
+
+  set community_image(imageUrl: string) {
+    this.props.community_image = imageUrl;
   }
 
   get created_at(): Date {

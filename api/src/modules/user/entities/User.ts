@@ -6,6 +6,7 @@ interface UserSchema {
   name: string;
   id?: string;
   created_at?: Date;
+  avatar?: string | null;
 }
 
 export class User {
@@ -16,6 +17,7 @@ export class User {
       ...props,
       created_at: props.created_at || new Date(),
       id: props.id || randomUUID(),
+      avatar: props.avatar || null,
     };
   }
 
@@ -45,6 +47,13 @@ export class User {
 
   set name(name: string) {
     this.props.name = name;
+  }
+  get avatar(): string {
+    return this.props.avatar;
+  }
+
+  set avatar(avatar: string) {
+    this.props.avatar = avatar;
   }
 
   get created_at(): Date {
