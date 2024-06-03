@@ -3,6 +3,7 @@ import { User } from "src/modules/user/entities/User";
 
 interface CommunitySchema {
   name: string;
+  description: string;
   id?: string;
   founder_id: string;
   key_access: boolean;
@@ -73,6 +74,13 @@ export class Community {
 
   set community_image(imageUrl: string) {
     this.props.community_image = imageUrl;
+  }
+  get description(): string {
+    return this.props.description;
+  }
+
+  set description(description: string) {
+    this.props.description = description;
   }
 
   get created_at(): Date {

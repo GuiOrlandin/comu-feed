@@ -22,6 +22,7 @@ describe("Create User", () => {
       founder_id: user.id,
       key_access: false,
       name: "GuiiosCommunity",
+      description: "test",
     });
 
     expect(communityRepositoryInMemory.communities).toEqual([community]);

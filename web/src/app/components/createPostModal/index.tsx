@@ -1,15 +1,21 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   Close,
+  CommunityNameAndDescription,
   Content,
+  CreateCommunity,
+  CreateCommunityButton,
+  CreateCommunityContainer,
   CreatePostalModalContainer,
   MediaPost,
   MediaPostContainer,
   OptionsOfPostContainer,
   Overlay,
+  PasswordInput,
   SendPostButton,
   TextPost,
   TextPostContainer,
+  UploadCommunityImage,
   UploadMediaContainer,
   UploadMediaContainerOnHover,
 } from "./styles";
@@ -19,7 +25,7 @@ import { useDropzone } from "react-dropzone";
 import { IoCloudUploadOutline } from "react-icons/io5";
 
 export default function CreatePostModal() {
-  const [postType, setPostType] = useState("textPost");
+  const [tabType, setTabType] = useState("textPost");
   const [media, setMedia] = useState<File[]>();
 
   function onDrop(media: File[]) {
@@ -34,8 +40,8 @@ export default function CreatePostModal() {
     },
   });
 
-  function handleSetPostType(postType: string) {
-    return setPostType(postType);
+  function handleSetTapType(postType: string) {
+    return setTabType(postType);
   }
 
   return (
@@ -46,26 +52,33 @@ export default function CreatePostModal() {
           <Close>X</Close>
           <OptionsOfPostContainer>
             <TextPost
-              variant={postType}
-              onClick={() => handleSetPostType("textPost")}
+              variant={tabType}
+              onClick={() => handleSetTapType("textPost")}
             >
               Texto
             </TextPost>
             <MediaPost
-              variant={postType}
-              onClick={() => handleSetPostType("mediaPost")}
+              variant={tabType}
+              onClick={() => handleSetTapType("mediaPost")}
             >
               Imagem & Video
             </MediaPost>
+            <CreateCommunity
+              variant={tabType}
+              onClick={() => handleSetTapType("createCommunity")}
+            >
+              Comunidade
+            </CreateCommunity>
           </OptionsOfPostContainer>
 
-          {postType === "textPost" ? (
+          {tabType === "textPost" && (
             <TextPostContainer>
               <input type="text" placeholder="Titulo" />
               <textarea name="" id="" placeholder="Conteudo do post"></textarea>
               <SendPostButton>Enviar</SendPostButton>
             </TextPostContainer>
-          ) : (
+          )}
+          {tabType === "mediaPost" && (
             <MediaPostContainer>
               <input type="text" placeholder="Titulo" />
 
@@ -88,6 +101,32 @@ export default function CreatePostModal() {
               )}
               <SendPostButton>Enviar</SendPostButton>
             </MediaPostContainer>
+          )}
+          {tabType === "createCommunity" && (
+            <>
+              <CreateCommunityContainer>
+                <UploadCommunityImage {...dropzone.getRootProps()}>
+                  <label>
+                    <IoCloudUploadOutline height={24} />
+                    <p>Foto</p>
+                  </label>
+                  <input type="" {...dropzone.getInputProps()} />
+                </UploadCommunityImage>
+                <CommunityNameAndDescription>
+                  <input type="text" placeholder="Nome da comunidade*" />
+                  <PasswordInput
+                    type="password"
+                    placeholder="Senha da comunidade (opcional)"
+                  />
+                  <textarea
+                    name=""
+                    id=""
+                    placeholder="Descrição da comunidade*"
+                  ></textarea>
+                </CommunityNameAndDescription>
+              </CreateCommunityContainer>
+              <CreateCommunityButton>Criar</CreateCommunityButton>
+            </>
           )}
         </CreatePostalModalContainer>
       </Content>

@@ -5,6 +5,7 @@ import { Community } from "../entities/community";
 interface CreatedCommunityRequest {
   founder_id: string;
   name: string;
+  description: string;
   password?: string;
   key_access: boolean;
   community_image?: string | null;
@@ -20,6 +21,7 @@ export class CreateCommunityUseCase {
     key_access,
     password,
     community_image,
+    description,
   }: CreatedCommunityRequest) {
     const community = new Community({
       founder_id,
@@ -27,6 +29,7 @@ export class CreateCommunityUseCase {
       name,
       password,
       community_image,
+      description,
     });
 
     await this.communityRepository.create(community);

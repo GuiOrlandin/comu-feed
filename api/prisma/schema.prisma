@@ -28,6 +28,7 @@ model Community {
     created_at    DateTime @default(now())
     community_image         String?
     name          String
+    description          String?
     User_Founder   User     @relation(fields: [founder_id], references: [id])
     founder_id      String
     textPosts       TextPost[]  

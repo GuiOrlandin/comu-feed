@@ -49,13 +49,14 @@ export class CommunityController {
     @Request() request: AuthRequestModel,
     @Body() body: CreateCommunityBody,
   ) {
-    const { name, password, key_access } = body;
+    const { name, password, key_access, description } = body;
     const user = await this.createCommunityUseCase.execute({
       key_access,
       founder_id: request.user.id,
       name,
       password,
       community_image: file.filename,
+      description,
     });
 
     return CommunityViewModel.toHttp(user);

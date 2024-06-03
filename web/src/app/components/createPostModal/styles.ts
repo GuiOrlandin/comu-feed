@@ -103,6 +103,18 @@ export const MediaPost = styled.button<PostType>`
     variant === "mediaPost" ? "2px solid #160548" : ""};
 `;
 
+export const CreateCommunity = styled.button<PostType>`
+  display: flex;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  width: 6.8rem;
+  color: #2f1b7e;
+  height: 1.6rem;
+  border: none;
+  border-bottom: ${({ variant }) =>
+    variant === "createCommunity" ? "2px solid #160548" : ""};
+`;
+
 export const SendPostButton = styled.button`
   display: flex;
   align-items: center;
@@ -180,4 +192,80 @@ export const UploadMediaContainer = styled.div`
   input {
     display: none;
   }
+`;
+
+export const CreateCommunityContainer = styled.div`
+  display: flex;
+  margin-top: 2rem;
+  gap: 2rem;
+
+  input {
+    font-size: 1rem;
+    height: 2.5rem;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid #160548;
+  }
+`;
+
+export const UploadCommunityImage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #2f1b7e;
+  border-radius: 10px;
+  background: #f5f5f5;
+  text-align: center;
+  height: 6rem;
+  width: 9rem;
+
+  p {
+    font-size: 1.125rem;
+  }
+
+  input {
+    display: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const CommunityNameAndDescription = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: #2f1b7e;
+  width: 20rem;
+
+  textArea {
+    font-size: 1rem;
+    margin-top: 1rem;
+    padding: 0.9rem;
+    resize: vertical;
+  }
+`;
+
+export const CreateCommunityButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #cb4444;
+  color: #f5f5f5;
+  padding: 1rem;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  width: 5rem;
+  height: 1.6rem;
+  border: none;
+  border-radius: 5px;
+  margin: 1rem 0 0 26rem;
+
+  &:hover {
+    background: #cf6161;
+  }
+`;
+
+export const PasswordInput = styled.input`
+  margin-top: 1rem;
 `;
