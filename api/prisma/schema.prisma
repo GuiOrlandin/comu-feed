@@ -33,7 +33,7 @@ model Community {
     founder_id      String
     textPosts       TextPost[]  
     mediaPosts      MediaPost[]  
-    key_access    Boolean?
+    key_access    String?
     password      String?
     User_Members   User[]    @relation("CommunityMembers")
 

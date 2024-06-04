@@ -7,7 +7,7 @@ interface CreatedCommunityRequest {
   name: string;
   description: string;
   password?: string;
-  key_access: boolean;
+  key_access: string;
   community_image?: string | null;
 }
 

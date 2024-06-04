@@ -39,8 +39,9 @@ describe("Delete comment in the post", () => {
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
-      key_access: false,
+      key_access: "false",
       name: "GuiiosCommunity",
+      description: "GuiiosCommunity",
     });
 
     const post = await createPostUseCase.execute({
@@ -58,7 +59,10 @@ describe("Delete comment in the post", () => {
       content: "Muito bom post!",
     });
 
-    await deleteCommentInThePostUseCase.execute({ comment_id: comment.id });
+    await deleteCommentInThePostUseCase.execute({
+      comment_id: comment.id,
+      user_id: user.id,
+    });
 
     expect(commentRepositoryInMemory.comments).toEqual([]);
   });

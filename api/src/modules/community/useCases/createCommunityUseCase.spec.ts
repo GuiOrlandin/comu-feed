@@ -20,7 +20,7 @@ describe("Create User", () => {
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
-      key_access: false,
+      key_access: "false",
       name: "GuiiosCommunity",
       description: "test",
     });

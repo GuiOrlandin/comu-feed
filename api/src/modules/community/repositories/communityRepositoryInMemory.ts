@@ -57,7 +57,7 @@ export class CommunityRepositoryInMemory implements CommunityRepository {
       throw new Error("A comunidade não existe!");
     }
 
-    if (community.key_access && community.password !== password) {
+    if (community.key_access === "true" && community.password !== password) {
       throw new Error("Senha incorreta!");
     }
 
@@ -75,11 +75,11 @@ export class CommunityRepositoryInMemory implements CommunityRepository {
       throw new Error("Você já é membro da comunidade!");
     }
 
-    if (community.key_access && community.password === password) {
+    if (community.key_access === "true" && community.password === password) {
       community.User_Members.push(user);
     }
 
-    if (!community.key_access && !password) {
+    if (community.key_access === "false" && !password) {
       community.User_Members.push(user);
     }
   }

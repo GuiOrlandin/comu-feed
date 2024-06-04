@@ -46,7 +46,7 @@ export class PrismaCommunityRepository implements CommunityRepository {
       throw new Error("A comunidade não existe!");
     }
 
-    if (community.key_access && community.password !== password) {
+    if (community.key_access === "true" && community.password !== password) {
       throw new Error("Senha incorreta!");
     }
 

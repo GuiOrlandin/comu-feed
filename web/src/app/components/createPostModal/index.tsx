@@ -21,18 +21,36 @@ import {
   UploadMediaContainerOnHover,
 } from "./styles";
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import {
+  CreateCommunityDetails,
+  useCreateCommunityMutate,
+} from "@/hooks/createCommunity";
 
 export default function CreatePostModal() {
   const [tabType, setTabType] = useState("textPost");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [communityImage, setCommunityImage] = useState<File[]>();
   const [media, setMedia] = useState<File[]>();
-  const { acceptedFiles } = useDropzone({});
+  const [createCommunityDetails, setCreateCommunityDetails] =
+    useState<CreateCommunityDetails>();
+  const { mutate } = useCreateCommunityMutate();
 
   function onDrop(media: File[]) {
     setMedia(media);
+  }
+
+  function handleChangeCreateCommunityDetails(
+    event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
+    inputTitle: string
+  ) {
+    const { value } = event.target;
+    setCreateCommunityDetails((prevDetails) => ({
+      ...prevDetails!,
+      [inputTitle]: value,
+    }));
   }
 
   const dropzone = useDropzone({
@@ -45,6 +63,7 @@ export default function CreatePostModal() {
 
   function onDropCommunityImage(acceptedFiles: File[]) {
     const file = acceptedFiles[0];
+    setCommunityImage(acceptedFiles);
     setImagePreview(URL.createObjectURL(file));
   }
 
@@ -57,6 +76,21 @@ export default function CreatePostModal() {
 
   function handleSetTapType(postType: string) {
     return setTabType(postType);
+  }
+  function handleCreateCommunity(data: CreateCommunityDetails) {
+    if (data.password === "") {
+      setCreateCommunityDetails((prevDetails) => ({
+        ...prevDetails!,
+        key_access: "false",
+      }));
+    } else {
+      setCreateCommunityDetails((prevDetails) => ({
+        ...prevDetails!,
+        key_access: "true",
+      }));
+    }
+
+    mutate({ data: createCommunityDetails!, file: communityImage! });
   }
 
   return (
@@ -141,19 +175,35 @@ export default function CreatePostModal() {
                   <input type="" {...communityImageUpload.getInputProps()} />
                 </UploadCommunityImage>
                 <CommunityNameAndDescription>
-                  <input type="text" placeholder="Nome da comunidade*" />
+                  <input
+                    type="text"
+                    placeholder="Nome da comunidade*"
+                    onChange={(value) =>
+                      handleChangeCreateCommunityDetails(value, "name")
+                    }
+                  />
                   <PasswordInput
                     type="password"
                     placeholder="Senha da comunidade (opcional)"
+                    onChange={(value) =>
+                      handleChangeCreateCommunityDetails(value, "password")
+                    }
                   />
                   <textarea
                     name=""
                     id=""
                     placeholder="Descrição da comunidade*"
+                    onChange={(value) =>
+                      handleChangeCreateCommunityDetails(value, "description")
+                    }
                   ></textarea>
                 </CommunityNameAndDescription>
               </CreateCommunityContainer>
-              <CreateCommunityButton>Criar</CreateCommunityButton>
+              <CreateCommunityButton
+                onClick={() => handleCreateCommunity(createCommunityDetails!)}
+              >
+                Criar
+              </CreateCommunityButton>
             </>
           )}
         </CreatePostalModalContainer>

@@ -6,7 +6,7 @@ interface CommunitySchema {
   description: string;
   id?: string;
   founder_id: string;
-  key_access: boolean;
+  key_access: string;
   created_at?: Date;
   password?: string;
   community_image?: string | null;
@@ -45,11 +45,11 @@ export class Community {
   set founder_id(founder_id: string) {
     this.props.founder_id = founder_id;
   }
-  get key_access(): boolean {
+  get key_access(): string {
     return this.props.key_access;
   }
 
-  set key_access(key_access: boolean) {
+  set key_access(key_access: string) {
     this.props.key_access = key_access;
   }
 

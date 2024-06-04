@@ -9,7 +9,7 @@ export interface UserAuthenticationDetails {
 async function postData(data: UserAuthenticationDetails) {
   try {
     const response = await axios.post("http://localhost:3333/signIn", data);
-    const token = response.data.token;
+    const token = await response.data.access_token;
     return token;
   } catch (error) {
     throw new Error("Falha ao autenticar usuário");

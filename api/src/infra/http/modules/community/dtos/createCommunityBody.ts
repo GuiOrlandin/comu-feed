@@ -9,9 +9,9 @@ export class CreateCommunityBody {
   @IsNotEmpty()
   description: string;
 
-  @IsBoolean()
+  @IsString()
   @IsNotEmpty()
-  key_access: boolean;
+  key_access: string;
 
   @IsString()
   @IsOptional()
