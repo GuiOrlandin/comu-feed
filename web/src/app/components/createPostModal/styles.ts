@@ -216,8 +216,8 @@ export const UploadCommunityImage = styled.div`
   border-radius: 10px;
   background: #f5f5f5;
   text-align: center;
-  height: 6rem;
-  width: 9rem;
+  height: 10rem;
+  width: 10rem;
 
   p {
     font-size: 1.125rem;
@@ -268,4 +268,26 @@ export const CreateCommunityButton = styled.button`
 
 export const PasswordInput = styled.input`
   margin-top: 1rem;
+`;
+export const ImageUploadContainer = styled.div`
+  img {
+    display: flex;
+    position: relative;
+    border-radius: 5px;
+  }
+
+  button {
+    display: flex;
+    color: #f5f5f5;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    margin-top: -9.7rem;
+    right: 24.9rem;
+    border-radius: 9px;
+    width: 1.3rem;
+    height: 1.5rem;
+    background: none;
+    border: none;
+  }
 `;

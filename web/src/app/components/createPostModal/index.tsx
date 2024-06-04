@@ -7,6 +7,7 @@ import {
   CreateCommunityButton,
   CreateCommunityContainer,
   CreatePostalModalContainer,
+  ImageUploadContainer,
   MediaPost,
   MediaPostContainer,
   OptionsOfPostContainer,
@@ -26,7 +27,9 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 
 export default function CreatePostModal() {
   const [tabType, setTabType] = useState("textPost");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [media, setMedia] = useState<File[]>();
+  const { acceptedFiles } = useDropzone({});
 
   function onDrop(media: File[]) {
     setMedia(media);
@@ -37,6 +40,18 @@ export default function CreatePostModal() {
     accept: {
       "image/*": [],
       "video/*": [],
+    },
+  });
+
+  function onDropCommunityImage(acceptedFiles: File[]) {
+    const file = acceptedFiles[0];
+    setImagePreview(URL.createObjectURL(file));
+  }
+
+  const communityImageUpload = useDropzone({
+    onDrop: onDropCommunityImage,
+    accept: {
+      "image/*": [],
     },
   });
 
@@ -105,12 +120,25 @@ export default function CreatePostModal() {
           {tabType === "createCommunity" && (
             <>
               <CreateCommunityContainer>
-                <UploadCommunityImage {...dropzone.getRootProps()}>
+                <UploadCommunityImage {...communityImageUpload.getRootProps()}>
                   <label>
-                    <IoCloudUploadOutline height={24} />
-                    <p>Foto</p>
+                    {imagePreview ? (
+                      <ImageUploadContainer>
+                        <img
+                          src={imagePreview!}
+                          alt="Preview"
+                          style={{ width: "160px", height: "160px" }}
+                        />
+                        <button onClick={() => setImagePreview("")}>x</button>
+                      </ImageUploadContainer>
+                    ) : (
+                      <>
+                        <IoCloudUploadOutline height={24} />
+                        <p>Foto</p>
+                      </>
+                    )}
                   </label>
-                  <input type="" {...dropzone.getInputProps()} />
+                  <input type="" {...communityImageUpload.getInputProps()} />
                 </UploadCommunityImage>
                 <CommunityNameAndDescription>
                   <input type="text" placeholder="Nome da comunidade*" />
