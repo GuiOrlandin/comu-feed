@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from "@nestjs/common";
@@ -12,10 +15,14 @@ import { Public } from "../auth/decorators/isPublic";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname } from "path";
+import { FindUserByEmailUseCase } from "src/modules/user/useCases/findUserByEmail";
 
 @Controller("users")
 export class UserController {
-  constructor(private createUserUseCase: CreateUserUseCase) {}
+  constructor(
+    private createUserUseCase: CreateUserUseCase,
+    private findUserByEmail: FindUserByEmailUseCase,
+  ) {}
 
   @Post()
   @Public()
@@ -46,5 +53,13 @@ export class UserController {
     });
 
     return UserViewModel.toHttp(user);
+  }
+
+  @Get()
+  @Public()
+  async findUser(@Query("email") email: string) {
+    const user = await this.findUserByEmail.execute({ email });
+
+    return user;
   }
 }

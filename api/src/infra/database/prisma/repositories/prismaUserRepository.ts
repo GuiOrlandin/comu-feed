@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "src/modules/user/entities/User";
+import { User, UserSchema } from "src/modules/user/entities/User";
 import { UserRepository } from "src/modules/user/repositories/userRepository";
 import { PrismaService } from "../prisma.service";
 import { PrismaUserMapper } from "../mappers/prismaUserMapper";
@@ -9,10 +9,17 @@ import { EmailAlreadyInUseException } from "src/modules/user/exceptions/emailAlr
 export class PrismaUserRepository implements UserRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<Partial<User> | null> {
     const user = await this.prisma.user.findFirst({
       where: {
         email,
+      },
+      include: {
+        Community_Founder: true,
+        Community_Member: true,
+        comments: true,
+        mediaPosts: true,
+        textPosts: true,
       },
     });
 
@@ -20,7 +27,7 @@ export class PrismaUserRepository implements UserRepository {
       return null;
     }
 
-    return PrismaUserMapper.toDomain(user);
+    return user;
   }
 
   async create(user: User): Promise<void> {

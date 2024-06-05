@@ -21,7 +21,7 @@ import {
   UploadMediaContainerOnHover,
 } from "./styles";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import {
@@ -32,11 +32,11 @@ import {
 export default function CreatePostModal() {
   const [tabType, setTabType] = useState("textPost");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [communityImage, setCommunityImage] = useState<File[]>();
+  const [communityImage, setCommunityImage] = useState<File[] | null>();
   const [media, setMedia] = useState<File[]>();
   const [createCommunityDetails, setCreateCommunityDetails] =
     useState<CreateCommunityDetails>();
-  const { mutate } = useCreateCommunityMutate();
+  const { mutate, isSuccess } = useCreateCommunityMutate();
 
   function onDrop(media: File[]) {
     setMedia(media);
@@ -93,6 +93,18 @@ export default function CreatePostModal() {
     mutate({ data: createCommunityDetails!, file: communityImage! });
   }
 
+  useEffect(() => {
+    if (isSuccess) {
+      setImagePreview(null);
+      setCommunityImage(null);
+      setCreateCommunityDetails({
+        description: "",
+        key_access: "",
+        name: "",
+      });
+      setTabType("textPost");
+    }
+  }, [isSuccess]);
   return (
     <Dialog.Portal>
       <Overlay />

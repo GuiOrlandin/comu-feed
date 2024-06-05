@@ -16,6 +16,10 @@ export class CommunityRepositoryInMemory implements CommunityRepository {
     return community;
   }
 
+  async findAllCommunities(): Promise<Community[]> {
+    return this.communities;
+  }
+
   async findByName(name: string): Promise<Community | null> {
     const regex = new RegExp(name, "i");
 

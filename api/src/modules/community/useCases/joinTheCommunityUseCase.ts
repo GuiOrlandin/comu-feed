@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CommunityRepository } from "../repositories/communityRepository";
 import { Community } from "../entities/community";
 import { UserRepository } from "src/modules/user/repositories/userRepository";

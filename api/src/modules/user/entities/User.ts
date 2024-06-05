@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 
-interface UserSchema {
+
+export interface UserSchema {
   email: string;
   password_hash: string;
   name: string;

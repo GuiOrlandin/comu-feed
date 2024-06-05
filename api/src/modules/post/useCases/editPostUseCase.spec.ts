@@ -33,8 +33,9 @@ describe("Edit post", () => {
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
-      key_access: false,
+      key_access: "false",
       name: "GuiiosCommunity",
+      description: "test",
     });
 
     const post = await createPostUseCase.execute({
@@ -62,7 +63,8 @@ describe("Edit post", () => {
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
-      key_access: false,
+      key_access: "false",
+      description: "test",
       name: "GuiiosCommunity",
     });
 
@@ -91,7 +93,8 @@ describe("Edit post", () => {
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
-      key_access: false,
+      key_access: "false",
+      description: "test",
       name: "GuiiosCommunity",
     });
 

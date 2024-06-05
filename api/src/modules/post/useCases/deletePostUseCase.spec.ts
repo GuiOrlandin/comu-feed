@@ -21,9 +21,7 @@ describe("Delete post", () => {
     createCommunityUseCase = new CreateCommunityUseCase(
       communityRepositoryInMemory,
     );
-    createPostUseCase = new CreatePostUseCase(
-      postRepositoryInMemory,
-    );
+    createPostUseCase = new CreatePostUseCase(postRepositoryInMemory);
   });
 
   it("Should be able to delete post", async () => {
@@ -33,7 +31,9 @@ describe("Delete post", () => {
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
-      key_access: false,
+      key_access: "false",
+      description: "test",
+
       name: "GuiiosCommunity",
     });
 
@@ -60,7 +60,8 @@ describe("Delete post", () => {
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
-      key_access: false,
+      key_access: "false",
+      description: "test",
       name: "GuiiosCommunity",
     });
 
@@ -87,7 +88,8 @@ describe("Delete post", () => {
 
     const community = await createCommunityUseCase.execute({
       founder_id: user.id,
-      key_access: false,
+      key_access: "false",
+      description: "test",
       name: "GuiiosCommunity",
     });
 

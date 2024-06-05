@@ -1,10 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CommunityRepository } from "../repositories/communityRepository";
 
-interface FindCommunityByNameRequest {
-  community_name: string;
-}
-
 @Injectable()
 export class FindCommunityByNameUseCase {
   constructor(private communityRepository: CommunityRepository) {}
