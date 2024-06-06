@@ -14,15 +14,9 @@ export class PrismaUserRepository implements UserRepository {
       where: {
         email,
       },
-      select: {
-        id: true,
-        avatar: true,
-        created_at: true,
-        love: true,
-        name: true,
-        email: true,
-        Community_Founder: true,
-        Community_Member: true,
+      include: {
+        community_Founder: true,
+        community_Member: true,
         comments: true,
         mediaPosts: true,
         textPosts: true,
@@ -34,6 +28,20 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     return user;
+  }
+
+  async findById(id: string): Promise<User | null> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return PrismaUserMapper.toDomain(user);
   }
 
   async create(user: User): Promise<void> {

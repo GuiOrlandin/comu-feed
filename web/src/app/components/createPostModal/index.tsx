@@ -28,17 +28,24 @@ import {
   CreateCommunityDetails,
   useCreateCommunityMutate,
 } from "@/hooks/createCommunity";
-import { emailStore } from "@/store/emailStore";
+import { UserResponse } from "../topBar";
 
-export default function CreatePostModal() {
+interface CreatPostModalProps {
+  user: UserResponse;
+}
+
+export default function CreatePostModal({ user }: CreatPostModalProps) {
   const [tabType, setTabType] = useState("textPost");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [communityImage, setCommunityImage] = useState<File[] | null>();
   const [media, setMedia] = useState<File[]>();
-  const email = emailStore((state) => state.email);
   const [createCommunityDetails, setCreateCommunityDetails] =
     useState<CreateCommunityDetails>();
   const { mutate, isSuccess } = useCreateCommunityMutate();
+  const combinedCommunities = [
+    ...(user?.community_Member || []),
+    ...(user?.community_Founder || []),
+  ];
 
   function onDrop(media: File[]) {
     setMedia(media);
@@ -137,6 +144,14 @@ export default function CreatePostModal() {
           {tabType === "textPost" && (
             <TextPostContainer>
               <input type="text" placeholder="Titulo" />
+              <select>
+                {user &&
+                  combinedCommunities.map((community) => (
+                    <option key={community.id} value="">
+                      {community.name}
+                    </option>
+                  ))}
+              </select>
               <textarea name="" id="" placeholder="Conteudo do post"></textarea>
               <SendPostButton>Enviar</SendPostButton>
             </TextPostContainer>

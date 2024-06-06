@@ -58,7 +58,7 @@ interface TextPostsResponse {
   content: string;
 }
 
-interface UserResponse {
+export interface UserResponse {
   id: string;
   avatar?: string | null;
   created_at: Date;
@@ -142,7 +142,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
                 <Dialog.Trigger asChild>
                   <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
                 </Dialog.Trigger>
-                <CreatePostModal />
+                <CreatePostModal user={user!} />
               </Dialog.Root>
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
