@@ -45,11 +45,21 @@ export class UserController {
     @Body() body: CreateUserBody,
   ) {
     const { email, name, password_hash, created_at, id } = body;
+
+    if (file) {
+      const user = await this.createUserUseCase.execute({
+        email,
+        name,
+        password_hash,
+        avatar: file.filename,
+      });
+
+      return UserViewModel.toHttp(user);
+    }
     const user = await this.createUserUseCase.execute({
       email,
       name,
       password_hash,
-      avatar: file.filename,
     });
 
     return UserViewModel.toHttp(user);

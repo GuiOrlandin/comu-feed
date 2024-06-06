@@ -33,20 +33,21 @@ async function postData(
       formData.append(`file`, file);
     });
 
-
     await axios.post("http://localhost:3333/community", formData, config);
   }
 }
 
 export function useCreateCommunityMutate() {
-  const storeToken = localStorage.getItem("storeToken");
   const setToken = tokenStore((state) => state.setToken);
   const authToken = tokenStore((state) => state.token);
 
-  if (storeToken) {
-    setToken(storeToken);
-  }
+  if (typeof window !== "undefined") {
+    const storeToken = localStorage.getItem("storeToken");
 
+    if (storeToken) {
+      setToken(storeToken);
+    }
+  }
   const mutate = useMutation({
     mutationFn: ({
       data,

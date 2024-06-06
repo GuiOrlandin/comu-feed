@@ -28,12 +28,14 @@ import {
   CreateCommunityDetails,
   useCreateCommunityMutate,
 } from "@/hooks/createCommunity";
+import { emailStore } from "@/store/emailStore";
 
 export default function CreatePostModal() {
   const [tabType, setTabType] = useState("textPost");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [communityImage, setCommunityImage] = useState<File[] | null>();
   const [media, setMedia] = useState<File[]>();
+  const email = emailStore((state) => state.email);
   const [createCommunityDetails, setCreateCommunityDetails] =
     useState<CreateCommunityDetails>();
   const { mutate, isSuccess } = useCreateCommunityMutate();

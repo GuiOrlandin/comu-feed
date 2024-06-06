@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { User, UserSchema } from "src/modules/user/entities/User";
+import { User } from "src/modules/user/entities/User";
 import { UserRepository } from "src/modules/user/repositories/userRepository";
 import { PrismaService } from "../prisma.service";
 import { PrismaUserMapper } from "../mappers/prismaUserMapper";
@@ -14,7 +14,13 @@ export class PrismaUserRepository implements UserRepository {
       where: {
         email,
       },
-      include: {
+      select: {
+        id: true,
+        avatar: true,
+        created_at: true,
+        love: true,
+        name: true,
+        email: true,
         Community_Founder: true,
         Community_Member: true,
         comments: true,

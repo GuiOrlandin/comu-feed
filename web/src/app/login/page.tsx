@@ -40,7 +40,7 @@ export default function Login() {
   const [inputType, setInputType] = useState("password");
   const [showPassword, setShowPassword] = useState(true);
 
-  const { mutate, isSuccess, error, data, variables } = useAuthenticateMutate();
+  const { mutate, isSuccess, error, data } = useAuthenticateMutate();
 
   function handleChangeUserDetailsForRegister(
     event: ChangeEvent<HTMLInputElement>,
@@ -64,7 +64,8 @@ export default function Login() {
       saveToken(data);
 
       if (typeof window !== "undefined") {
-        const token = localStorage.setItem("storeToken", data);
+        localStorage.setItem("storeToken", data);
+        localStorage.setItem("storeEmail", userAuthenticateCredentials!.email);
       }
 
       router.push("/");
