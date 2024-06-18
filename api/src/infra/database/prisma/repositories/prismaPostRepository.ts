@@ -12,8 +12,26 @@ import { PostNotFoundException } from "src/modules/post/exceptions/postNotFoundE
 @Injectable()
 export class PrismaPostRepository implements PostRepository {
   constructor(private prisma: PrismaService) {}
-  findAllPosts(): Promise<(TextPost | MediaPost)[]> {
-    throw new Error("Method not implemented.");
+  async findAllPosts(): Promise<(TextPost | MediaPost)[]> {
+    const textPostRecords = await this.prisma.textPost.findMany({
+      orderBy: {
+        created_at: "asc",
+      },
+    });
+
+    const mediaPostRecords = await this.prisma.mediaPost.findMany({
+      orderBy: {
+        created_at: "asc",
+      },
+    });
+
+    const textPosts = textPostRecords.map((record) => new TextPost(record));
+
+    const mediaPosts = mediaPostRecords.map((record) => new MediaPost(record));
+
+    const allPosts: (TextPost | MediaPost)[] = [...textPosts, ...mediaPosts];
+
+    return allPosts;
   }
 
   private async deleteFile(filePath: string): Promise<void> {

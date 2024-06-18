@@ -8,6 +8,7 @@ import {
   Delete,
   Param,
   Put,
+  Get,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { extname } from "path";
@@ -21,6 +22,8 @@ import { MediaPost } from "src/modules/post/entities/mediaPost";
 import { DeletePostUseCase } from "src/modules/post/useCases/deletePostUseCase";
 import { EditPostUseCase } from "src/modules/post/useCases/editPostUseCase";
 import { EditPostBody } from "./dtos/editPostBody";
+import { Public } from "../auth/decorators/isPublic";
+import { FindAllPostsUseCase } from "src/modules/post/useCases/findAllPostsUseCase";
 
 @Controller("post")
 export class PostController {
@@ -28,6 +31,7 @@ export class PostController {
     private createPostUseCase: CreatePostUseCase,
     private deletePostUseCase: DeletePostUseCase,
     private editPostUseCase: EditPostUseCase,
+    private findAllPostsUseCase: FindAllPostsUseCase,
   ) {}
 
   @Post("textPost")
@@ -132,5 +136,13 @@ export class PostController {
       post_id,
       userId: request.user.id,
     });
+  }
+
+  @Get()
+  @Public()
+  async findUser() {
+    const allPosts = await this.findAllPostsUseCase.execute();
+
+    return allPosts;
   }
 }
