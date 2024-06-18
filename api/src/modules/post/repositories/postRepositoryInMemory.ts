@@ -15,6 +15,12 @@ export class PostRepositoryInMemory implements PostRepository {
     return post;
   }
 
+  findAllPosts(): Promise<(TextPost | MediaPost)[]> {
+    const allPosts = this.post;
+
+    return Promise.resolve(allPosts);
+  }
+
   async delete(id: string): Promise<void> {
     this.post = this.post.filter((post) => post.id !== id);
   }

@@ -12,6 +12,9 @@ import { PostNotFoundException } from "src/modules/post/exceptions/postNotFoundE
 @Injectable()
 export class PrismaPostRepository implements PostRepository {
   constructor(private prisma: PrismaService) {}
+  findAllPosts(): Promise<(TextPost | MediaPost)[]> {
+    throw new Error("Method not implemented.");
+  }
 
   private async deleteFile(filePath: string): Promise<void> {
     const fullPath = path.join(
