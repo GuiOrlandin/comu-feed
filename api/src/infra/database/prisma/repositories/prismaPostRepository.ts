@@ -2,7 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import * as fs from "fs";
 import * as path from "path";
-import { PostRepository } from "src/modules/post/repositories/postRepository";
+import {
+  MediaPostWithUser,
+  PostRepository,
+  TextPostWithUser,
+} from "src/modules/post/repositories/postRepository";
 import { postWithoutPermissionException } from "src/modules/post/exceptions/postWithoutPermissionException";
 import { TextPost } from "src/modules/post/entities/textPost";
 import { MediaPost } from "src/modules/post/entities/mediaPost";
@@ -12,24 +16,66 @@ import { PostNotFoundException } from "src/modules/post/exceptions/postNotFoundE
 @Injectable()
 export class PrismaPostRepository implements PostRepository {
   constructor(private prisma: PrismaService) {}
-  async findAllPosts(): Promise<(TextPost | MediaPost)[]> {
+
+  async findAllPosts(): Promise<(TextPostWithUser | MediaPostWithUser)[]> {
     const textPostRecords = await this.prisma.textPost.findMany({
+      include: {
+        user: true,
+      },
       orderBy: {
         created_at: "asc",
       },
     });
+
+    console.log(textPostRecords);
 
     const mediaPostRecords = await this.prisma.mediaPost.findMany({
+      include: {
+        user: true,
+      },
       orderBy: {
         created_at: "asc",
       },
     });
 
-    const textPosts = textPostRecords.map((record) => new TextPost(record));
+    const textPosts: TextPostWithUser[] = textPostRecords.map((record) => ({
+      id: record.id,
+      title: record.title,
+      user_id: record.user_id,
+      community_id: record.community_id,
+      content: record.content,
+      created_at: record.created_at,
+      user: {
+        id: record.user.id,
+        avatar: record.user.avatar,
+        created_at: record.user.created_at,
+        email: record.user.email,
+        name: record.user.name,
+        password_hash: record.user.password_hash,
+      },
+    }));
 
-    const mediaPosts = mediaPostRecords.map((record) => new MediaPost(record));
+    const mediaPosts: MediaPostWithUser[] = mediaPostRecords.map((record) => ({
+      id: record.id,
+      title: record.title,
+      user_id: record.user_id,
+      community_id: record.community_id,
+      media: record.media,
+      created_at: record.created_at,
+      user: {
+        id: record.user.id,
+        avatar: record.user.avatar,
+        created_at: record.user.created_at,
+        email: record.user.email,
+        name: record.user.name,
+        password_hash: record.user.password_hash,
+      },
+    }));
 
-    const allPosts: (TextPost | MediaPost)[] = [...textPosts, ...mediaPosts];
+    const allPosts: (TextPostWithUser | MediaPostWithUser)[] = [
+      ...textPosts,
+      ...mediaPosts,
+    ];
 
     return allPosts;
   }

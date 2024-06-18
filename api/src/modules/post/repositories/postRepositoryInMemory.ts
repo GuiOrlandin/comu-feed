@@ -1,6 +1,10 @@
 import { MediaPost } from "../entities/mediaPost";
 import { TextPost } from "../entities/textPost";
-import { PostRepository } from "./postRepository";
+import {
+  MediaPostWithUser,
+  PostRepository,
+  TextPostWithUser,
+} from "./postRepository";
 
 export class PostRepositoryInMemory implements PostRepository {
   public post: (TextPost | MediaPost)[] = [];
@@ -15,7 +19,7 @@ export class PostRepositoryInMemory implements PostRepository {
     return post;
   }
 
-  findAllPosts(): Promise<(TextPost | MediaPost)[]> {
+  findAllPosts(): Promise<(TextPostWithUser | MediaPostWithUser)[]> {
     const allPosts = this.post;
 
     return Promise.resolve(allPosts);

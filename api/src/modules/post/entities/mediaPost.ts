@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import { User } from "src/modules/user/entities/User";
 
 interface PostSchema {
   title: string;
@@ -7,6 +8,7 @@ interface PostSchema {
   media?: string;
   id?: string;
   created_at?: Date;
+  user?: User;
 }
 
 export class MediaPost {
