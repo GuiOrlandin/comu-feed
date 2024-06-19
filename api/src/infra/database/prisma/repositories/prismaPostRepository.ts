@@ -20,18 +20,70 @@ export class PrismaPostRepository implements PostRepository {
   async findAllPosts(): Promise<(TextPostWithUser | MediaPostWithUser)[]> {
     const textPostRecords = await this.prisma.textPost.findMany({
       include: {
-        user: true,
+        user: {
+          select: {
+            id: false,
+            avatar: true,
+            created_at: false,
+            email: true,
+            name: true,
+            password_hash: false,
+          },
+        },
+        comments: {
+          select: {
+            content: true,
+            user: {
+              select: {
+                avatar: true,
+                email: true,
+                name: true,
+              },
+            },
+            created_at: true,
+          },
+        },
+        community: {
+          select: {
+            name: true,
+          },
+        },
       },
       orderBy: {
         created_at: "asc",
       },
     });
 
-    console.log(textPostRecords);
-
     const mediaPostRecords = await this.prisma.mediaPost.findMany({
       include: {
-        user: true,
+        user: {
+          select: {
+            id: false,
+            avatar: true,
+            created_at: false,
+            email: true,
+            name: true,
+            password_hash: false,
+          },
+        },
+        comments: {
+          select: {
+            content: true,
+            user: {
+              select: {
+                avatar: true,
+                email: true,
+                name: true,
+              },
+            },
+            created_at: true,
+          },
+        },
+        community: {
+          select: {
+            name: true,
+          },
+        },
       },
       orderBy: {
         created_at: "asc",
@@ -46,13 +98,22 @@ export class PrismaPostRepository implements PostRepository {
       content: record.content,
       created_at: record.created_at,
       user: {
-        id: record.user.id,
         avatar: record.user.avatar,
-        created_at: record.user.created_at,
         email: record.user.email,
         name: record.user.name,
-        password_hash: record.user.password_hash,
       },
+      community: {
+        name: record.community.name,
+      },
+      comments: record.comments.map((comment) => ({
+        content: comment.content,
+        user: {
+          avatar: comment.user.avatar,
+          email: comment.user.email,
+          name: comment.user.name,
+        },
+        created_at: comment.created_at,
+      })),
     }));
 
     const mediaPosts: MediaPostWithUser[] = mediaPostRecords.map((record) => ({
@@ -63,13 +124,22 @@ export class PrismaPostRepository implements PostRepository {
       media: record.media,
       created_at: record.created_at,
       user: {
-        id: record.user.id,
         avatar: record.user.avatar,
-        created_at: record.user.created_at,
         email: record.user.email,
         name: record.user.name,
-        password_hash: record.user.password_hash,
       },
+      community: {
+        name: record.community.name,
+      },
+      comments: record.comments.map((comment) => ({
+        content: comment.content,
+        user: {
+          avatar: comment.user.avatar,
+          email: comment.user.email,
+          name: comment.user.name,
+        },
+        created_at: comment.created_at,
+      })),
     }));
 
     const allPosts: (TextPostWithUser | MediaPostWithUser)[] = [
@@ -105,13 +175,12 @@ export class PrismaPostRepository implements PostRepository {
 
     if (!user) {
       throw new postWithoutPermissionException({
-        actionName: "acessar",
+        actionName: "criar",
       });
     }
 
     const userInTheCommunity = await this.prisma.community.findFirst({
       where: {
-        id: post.community_id,
         OR: [
           {
             User_Members: {
@@ -129,7 +198,7 @@ export class PrismaPostRepository implements PostRepository {
 
     if (!userInTheCommunity) {
       throw new postWithoutPermissionException({
-        actionName: "acessar",
+        actionName: "criar",
       });
     }
 

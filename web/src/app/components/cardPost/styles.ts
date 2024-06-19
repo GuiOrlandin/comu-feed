@@ -1,11 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import { Skeleton } from "@mui/material";
-
-interface PostType {
-  variant: string;
-}
 
 export const PostCardContainer = styled.div`
   display: flex;
@@ -24,21 +19,23 @@ export const NameAndCommunity = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
-export const SkeletonAvatar = styled(Skeleton)`
-  margin-top: 0.18rem;
+export const ContentOfPost = styled.div`
+  display: flex;
+  border: 8px;
+  flex-direction: column;
+  overflow: hidden;
 `;
-
-export const SkeletonName = styled(Skeleton)`
-  margin-top: 0.18rem;
-  margin: -0.4rem 1rem;
+export const ContentOfPostWithMedia = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 `;
-export const SkeletonCommunity = styled(Skeleton)`
-  margin-top: 0.18rem;
-  margin: -0.4rem 1rem;
-`;
-
-export const SkeletonContent = styled(Skeleton)`
-  border-radius: 5px;
-  margin-top: 1rem;
+export const AvatarContentWithoutImage = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
 `;

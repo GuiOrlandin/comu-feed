@@ -1,31 +1,68 @@
 "use client";
 
-import CardPost from "@/app/components/cardPost";
+import CardPostWithSkeleton from "@/app/components/cardPostWithSkeleton";
 import TopBar from "@/app/components/topBar";
 import { CardsOfPostContainer, HomeContainer } from "@/app/home/styles";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import CardPost from "../components/cardPost";
 
-interface MediaPost {
-  title: string;
-  user_id: string;
-  community_id: string;
-  media?: string;
-  id?: string;
-  created_at?: Date;
+export interface CommentWithUser {
+  content: string;
+  user: {
+    avatar: string;
+    email: string;
+    name: string;
+  };
+  created_at: Date;
 }
 
-interface TextPost {
+export interface MediaPostWithUser {
+  id: string;
   title: string;
   user_id: string;
   community_id: string;
-  content?: string;
-  id?: string;
-  created_at?: Date;
+  media: string;
+  created_at: Date;
+  user?: {
+    id: string;
+    avatar: string;
+    created_at: Date;
+    email: string;
+    name: string;
+  };
+  comments?: CommentWithUser[];
+  community?: {
+    name: string;
+  };
+}
+
+export interface TextPostWithUser {
+  id: string;
+  title: string;
+  user_id: string;
+  community_id: string;
+  content: string;
+  created_at: Date;
+  user?: {
+    id: string;
+    avatar: string;
+    created_at: Date;
+    email: string;
+    name: string;
+  };
+  comments?: CommentWithUser[];
+  community?: {
+    name: string;
+  };
 }
 
 export default function Home() {
-  const { data: posts, refetch } = useQuery<(TextPost | MediaPost)[]>({
+  const {
+    data: posts,
+    refetch,
+    isLoading,
+  } = useQuery<(TextPostWithUser | MediaPostWithUser)[]>({
     queryKey: ["posts-info"],
 
     queryFn: async () => {
@@ -40,12 +77,19 @@ export default function Home() {
   return (
     <HomeContainer>
       <TopBar page="home" />
-
-      <CardsOfPostContainer>
-        <CardPost />
-        <CardPost />
-        <CardPost />
-      </CardsOfPostContainer>
+      {isLoading ? (
+        <CardsOfPostContainer>
+          <CardPostWithSkeleton />
+          <CardPostWithSkeleton />
+          <CardPostWithSkeleton />
+        </CardsOfPostContainer>
+      ) : (
+        <CardsOfPostContainer>
+          {posts?.map((post) => (
+            <CardPost key={post.id} post={post} />
+          ))}
+        </CardsOfPostContainer>
+      )}
     </HomeContainer>
   );
 }

@@ -15,4 +15,5 @@ export const CardsOfPostContainer = styled.div`
   justify-content: center;
   gap: 2rem;
   margin-top: 15%;
+  overflow: hidden;
 `;

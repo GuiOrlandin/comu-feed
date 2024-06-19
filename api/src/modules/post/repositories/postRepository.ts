@@ -1,6 +1,16 @@
 import { MediaPost } from "../entities/mediaPost";
 import { TextPost } from "../entities/textPost";
 
+export interface CommentWithUser {
+  content: string;
+  user: {
+    avatar: string;
+    email: string;
+    name: string;
+  };
+  created_at: Date;
+}
+
 export interface TextPostWithUser {
   id: string;
   title: string;
@@ -9,12 +19,13 @@ export interface TextPostWithUser {
   content: string;
   created_at: Date;
   user?: {
-    id: string;
     avatar: string;
-    created_at: Date;
     email: string;
     name: string;
-    password_hash: string;
+  };
+  comments?: CommentWithUser[];
+  community?: {
+    name: string;
   };
 }
 
@@ -26,12 +37,13 @@ export interface MediaPostWithUser {
   media: string;
   created_at: Date;
   user?: {
-    id: string;
     avatar: string;
-    created_at: Date;
     email: string;
     name: string;
-    password_hash: string;
+  };
+  comments?: CommentWithUser[];
+  community?: {
+    name: string;
   };
 }
 
