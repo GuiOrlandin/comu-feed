@@ -4,6 +4,7 @@ import { PostRepository } from "../repositories/postRepository";
 import { PostNotFoundException } from "../exceptions/postNotFoundException";
 import { postWithoutPermissionException } from "../exceptions/postWithoutPermissionException";
 import { TextPost } from "../entities/textPost";
+import { MediaPost } from "../entities/mediaPost";
 
 interface EditPostRequest {
   content?: string;
@@ -37,10 +38,14 @@ export class EditPostUseCase {
       await this.postRepository.save(post);
 
       return post;
-    } else {
-      await this.postRepository.save(post);
+    }
 
-      return post;
+    if (post instanceof MediaPost) {
+      {
+        await this.postRepository.save(post);
+
+        return post;
+      }
     }
   }
 }

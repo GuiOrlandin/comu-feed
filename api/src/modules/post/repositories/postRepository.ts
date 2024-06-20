@@ -58,7 +58,9 @@ export interface MediaPostWithUser {
 export abstract class PostRepository {
   abstract create(post: TextPost | MediaPost): Promise<void>;
   abstract delete(id: string): Promise<void>;
-  abstract findById(id: string): Promise<TextPost | MediaPost | null>;
+  abstract findById(
+    id: string,
+  ): Promise<TextPostWithUser | MediaPostWithUser | null>;
   abstract findAllPosts(): Promise<(TextPostWithUser | MediaPostWithUser)[]>;
   abstract save(post: TextPost | MediaPost): Promise<void>;
 }
