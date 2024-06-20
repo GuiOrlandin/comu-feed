@@ -24,6 +24,7 @@ import { EditPostUseCase } from "src/modules/post/useCases/editPostUseCase";
 import { EditPostBody } from "./dtos/editPostBody";
 import { Public } from "../auth/decorators/isPublic";
 import { FindAllPostsUseCase } from "src/modules/post/useCases/findAllPostsUseCase";
+import { FindPostByIdUseCase } from "src/modules/post/useCases/findPostByIdUseCase";
 
 @Controller("post")
 export class PostController {
@@ -32,6 +33,7 @@ export class PostController {
     private deletePostUseCase: DeletePostUseCase,
     private editPostUseCase: EditPostUseCase,
     private findAllPostsUseCase: FindAllPostsUseCase,
+    private findPostByIdUseCase: FindPostByIdUseCase,
   ) {}
 
   @Post("textPost")
@@ -51,6 +53,16 @@ export class PostController {
     if (post instanceof TextPost) {
       return TextPostViewModel.toHttp(post);
     }
+  }
+
+  @Get(":id")
+  @Public()
+  async findPostById(@Param("id") post_id: string) {
+    const post = await this.findPostByIdUseCase.execute({
+      id: post_id,
+    });
+
+    return post;
   }
 
   @Post("mediaPost")
@@ -140,7 +152,7 @@ export class PostController {
 
   @Get()
   @Public()
-  async findUser() {
+  async findAllPost() {
     const allPosts = await this.findAllPostsUseCase.execute();
 
     return allPosts;
