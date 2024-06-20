@@ -9,7 +9,7 @@ export const PostCardContainer = styled.div`
   width: 23.5625rem;
   border-radius: 10px;
   background: #f5f5f5;
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 0 1.5rem;
 `;
 
 export const ProfileContent = styled.div`
@@ -22,9 +22,14 @@ export const NameAndCommunity = styled.div`
 export const ContentOfPost = styled.div`
   display: flex;
   border: 8px;
+  width: 21rem;
+  height: 5.6rem;
   flex-direction: column;
-  overflow: hidden;
+  overflow: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 `;
+
 export const ContentOfPostWithMedia = styled.div`
   display: flex;
   flex-direction: column;
@@ -38,4 +43,20 @@ export const AvatarContentWithoutImage = styled.div`
   flex-direction: column;
   margin-right: 1rem;
   margin-bottom: 1rem;
+`;
+export const LoveAndCommentContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  padding-top: 0.3rem;
+`;
+export const LoveImageAndLength = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+export const CommentsImageAndLength = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;

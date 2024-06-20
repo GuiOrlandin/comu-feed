@@ -17,6 +17,13 @@ export interface CommentWithUser {
   created_at: Date;
 }
 
+export interface LoveWithUser {
+  user: {
+    avatar: string;
+    name: string;
+  };
+}
+
 export interface MediaPostWithUser {
   id: string;
   title: string;
@@ -31,6 +38,7 @@ export interface MediaPostWithUser {
     email: string;
     name: string;
   };
+  love: LoveWithUser[];
   comments?: CommentWithUser[];
   community?: {
     name: string;
@@ -52,6 +60,7 @@ export interface TextPostWithUser {
     name: string;
   };
   comments?: CommentWithUser[];
+  love: LoveWithUser[];
   community?: {
     name: string;
   };
@@ -85,7 +94,7 @@ export default function Home() {
         </CardsOfPostContainer>
       ) : (
         <CardsOfPostContainer>
-          {posts?.map((post) => (
+          {posts?.slice(0, 3).map((post) => (
             <CardPost key={post.id} post={post} />
           ))}
         </CardsOfPostContainer>

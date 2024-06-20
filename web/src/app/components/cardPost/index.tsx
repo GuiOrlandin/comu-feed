@@ -1,11 +1,16 @@
 import Image from "next/image";
 import { MediaPostWithUser, TextPostWithUser } from "@/app/home/page";
 import { RxAvatar } from "react-icons/rx";
+import { CiHeart } from "react-icons/ci";
+import { FaRegCommentAlt } from "react-icons/fa";
 
 import {
   AvatarContentWithoutImage,
+  CommentsImageAndLength,
   ContentOfPost,
   ContentOfPostWithMedia,
+  LoveAndCommentContainer,
+  LoveImageAndLength,
   NameAndCommunity,
   PostCardContainer,
   ProfileContent,
@@ -19,8 +24,6 @@ export default function CardPost({ post }: CardPostProps) {
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(filePath);
   }
-
-  console.log(post);
 
   return (
     <PostCardContainer>
@@ -66,6 +69,24 @@ export default function CardPost({ post }: CardPostProps) {
           </ContentOfPostWithMedia>
         )}
       </ContentOfPost>
+      <LoveAndCommentContainer>
+        <LoveImageAndLength>
+          <CiHeart color="#CB4444" size={25} />
+          {post.love.length <= 1 ? (
+            <p>{post.love.length} curtida</p>
+          ) : (
+            <p> {post.love.length} curtidas</p>
+          )}
+        </LoveImageAndLength>
+        <CommentsImageAndLength>
+          <FaRegCommentAlt color="#CB4444" size={18} />
+          {post.comments!.length <= 1 ? (
+            <p>{post.comments!.length} comentário</p>
+          ) : (
+            <p> {post.comments!.length} comentários</p>
+          )}
+        </CommentsImageAndLength>
+      </LoveAndCommentContainer>
     </PostCardContainer>
   );
 }

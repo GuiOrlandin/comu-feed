@@ -43,6 +43,16 @@ export class PrismaPostRepository implements PostRepository {
             created_at: true,
           },
         },
+        love: {
+          select: {
+            user: {
+              select: {
+                avatar: true,
+                name: true,
+              },
+            },
+          },
+        },
         community: {
           select: {
             name: true,
@@ -64,6 +74,16 @@ export class PrismaPostRepository implements PostRepository {
             email: true,
             name: true,
             password_hash: false,
+          },
+        },
+        love: {
+          select: {
+            user: {
+              select: {
+                avatar: true,
+                name: true,
+              },
+            },
           },
         },
         comments: {
@@ -105,6 +125,12 @@ export class PrismaPostRepository implements PostRepository {
       community: {
         name: record.community.name,
       },
+      love: record.love.map((love) => ({
+        user: {
+          avatar: love.user.avatar,
+          name: love.user.name,
+        },
+      })),
       comments: record.comments.map((comment) => ({
         content: comment.content,
         user: {
@@ -131,6 +157,12 @@ export class PrismaPostRepository implements PostRepository {
       community: {
         name: record.community.name,
       },
+      love: record.love.map((love) => ({
+        user: {
+          avatar: love.user.avatar,
+          name: love.user.name,
+        },
+      })),
       comments: record.comments.map((comment) => ({
         content: comment.content,
         user: {
