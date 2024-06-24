@@ -42,6 +42,13 @@ export const NameAndCommunity = styled.div`
 
 export const ProfileContent = styled.div`
   display: flex;
+
+  img {
+    margin-right: 1rem;
+  }
+  svg {
+    margin-right: 1rem;
+  }
 `;
 
 export const ContentOfPost = styled.div`

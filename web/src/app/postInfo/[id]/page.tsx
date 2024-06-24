@@ -29,7 +29,7 @@ import {
   CommentsImageAndLength,
   LoveImageAndLength,
 } from "@/app/components/cardPost/styles";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CreateCommentDetails,
   useCreateCommentMutate,
@@ -38,6 +38,7 @@ import AvatarImage from "@/app/components/avatarImg";
 
 export default function PostInfo({ params }: { params: { id: string } }) {
   const { mutate, isSuccess } = useCreateCommentMutate();
+  const [commentContent, setCommentContent] = useState("");
   const [createCommentDetails, setCreateCommentDetails] =
     useState<CreateCommentDetails>({
       content: "",
@@ -61,12 +62,10 @@ export default function PostInfo({ params }: { params: { id: string } }) {
   }
 
   function handleChangeCommentContent(
-    event: ChangeEvent<HTMLTextAreaElement>,
+    value: string,
     postType: string,
     postId: string
   ) {
-    const { value } = event.target;
-
     if (postType === "text_post_id") {
       return setCreateCommentDetails({
         content: value,
@@ -89,6 +88,7 @@ export default function PostInfo({ params }: { params: { id: string } }) {
   useEffect(() => {
     if (isSuccess) {
       refetch();
+      setCommentContent("");
     }
   }, [isSuccess]);
 
@@ -111,6 +111,7 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                     urlImg={`http://localhost:3333/files/avatarImage/${
                       post!.user?.avatar
                     }`}
+                    avatarImgDimensions={6}
                   />
                 )}
               </AvatarContentWithoutImage>
@@ -165,22 +166,30 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                 <>
                   <textarea
                     placeholder="Digite seu comentário"
-                    onChange={(value) =>
-                      handleChangeCommentContent(value, "text_post_id", post.id)
-                    }
+                    value={commentContent}
+                    onChange={(event) => {
+                      setCommentContent(event.target.value);
+                      handleChangeCommentContent(
+                        event.target.value,
+                        "text_post_id",
+                        post.id
+                      );
+                    }}
                   />
                 </>
               ) : (
                 <>
                   <textarea
                     placeholder="Digite seu comentário"
-                    onChange={(value) =>
+                    value={commentContent}
+                    onChange={(event) => {
+                      setCommentContent(event.target.value);
                       handleChangeCommentContent(
-                        value,
+                        event.target.value,
                         "media_post_id",
                         post!.id
-                      )
-                    }
+                      );
+                    }}
                   />
                 </>
               )}
