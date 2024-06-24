@@ -33,7 +33,6 @@ export const PostWrapper = styled.div`
 
 export const AvatarContentWithoutImage = styled.div`
   display: flex;
-  margin-right: 1rem;
 `;
 
 export const NameAndCommunity = styled.div`
@@ -125,4 +124,11 @@ export const SendCommentButton = styled.button`
 
 export const AvatarContentInComment = styled.div`
   display: flex;
+
+  img {
+    margin-right: 1rem;
+  }
+  svg {
+    margin-right: 1rem;
+  }
 `;

@@ -34,6 +34,7 @@ import {
   CreateCommentDetails,
   useCreateCommentMutate,
 } from "@/hooks/createComment";
+import AvatarImage from "@/app/components/avatarImg";
 
 export default function PostInfo({ params }: { params: { id: string } }) {
   const { mutate, isSuccess } = useCreateCommentMutate();
@@ -85,8 +86,6 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     mutate({ data: createCommentDetails });
   }
 
-  console.log(createCommentDetails);
-
   useEffect(() => {
     if (isSuccess) {
       refetch();
@@ -108,13 +107,10 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                     <RxAvatar size={60} />
                   </AvatarContentWithoutImage>
                 ) : (
-                  <Image
-                    src={`http://localhost:3333/files/avatarImage/${
+                  <AvatarImage
+                    urlImg={`http://localhost:3333/files/avatarImage/${
                       post!.user?.avatar
                     }`}
-                    width={6 * 16}
-                    height={6 * 16}
-                    alt="Picture of the author"
                   />
                 )}
               </AvatarContentWithoutImage>
@@ -199,16 +195,14 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                       <AvatarContentInComment>
                         {comment!.user?.avatar === null ? (
                           <AvatarContentWithoutImage>
-                            <RxAvatar size={40} />
+                            <RxAvatar size={44} />
                           </AvatarContentWithoutImage>
                         ) : (
-                          <Image
-                            src={`http://localhost:3333/files/avatarImage/${
+                          <AvatarImage
+                            urlImg={`http://localhost:3333/files/avatarImage/${
                               comment!.user?.avatar
                             }`}
-                            width={6 * 16}
-                            height={6 * 16}
-                            alt="Picture of the author"
+                            avatarImgDimensions={2.8}
                           />
                         )}
                       </AvatarContentInComment>
