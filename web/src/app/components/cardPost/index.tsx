@@ -22,7 +22,7 @@ interface CardPostProps {
 
 export default function CardPost({ post }: CardPostProps) {
   function isImage(filePath: string): boolean {
-    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(filePath);
+    return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
   }
 
   return (

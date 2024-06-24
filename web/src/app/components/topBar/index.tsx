@@ -102,10 +102,8 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
     },
   });
 
-  console.log(user);
 
   useEffect(() => {
-    console.log(session);
     if (session) {
       localStorage.setItem("storeToken", session.expires);
       localStorage.setItem("storeEmail", session.user?.email as string);
@@ -214,6 +212,32 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
         <>
           <TwoOptionsRedirectOnBarContainerInOthersPages>
             <Link href="home">Home</Link>
+            <Link href="mostLoved">Mais amados</Link>
+          </TwoOptionsRedirectOnBarContainerInOthersPages>
+          {userAuthenticated ? (
+            <ButtonsOnBarContainer>
+              <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+              <ButtonOnBarContainer onClick={() => handleLogout()}>
+                Sair
+              </ButtonOnBarContainer>
+            </ButtonsOnBarContainer>
+          ) : (
+            <ButtonsOnBarContainer>
+              <ButtonOnBarContainer onClick={() => handleRedirect("login")}>
+                Entrar
+              </ButtonOnBarContainer>
+              <ButtonOnBarContainer onClick={() => handleRedirect("register")}>
+                Cadastrar
+              </ButtonOnBarContainer>
+            </ButtonsOnBarContainer>
+          )}
+        </>
+      )}
+
+      {page === "postInfo" && (
+        <>
+          <TwoOptionsRedirectOnBarContainerInOthersPages>
+            <Link href="news">Novidades</Link>
             <Link href="mostLoved">Mais amados</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (

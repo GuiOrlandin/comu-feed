@@ -44,7 +44,6 @@ describe("Find all posts", () => {
 
     const response = await findPostByIdUseCase.execute({ id: post.id });
 
-    console.log(response);
 
     await expect(response).toEqual(post);
   });

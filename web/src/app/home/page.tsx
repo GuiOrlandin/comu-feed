@@ -81,8 +81,6 @@ export default function Home() {
     },
   });
 
-  console.log(posts);
-
   return (
     <HomeContainer>
       <TopBar page="home" />

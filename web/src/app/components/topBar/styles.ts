@@ -41,7 +41,7 @@ export const TwoOptionsRedirectOnBarContainerInOthersPages = styled.div`
 
     &:hover {
       cursor: pointer;
-      border-bottom: 1px solid #f5f5f5;
+      border-bottom: 1px solid #2f1b7e;
     }
   }
 `;
