@@ -26,6 +26,7 @@ import { FiEyeOff } from "react-icons/fi";
 import { FaRegEye } from "react-icons/fa6";
 
 import { useRouter } from "next/navigation";
+
 import { tokenStore } from "@/store/tokenStore";
 
 export default function Login() {
@@ -68,7 +69,7 @@ export default function Login() {
         localStorage.setItem("storeEmail", userAuthenticateCredentials!.email);
       }
 
-      router.push("/");
+      router.back();
     }
 
     if (error?.message === "Falha ao autenticar usuário") {

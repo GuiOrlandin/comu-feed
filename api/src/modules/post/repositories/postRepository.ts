@@ -3,7 +3,9 @@ import { TextPost } from "../entities/textPost";
 
 export interface CommentWithUser {
   content: string;
+  id: string;
   user: {
+    id: string;
     avatar: string;
     email: string;
     name: string;

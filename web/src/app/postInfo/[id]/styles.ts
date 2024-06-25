@@ -1,6 +1,7 @@
 "use client";
 
 import styled from "styled-components";
+import * as Dialog from "@radix-ui/react-dialog";
 
 export const PostInfoContainer = styled.div`
   display: flex;
@@ -77,6 +78,7 @@ export const LoveAndCommentContainer = styled.div`
 
 export const CommentsContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   margin-top: 1rem;
 
   h2 {
@@ -96,10 +98,10 @@ export const NameAndContentOfComment = styled.div`
 export const CommentsAndCreateCommentContainer = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
 
   textArea {
     display: flex;
-    position: relative;
     border: 2px solid #f0edf6;
     border-radius: 8px;
     height: 4.9rem;
@@ -116,12 +118,12 @@ export const SendCommentButton = styled.button`
   padding: 0.5rem;
   display: flex;
   position: absolute;
-  left: 76.3%;
+  left: 92.7%;
   border: none;
   font-weight: 600;
   border-radius: 4px;
   color: #2f1b7e;
-  margin-top: 3.3%;
+  margin-top: 5.4%;
   background: #f0edf6;
 
   &:hover {
@@ -138,4 +140,73 @@ export const AvatarContentInComment = styled.div`
   svg {
     margin-right: 1rem;
   }
+`;
+
+export const DialogDeleteCommentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Content = styled(Dialog.Content)`
+  flex-direction: column;
+  min-width: 16rem;
+  border-radius: 6px;
+  padding: 2rem 2rem 1.2rem 2rem;
+  background: #f0edf6;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+export const DialogClose = styled(Dialog.Close)`
+  border: none;
+  margin: -1rem 0 1rem 12rem;
+`;
+
+export const ConfirmButton = styled.button`
+  display: flex;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  background: #cb4444;
+
+  &:hover {
+    background: #cf6161;
+  }
+`;
+
+export const CancelButton = styled(Dialog.Close)`
+  display: flex;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  background: #cb4444;
+
+  &:hover {
+    background: #cf6161;
+  }
+`;
+export const ButtonsOfDialogContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const DialogTitle = styled(Dialog.Title)`
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+`;
+export const DialogTrigger = styled(Dialog.Trigger)`
+  display: flex;
+`;
+
+export const DialogDeleteTriggerButton = styled.button`
+  border: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: none;
 `;

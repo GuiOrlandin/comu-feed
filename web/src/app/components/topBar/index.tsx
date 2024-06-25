@@ -18,6 +18,7 @@ import { emailStore } from "@/store/emailStore";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { userStore } from "@/store/userStore";
 
 interface TopBarProps {
   page: string;
@@ -61,13 +62,14 @@ interface TextPostsResponse {
 export interface UserResponse {
   id: string;
   avatar?: string | null;
-  created_at: Date;
+  created_at?: Date;
   email: string;
-  community_Founder: CommunityResponse[];
-  community_Member: CommunityResponse[];
-  comments: CommentsResponse[];
-  mediaResponse: MediaPostsResponse[];
-  textResponse: TextPostsResponse[];
+  name: string;
+  community_Founder?: CommunityResponse[];
+  community_Member?: CommunityResponse[];
+  comments?: CommentsResponse[];
+  mediaResponse?: MediaPostsResponse[];
+  textResponse?: TextPostsResponse[];
 }
 
 export default function TopBar({ page, isLoged }: TopBarProps) {
@@ -76,6 +78,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
   const token = tokenStore((state) => state.token);
   const setEmail = emailStore((state) => state.setEmail);
   const email = emailStore((state) => state.email);
+  const setUser = userStore((state) => state.setUser);
   const setToken = tokenStore((state) => state.setToken);
   const { data: session } = useSession();
 
@@ -90,7 +93,11 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
     }
   }
 
-  const { data: user, refetch } = useQuery<UserResponse>({
+  const {
+    data: user,
+    refetch,
+    isSuccess,
+  } = useQuery<UserResponse>({
     queryKey: ["user-info"],
 
     queryFn: async () => {
@@ -101,7 +108,6 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       }
     },
   });
-
 
   useEffect(() => {
     if (session) {
@@ -118,13 +124,17 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       setEmail(emailStorage!);
     }
 
+    if (isSuccess) {
+      setUser(user!);
+    }
+
     if (token && email) {
       setUserAuthenticated(true);
       refetch();
     } else {
       setUserAuthenticated(false);
     }
-  }, [token, session]);
+  }, [token, session, isSuccess]);
 
   return (
     <TopBarContainer>

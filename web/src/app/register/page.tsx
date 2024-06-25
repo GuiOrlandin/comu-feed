@@ -63,7 +63,7 @@ export default function Register() {
 
   useEffect(() => {
     if (isSuccess) {
-      router.push("/login");
+      router.back();
     }
 
     if (error?.message === "Request failed with status code 401") {

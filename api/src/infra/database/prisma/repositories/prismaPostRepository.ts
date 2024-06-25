@@ -159,8 +159,10 @@ export class PrismaPostRepository implements PostRepository {
         comments: {
           select: {
             content: true,
+            id: true,
             user: {
               select: {
+                id: true,
                 avatar: true,
                 email: true,
                 name: true,
@@ -215,8 +217,10 @@ export class PrismaPostRepository implements PostRepository {
         comments: {
           select: {
             content: true,
+            id: true,
             user: {
               select: {
+                id: true,
                 avatar: true,
                 email: true,
                 name: true,
@@ -259,7 +263,9 @@ export class PrismaPostRepository implements PostRepository {
       })),
       comments: record.comments.map((comment) => ({
         content: comment.content,
+        id: comment.id,
         user: {
+          id: comment.user.id,
           avatar: comment.user.avatar,
           email: comment.user.email,
           name: comment.user.name,
@@ -291,7 +297,9 @@ export class PrismaPostRepository implements PostRepository {
       })),
       comments: record.comments.map((comment) => ({
         content: comment.content,
+        id: comment.id,
         user: {
+          id: comment.user.id,
           avatar: comment.user.avatar,
           email: comment.user.email,
           name: comment.user.name,
@@ -329,8 +337,10 @@ export class PrismaPostRepository implements PostRepository {
         comments: {
           select: {
             content: true,
+            id: true,
             user: {
               select: {
+                id: true,
                 avatar: true,
                 email: true,
                 name: true,
@@ -375,8 +385,10 @@ export class PrismaPostRepository implements PostRepository {
         comments: {
           select: {
             content: true,
+            id: true,
             user: {
               select: {
+                id: true,
                 avatar: true,
                 email: true,
                 name: true,

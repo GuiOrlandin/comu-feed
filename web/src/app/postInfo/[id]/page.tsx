@@ -1,22 +1,8 @@
 "use client";
 
 import TopBar from "@/app/components/topBar";
-import {
-  AvatarContentInComment,
-  AvatarContentWithoutImage,
-  CommentsAndCreateCommentContainer,
-  CommentsContainer,
-  ContentOfPost,
-  ContentOfPostWithMedia,
-  LoveAndCommentContainer,
-  NameAndCommunity,
-  NameAndContentOfComment,
-  PostContainer,
-  PostInfoContainer,
-  PostWrapper,
-  ProfileContent,
-  SendCommentButton,
-} from "./styles";
+import * as Dialog from "@radix-ui/react-dialog";
+
 import Image from "next/image";
 import { RxAvatar } from "react-icons/rx";
 import { CiHeart } from "react-icons/ci";
@@ -36,9 +22,41 @@ import {
 } from "@/hooks/createComment";
 import AvatarImage from "@/app/components/avatarImg";
 
+import {
+  AvatarContentInComment,
+  AvatarContentWithoutImage,
+  ButtonsOfDialogContainer,
+  CancelButton,
+  CommentsAndCreateCommentContainer,
+  CommentsContainer,
+  ConfirmButton,
+  Content,
+  ContentOfPost,
+  ContentOfPostWithMedia,
+  DialogClose,
+  DialogDeleteCommentContainer,
+  DialogDeleteTriggerButton,
+  DialogTitle,
+  DialogTrigger,
+  LoveAndCommentContainer,
+  NameAndCommunity,
+  NameAndContentOfComment,
+  PostContainer,
+  PostInfoContainer,
+  PostWrapper,
+  ProfileContent,
+  SendCommentButton,
+} from "./styles";
+import { Overlay } from "@/app/components/createPostModal/styles";
+import { tokenStore } from "@/store/tokenStore";
+import { userStore } from "@/store/userStore";
+
 export default function PostInfo({ params }: { params: { id: string } }) {
   const { mutate, isSuccess } = useCreateCommentMutate();
+  const authToken = tokenStore((state) => state.token);
+  const user = userStore((state) => state.user);
   const [commentContent, setCommentContent] = useState("");
+  const [postIdToDelete, setPostIdToDelete] = useState("");
   const [createCommentDetails, setCreateCommentDetails] =
     useState<CreateCommentDetails>({
       content: "",
@@ -56,6 +74,24 @@ export default function PostInfo({ params }: { params: { id: string } }) {
         .then((response) => response.data);
     },
   });
+
+  const { refetch: deleteCommentRefetch, isSuccess: deleteCommentIsSuccess } =
+    useQuery({
+      queryKey: ["delete-comment"],
+      enabled: false,
+
+      queryFn: async () => {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        };
+
+        return axios
+          .delete(`http://localhost:3333/comment/${postIdToDelete}`, config)
+          .then((response) => response.data);
+      },
+    });
 
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
@@ -84,13 +120,25 @@ export default function PostInfo({ params }: { params: { id: string } }) {
   function handleCreateComment() {
     mutate({ data: createCommentDetails });
   }
+  function handleDeleteComment(postId: string) {
+    console.log(postId);
+    setPostIdToDelete(postId);
+
+    deleteCommentRefetch();
+  }
 
   useEffect(() => {
     if (isSuccess) {
       refetch();
       setCommentContent("");
     }
-  }, [isSuccess]);
+
+    if (deleteCommentIsSuccess) {
+      refetch();
+    }
+  }, [isSuccess, deleteCommentIsSuccess]);
+
+  console.log(user);
 
   return (
     <PostInfoContainer>
@@ -220,6 +268,35 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                         <p>{comment.content}</p>
                       </NameAndContentOfComment>
                     </ProfileContent>
+                    {user && comment.user.id === user.id && (
+                      <Dialog.Root>
+                        <DialogTrigger asChild>
+                          <DialogDeleteTriggerButton>
+                            X
+                          </DialogDeleteTriggerButton>
+                        </DialogTrigger>
+                        <Dialog.Portal>
+                          <Overlay />
+                          <Content>
+                            <DialogTitle>
+                              Você deseja deletar o comentário?
+                            </DialogTitle>
+                            <DialogDeleteCommentContainer>
+                              <ButtonsOfDialogContainer>
+                                <ConfirmButton
+                                  onClick={() =>
+                                    handleDeleteComment(comment.id)
+                                  }
+                                >
+                                  Confirmar
+                                </ConfirmButton>
+                                <CancelButton>Cancelar</CancelButton>
+                              </ButtonsOfDialogContainer>
+                            </DialogDeleteCommentContainer>
+                          </Content>
+                        </Dialog.Portal>
+                      </Dialog.Root>
+                    )}
                   </CommentsContainer>
                 ))}
             </CommentsAndCreateCommentContainer>

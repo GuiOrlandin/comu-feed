@@ -8,8 +8,10 @@ import axios from "axios";
 import CardPost from "../components/cardPost";
 
 export interface CommentWithUser {
+  id: string;
   content: string;
   user: {
+    id: string;
     avatar: string;
     email: string;
     name: string;
