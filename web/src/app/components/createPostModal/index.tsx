@@ -35,7 +35,7 @@ interface CreatPostModalProps {
 }
 
 export default function CreatePostModal({ user }: CreatPostModalProps) {
-  const [tabType, setTabType] = useState("textPost");
+  const [tabType, setTabType] = useState("createCommunity");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [communityImage, setCommunityImage] = useState<File[] | null>();
   const [media, setMedia] = useState<File[]>();
@@ -121,24 +121,35 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
         <CreatePostalModalContainer>
           <Close>X</Close>
           <OptionsOfPostContainer>
-            <TextPost
-              variant={tabType}
-              onClick={() => handleSetTapType("textPost")}
-            >
-              Texto
-            </TextPost>
-            <MediaPost
-              variant={tabType}
-              onClick={() => handleSetTapType("mediaPost")}
-            >
-              Imagem & Video
-            </MediaPost>
-            <CreateCommunity
-              variant={tabType}
-              onClick={() => handleSetTapType("createCommunity")}
-            >
-              Comunidade
-            </CreateCommunity>
+            {combinedCommunities.length > 0 ? (
+              <>
+                <TextPost
+                  variant={tabType}
+                  onClick={() => handleSetTapType("textPost")}
+                >
+                  Texto
+                </TextPost>
+                <MediaPost
+                  variant={tabType}
+                  onClick={() => handleSetTapType("mediaPost")}
+                >
+                  Imagem & Video
+                </MediaPost>
+                <CreateCommunity
+                  variant={tabType}
+                  onClick={() => handleSetTapType("createCommunity")}
+                >
+                  Comunidade
+                </CreateCommunity>
+              </>
+            ) : (
+              <CreateCommunity
+                variant={tabType}
+                onClick={() => handleSetTapType("createCommunity")}
+              >
+                Comunidade
+              </CreateCommunity>
+            )}
           </OptionsOfPostContainer>
 
           {tabType === "textPost" && (

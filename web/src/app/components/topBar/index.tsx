@@ -147,15 +147,13 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInHome>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              {(user!.community_Founder!.length > 0 ||
-                user!.community_Member!.length > 0) && (
-                <Dialog.Root>
-                  <Dialog.Trigger asChild>
-                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                  </Dialog.Trigger>
-                  <CreatePostModal user={user!} />
-                </Dialog.Root>
-              )}
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                </Dialog.Trigger>
+                <CreatePostModal user={user!} />
+              </Dialog.Root>
+
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
@@ -175,7 +173,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       {page === "register" && (
         <>
           <TwoOptionsRedirectOnBarContainerInOthersPages>
-            <Link href="home">Home</Link>
+            <Link href="/home">Home</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           <ButtonsOnBarContainer>
             <ButtonOnBarContainer onClick={() => handleRedirect("login")}>
@@ -200,20 +198,18 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       {page === "mostLoved" && (
         <>
           <TwoOptionsRedirectOnBarContainerInOthersPages>
-            <Link href="home">Home</Link>
-            <Link href="news">Novidades</Link>
+            <Link href="/home">Home</Link>
+            <Link href="/news">Novidades</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              {(user!.community_Founder!.length > 0 ||
-                user!.community_Member!.length > 0) && (
-                <Dialog.Root>
-                  <Dialog.Trigger asChild>
-                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                  </Dialog.Trigger>
-                  <CreatePostModal user={user!} />
-                </Dialog.Root>
-              )}
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                </Dialog.Trigger>
+                <CreatePostModal user={user!} />
+              </Dialog.Root>
+
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
@@ -233,20 +229,18 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       {page === "news" && (
         <>
           <TwoOptionsRedirectOnBarContainerInOthersPages>
-            <Link href="home">Home</Link>
-            <Link href="mostLoved">Mais amados</Link>
+            <Link href="/home">Home</Link>
+            <Link href="/mostLoved">Mais amados</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              {(user!.community_Founder!.length > 0 ||
-                user!.community_Member!.length > 0) && (
-                <Dialog.Root>
-                  <Dialog.Trigger asChild>
-                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                  </Dialog.Trigger>
-                  <CreatePostModal user={user!} />
-                </Dialog.Root>
-              )}
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                </Dialog.Trigger>
+                <CreatePostModal user={user!} />
+              </Dialog.Root>
+
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
@@ -267,20 +261,19 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       {page === "postInfo" && (
         <>
           <TwoOptionsRedirectOnBarContainerInOthersPages>
-            <Link href="news">Novidades</Link>
-            <Link href="mostLoved">Mais amados</Link>
+            <Link href="/home">Home</Link>
+            <Link href="/news">Novidades</Link>
+            <Link href="/mostLoved">Mais amados</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              {(user!.community_Founder!.length > 0 ||
-                user!.community_Member!.length > 0) && (
-                <Dialog.Root>
-                  <Dialog.Trigger asChild>
-                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                  </Dialog.Trigger>
-                  <CreatePostModal user={user!} />
-                </Dialog.Root>
-              )}
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                </Dialog.Trigger>
+                <CreatePostModal user={user!} />
+              </Dialog.Root>
+
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
