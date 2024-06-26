@@ -2,6 +2,7 @@
 
 import styled from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
+import { Skeleton } from "@mui/material";
 
 export const PostInfoContainer = styled.div`
   display: flex;
@@ -210,3 +211,24 @@ export const DialogDeleteTriggerButton = styled.button`
   font-weight: 700;
   background: none;
 `;
+
+export const SkeletonAvatarNameAndCommunityContainer = styled.div`
+  display: flex;
+`;
+
+export const SkeletonNameAndCommunityContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const SkeletonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+export const SkeletonCommentAndLikeContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const SkeletonLike = styled(Skeleton)``;
+export const SkeletonComment = styled(Skeleton)``;

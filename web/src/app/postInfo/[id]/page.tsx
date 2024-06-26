@@ -46,10 +46,23 @@ import {
   PostWrapper,
   ProfileContent,
   SendCommentButton,
+  SkeletonAvatarNameAndCommunityContainer,
+  SkeletonComment,
+  SkeletonCommentAndLikeContainer,
+  SkeletonContainer,
+  SkeletonLike,
+  SkeletonNameAndCommunityContainer,
 } from "./styles";
-import { Overlay } from "@/app/components/createPostModal/styles";
+
 import { tokenStore } from "@/store/tokenStore";
 import { userStore } from "@/store/userStore";
+import {
+  SkeletonAvatar,
+  SkeletonCommunity,
+  SkeletonContent,
+  SkeletonName,
+} from "@/app/components/cardPostWithSkeleton/styles";
+import { Overlay } from "@/app/components/createPostModal/styles";
 
 export default function PostInfo({ params }: { params: { id: string } }) {
   const { mutate, isSuccess } = useCreateCommentMutate();
@@ -138,12 +151,42 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     }
   }, [isSuccess, deleteCommentIsSuccess]);
 
-
   return (
     <PostInfoContainer>
       <TopBar page="postInfo" />
       {isLoading ? (
-        <>test</>
+        <PostWrapper>
+          <PostContainer>
+            <SkeletonContainer>
+              <ProfileContent>
+                <SkeletonAvatarNameAndCommunityContainer>
+                  <SkeletonAvatar
+                    width={6 * 16}
+                    height={6 * 16}
+                    variant="rectangular"
+                  />
+                  <SkeletonNameAndCommunityContainer>
+                    <SkeletonName
+                      width={14 * 16}
+                      height={3 * 16}
+                      variant="text"
+                    />
+                    <SkeletonCommunity
+                      width={7 * 16}
+                      height={2 * 16}
+                      variant="text"
+                    />
+                  </SkeletonNameAndCommunityContainer>
+                </SkeletonAvatarNameAndCommunityContainer>
+              </ProfileContent>
+              <SkeletonContent height={5 * 16} variant="rectangular" />
+              <SkeletonCommentAndLikeContainer>
+                <SkeletonLike height={3 * 16} width={6 * 16} />
+                <SkeletonComment height={3 * 16} width={6 * 16} />
+              </SkeletonCommentAndLikeContainer>
+            </SkeletonContainer>
+          </PostContainer>
+        </PostWrapper>
       ) : (
         <PostWrapper>
           <PostContainer>
