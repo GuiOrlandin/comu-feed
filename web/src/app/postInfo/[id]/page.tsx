@@ -138,7 +138,6 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     }
   }, [isSuccess, deleteCommentIsSuccess]);
 
-  console.log(user);
 
   return (
     <PostInfoContainer>

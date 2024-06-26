@@ -80,6 +80,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
   const email = emailStore((state) => state.email);
   const setUser = userStore((state) => state.setUser);
   const setToken = tokenStore((state) => state.setToken);
+
   const { data: session } = useSession();
 
   function handleRedirect(page: string) {
@@ -146,12 +147,15 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInHome>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                </Dialog.Trigger>
-                <CreatePostModal user={user!} />
-              </Dialog.Root>
+              {(user!.community_Founder!.length > 0 ||
+                user!.community_Member!.length > 0) && (
+                <Dialog.Root>
+                  <Dialog.Trigger asChild>
+                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                  </Dialog.Trigger>
+                  <CreatePostModal user={user!} />
+                </Dialog.Root>
+              )}
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
@@ -201,7 +205,15 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+              {(user!.community_Founder!.length > 0 ||
+                user!.community_Member!.length > 0) && (
+                <Dialog.Root>
+                  <Dialog.Trigger asChild>
+                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                  </Dialog.Trigger>
+                  <CreatePostModal user={user!} />
+                </Dialog.Root>
+              )}
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
@@ -226,7 +238,15 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+              {(user!.community_Founder!.length > 0 ||
+                user!.community_Member!.length > 0) && (
+                <Dialog.Root>
+                  <Dialog.Trigger asChild>
+                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                  </Dialog.Trigger>
+                  <CreatePostModal user={user!} />
+                </Dialog.Root>
+              )}
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
@@ -252,7 +272,15 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+              {(user!.community_Founder!.length > 0 ||
+                user!.community_Member!.length > 0) && (
+                <Dialog.Root>
+                  <Dialog.Trigger asChild>
+                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                  </Dialog.Trigger>
+                  <CreatePostModal user={user!} />
+                </Dialog.Root>
+              )}
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>

@@ -85,6 +85,10 @@ export const TextPostContainer = styled.div`
     padding: 1rem;
     font-size: 1rem;
   }
+
+  select {
+    margin-top: 0.6rem;
+  }
 `;
 
 export const OptionsOfPostContainer = styled.div`
