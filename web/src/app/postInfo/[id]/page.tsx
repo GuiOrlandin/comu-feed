@@ -237,18 +237,26 @@ export default function PostInfo({ params }: { params: { id: string } }) {
             <LoveAndCommentContainer>
               <LoveImageAndLength>
                 <CiHeart color="#CB4444" size={25} />
-                {post!.love.length <= 1 ? (
-                  <p>{post!.love.length} curtida</p>
+                {post!.love ? (
+                  post!.love.length <= 1 ? (
+                    <p>{post!.love.length} curtida</p>
+                  ) : (
+                    <p>{post!.love.length} curtidas</p>
+                  )
                 ) : (
-                  <p> {post!.love.length} curtidas</p>
+                  <p>0 curtidas</p>
                 )}
               </LoveImageAndLength>
               <CommentsImageAndLength>
                 <FaRegCommentAlt color="#CB4444" size={18} />
-                {post!.comments!.length <= 1 ? (
-                  <p>{post!.comments!.length} comentário</p>
+                {post?.comments ? (
+                  post!.comments!.length <= 1 ? (
+                    <p>{post!.comments!.length} comentário</p>
+                  ) : (
+                    <p> {post!.comments!.length} comentários</p>
+                  )
                 ) : (
-                  <p> {post!.comments!.length} comentários</p>
+                  <p>0 comentários</p>
                 )}
               </CommentsImageAndLength>
             </LoveAndCommentContainer>
@@ -291,7 +299,8 @@ export default function PostInfo({ params }: { params: { id: string } }) {
               >
                 Enviar
               </SendCommentButton>
-              {post!.comments!.length > 0 &&
+              {post?.comments &&
+                post!.comments!.length > 0 &&
                 post?.comments?.map((comment) => (
                   <CommentsContainer key={comment.content}>
                     <ProfileContent>

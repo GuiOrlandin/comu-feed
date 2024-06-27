@@ -1,5 +1,8 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 import { MediaPostWithUser, TextPostWithUser } from "@/app/home/page";
+
 import { RxAvatar } from "react-icons/rx";
 import { CiHeart } from "react-icons/ci";
 import { FaRegCommentAlt } from "react-icons/fa";
@@ -21,6 +24,8 @@ interface CardPostProps {
 }
 
 export default function CardPost({ post }: CardPostProps) {
+  const router = useRouter();
+
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
   }
@@ -46,7 +51,7 @@ export default function CardPost({ post }: CardPostProps) {
           <span>{post.community?.name}</span>
         </NameAndCommunity>
       </ProfileContent>
-      <ContentOfPost>
+      <ContentOfPost onClick={() => router.push(`/postInfo/${post.id}`)}>
         {"content" in post ? (
           <>
             <p>{post.content}</p>
@@ -78,7 +83,9 @@ export default function CardPost({ post }: CardPostProps) {
             <p> {post.love.length} curtidas</p>
           )}
         </LoveImageAndLength>
-        <CommentsImageAndLength>
+        <CommentsImageAndLength
+          onClick={() => router.push(`/postInfo/${post.id}`)}
+        >
           <FaRegCommentAlt color="#CB4444" size={18} />
           {post.comments!.length <= 1 ? (
             <p>{post.comments!.length} comentário</p>
