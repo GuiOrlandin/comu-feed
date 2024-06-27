@@ -130,6 +130,10 @@ export const SendCommentButton = styled.button`
   &:hover {
     background: #e3d6fd;
   }
+  &:disabled {
+    background: #d9d9d9;
+    cursor: not-allowed;
+  }
 `;
 
 export const AvatarContentInComment = styled.div`

@@ -28,6 +28,10 @@ export const ContentOfPost = styled.div`
   overflow: scroll;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const ContentOfPostWithMedia = styled.div`
@@ -54,9 +58,17 @@ export const LoveImageAndLength = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 export const CommentsImageAndLength = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;

@@ -79,6 +79,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
   const setEmail = emailStore((state) => state.setEmail);
   const email = emailStore((state) => state.email);
   const setUser = userStore((state) => state.setUser);
+  const removeUser = userStore((state) => state.removeUser);
   const setToken = tokenStore((state) => state.setToken);
 
   const { data: session } = useSession();
@@ -92,6 +93,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       localStorage.removeItem("storeToken");
       localStorage.removeItem("storeEmail");
     }
+    removeUser();
   }
 
   const {

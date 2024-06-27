@@ -151,6 +151,7 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     }
   }, [isSuccess, deleteCommentIsSuccess]);
 
+  console.log(user);
   return (
     <PostInfoContainer>
       <TopBar page="postInfo" />
@@ -284,7 +285,10 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                 </>
               )}
 
-              <SendCommentButton onClick={() => handleCreateComment()}>
+              <SendCommentButton
+                disabled={user!.id === "" ? true : false}
+                onClick={() => handleCreateComment()}
+              >
                 Enviar
               </SendCommentButton>
               {post!.comments!.length > 0 &&

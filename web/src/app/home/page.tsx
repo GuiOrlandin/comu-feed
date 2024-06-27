@@ -94,9 +94,10 @@ export default function Home() {
         </CardsOfPostContainer>
       ) : (
         <CardsOfPostContainer>
-          {posts?.slice(0, 3).map((post) => (
-            <CardPost key={post.id} post={post} />
-          ))}
+          {Array.isArray(posts) &&
+            posts
+              ?.slice(0, 3)
+              .map((post) => <CardPost key={post.id} post={post} />)}
         </CardsOfPostContainer>
       )}
     </HomeContainer>
