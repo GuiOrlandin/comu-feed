@@ -173,10 +173,15 @@ export class PrismaPostRepository implements PostRepository {
         },
         love: {
           select: {
+            id: true,
+            media_post_id: true,
+            text_post_id: true,
+            user_id: true,
             user: {
               select: {
                 avatar: true,
                 name: true,
+                id: true,
               },
             },
           },
@@ -206,10 +211,15 @@ export class PrismaPostRepository implements PostRepository {
         },
         love: {
           select: {
+            id: true,
+            media_post_id: true,
+            text_post_id: true,
+            user_id: true,
             user: {
               select: {
                 avatar: true,
                 name: true,
+                id: true,
               },
             },
           },
@@ -256,9 +266,13 @@ export class PrismaPostRepository implements PostRepository {
         name: record.community.name,
       },
       love: record.love.map((love) => ({
+        id: love.id,
+        media_post_id: love.media_post_id,
+        text_post_id: love.text_post_id,
         user: {
           avatar: love.user.avatar,
           name: love.user.name,
+          id: love.user.id,
         },
       })),
       comments: record.comments.map((comment) => ({
@@ -290,9 +304,13 @@ export class PrismaPostRepository implements PostRepository {
         name: record.community.name,
       },
       love: record.love.map((love) => ({
+        id: love.id,
+        media_post_id: love.media_post_id,
+        text_post_id: love.text_post_id,
         user: {
           avatar: love.user.avatar,
           name: love.user.name,
+          id: love.user.id,
         },
       })),
       comments: record.comments.map((comment) => ({
@@ -351,10 +369,15 @@ export class PrismaPostRepository implements PostRepository {
         },
         love: {
           select: {
+            id: true,
+            media_post_id: true,
+            text_post_id: true,
+            user_id: true,
             user: {
               select: {
                 avatar: true,
                 name: true,
+                id: true,
               },
             },
           },
@@ -399,10 +422,15 @@ export class PrismaPostRepository implements PostRepository {
         },
         love: {
           select: {
+            id: true,
+            media_post_id: true,
+            text_post_id: true,
+            user_id: true,
             user: {
               select: {
                 avatar: true,
                 name: true,
+                id: true,
               },
             },
           },

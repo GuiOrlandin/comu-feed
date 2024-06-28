@@ -1,11 +1,16 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { MediaPostWithUser, TextPostWithUser } from "@/app/home/page";
+import {
+  LoveWithUser,
+  MediaPostWithUser,
+  TextPostWithUser,
+} from "@/app/home/page";
 
 import { RxAvatar } from "react-icons/rx";
 import { CiHeart } from "react-icons/ci";
 import { FaRegCommentAlt } from "react-icons/fa";
+import { TiHeartFullOutline } from "react-icons/ti";
 
 import {
   AvatarContentWithoutImage,
@@ -18,17 +23,102 @@ import {
   PostCardContainer,
   ProfileContent,
 } from "./styles";
+import { useCreateLoveMutate } from "@/hooks/createLove";
+import { userStore } from "@/store/userStore";
+import { useEffect, useState } from "react";
+import { useDeleteLoveMutate } from "@/hooks/deleteLove";
 
 interface CardPostProps {
   post: TextPostWithUser | MediaPostWithUser;
+  refetchPost?: () => void;
 }
 
-export default function CardPost({ post }: CardPostProps) {
+export default function CardPost({ post, refetchPost }: CardPostProps) {
   const router = useRouter();
+  const user = userStore((state) => state.user);
+
+  const [loveIdToDelete, setLoveIdToDelete] = useState("");
+  const [loveInfo, setLoveInfo] = useState<LoveWithUser>({
+    id: "",
+    media_post_id: "",
+    text_post_id: "",
+    user: {
+      avatar: "",
+      id: "",
+      name: "",
+    },
+  });
+  const { mutate, isSuccess } = useCreateLoveMutate();
+  const { mutate: deleteLoveMutate, isSuccess: deleteLoveIsSuccess } =
+    useDeleteLoveMutate();
 
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
   }
+
+  function handleLikePost(postId: string, postType: string) {
+    if (postType === "textPost") {
+      return mutate({
+        data: {
+          media_post_id: "",
+          text_post_id: postId,
+        },
+      });
+    } else {
+      mutate({
+        data: {
+          media_post_id: postId,
+          text_post_id: "",
+        },
+      });
+    }
+  }
+  function handleDislikePost() {
+    deleteLoveMutate(loveIdToDelete);
+  }
+
+  useEffect(() => {
+    if (isSuccess || deleteLoveIsSuccess) {
+      refetchPost!();
+    }
+    if (deleteLoveIsSuccess) {
+      refetchPost!();
+      setLoveInfo({
+        id: "",
+        media_post_id: "",
+        text_post_id: "",
+        user: {
+          avatar: "",
+          id: "",
+          name: "",
+        },
+      });
+
+      setLoveIdToDelete("");
+    }
+
+    if (post && user) {
+      const loveInfoFound = post!.love!.find(
+        (love) => love.user.id === user.id
+      );
+
+      if (loveInfoFound) {
+        setLoveInfo(loveInfoFound!);
+        setLoveIdToDelete(loveInfoFound!.id);
+      } else {
+        setLoveInfo({
+          id: "",
+          media_post_id: "",
+          text_post_id: "",
+          user: {
+            avatar: "",
+            id: "",
+            name: "",
+          },
+        });
+      }
+    }
+  }, [isSuccess, post, deleteLoveIsSuccess, user]);
 
   return (
     <PostCardContainer>
@@ -75,14 +165,69 @@ export default function CardPost({ post }: CardPostProps) {
         )}
       </ContentOfPost>
       <LoveAndCommentContainer>
-        <LoveImageAndLength>
-          <CiHeart color="#CB4444" size={25} />
-          {post.love.length <= 1 ? (
-            <p>{post.love.length} curtida</p>
-          ) : (
-            <p> {post.love.length} curtidas</p>
-          )}
-        </LoveImageAndLength>
+        {loveInfo.id !== "" ? (
+          <>
+            {"content" in post ? (
+              <LoveImageAndLength>
+                <TiHeartFullOutline
+                  fill="#CB4444"
+                  size={25}
+                  onClick={() => handleDislikePost()}
+                />
+                {post!.love!.length <= 1 ? (
+                  <p>{post!.love!.length} curtida</p>
+                ) : (
+                  <p> {post!.love!.length} curtidas</p>
+                )}
+              </LoveImageAndLength>
+            ) : (
+              <LoveImageAndLength>
+                <TiHeartFullOutline
+                  color="#CB4444"
+                  fill="#CB4444"
+                  size={25}
+                  onClick={() => handleDislikePost()}
+                />
+                {post.love.length <= 1 ? (
+                  <p>{post.love.length} curtida</p>
+                ) : (
+                  <p> {post.love.length} curtidas</p>
+                )}
+              </LoveImageAndLength>
+            )}
+          </>
+        ) : (
+          <>
+            {"content" in post ? (
+              <LoveImageAndLength>
+                <CiHeart
+                  color="#CB4444"
+                  size={25}
+                  onClick={() => handleLikePost(post.id, "textPost")}
+                />
+                {post!.love!.length <= 1 ? (
+                  <p>{post!.love!.length} curtida</p>
+                ) : (
+                  <p> {post!.love!.length} curtidas</p>
+                )}
+              </LoveImageAndLength>
+            ) : (
+              <LoveImageAndLength>
+                <CiHeart
+                  color="#CB4444"
+                  size={25}
+                  onClick={() => handleLikePost(post.id, "mediaPost")}
+                />
+                {post.love.length <= 1 ? (
+                  <p>{post.love.length} curtida</p>
+                ) : (
+                  <p> {post.love.length} curtidas</p>
+                )}
+              </LoveImageAndLength>
+            )}
+          </>
+        )}
+
         <CommentsImageAndLength
           onClick={() => router.push(`/postInfo/${post.id}`)}
         >

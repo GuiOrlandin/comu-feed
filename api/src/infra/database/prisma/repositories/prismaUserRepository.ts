@@ -20,6 +20,7 @@ export class PrismaUserRepository implements UserRepository {
         comments: true,
         mediaPosts: true,
         textPosts: true,
+        love: true,
       },
     });
 

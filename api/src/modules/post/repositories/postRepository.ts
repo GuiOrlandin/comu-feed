@@ -13,9 +13,13 @@ export interface CommentWithUser {
   created_at: Date;
 }
 export interface LoveWithUser {
+  id: string;
+  text_post_id?: string;
+  media_post_id?: string;
   user: {
     avatar: string;
     name: string;
+    id: string;
   };
 }
 

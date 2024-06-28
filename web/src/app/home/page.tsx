@@ -20,9 +20,13 @@ export interface CommentWithUser {
 }
 
 export interface LoveWithUser {
+  id: string;
+  text_post_id?: string;
+  media_post_id?: string;
   user: {
     avatar: string;
     name: string;
+    id: string;
   };
 }
 
@@ -62,7 +66,7 @@ export interface TextPostWithUser {
     name: string;
   };
   comments?: CommentWithUser[];
-  love: LoveWithUser[];
+  love?: LoveWithUser[];
   community?: {
     name: string;
   };
@@ -97,7 +101,13 @@ export default function Home() {
           {Array.isArray(posts) &&
             posts
               ?.slice(0, 3)
-              .map((post) => <CardPost key={post.id} post={post} />)}
+              .map((post) => (
+                <CardPost
+                  key={post.id}
+                  post={post}
+                  refetchPost={() => refetch()}
+                />
+              ))}
         </CardsOfPostContainer>
       )}
     </HomeContainer>

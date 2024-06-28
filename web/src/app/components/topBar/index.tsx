@@ -49,6 +49,7 @@ interface MediaPostsResponse {
   title: string;
   community_id: string;
   media: string;
+  love: LoveResponse[];
 }
 interface TextPostsResponse {
   id: string;
@@ -57,6 +58,15 @@ interface TextPostsResponse {
   title: string;
   community_id: string;
   content: string;
+  love: LoveResponse[];
+}
+
+export interface LoveResponse {
+  id: string;
+  created_at: Date;
+  user_id: string;
+  text_post_id?: string;
+  media_post_id?: string;
 }
 
 export interface UserResponse {
@@ -70,6 +80,7 @@ export interface UserResponse {
   comments?: CommentsResponse[];
   mediaResponse?: MediaPostsResponse[];
   textResponse?: TextPostsResponse[];
+  love: LoveResponse[];
 }
 
 export default function TopBar({ page, isLoged }: TopBarProps) {
@@ -79,6 +90,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
   const setEmail = emailStore((state) => state.setEmail);
   const email = emailStore((state) => state.email);
   const setUser = userStore((state) => state.setUser);
+  const userTest = userStore((state) => state.user);
   const removeUser = userStore((state) => state.removeUser);
   const setToken = tokenStore((state) => state.setToken);
 
@@ -138,6 +150,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       setUserAuthenticated(false);
     }
   }, [token, session, isSuccess]);
+
 
   return (
     <TopBarContainer>

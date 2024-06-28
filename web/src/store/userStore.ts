@@ -19,6 +19,7 @@ export const userStore = create<UserStore>()((set) => ({
     mediaResponse: [],
     textResponse: [],
     avatar: "",
+    love: [],
   },
   setUser: (user) => set({ user }),
   removeUser: () =>
@@ -34,6 +35,7 @@ export const userStore = create<UserStore>()((set) => ({
         mediaResponse: [],
         textResponse: [],
         avatar: "",
+        love: [],
       },
     }),
 }));

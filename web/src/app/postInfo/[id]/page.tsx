@@ -134,7 +134,6 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     mutate({ data: createCommentDetails });
   }
   function handleDeleteComment(postId: string) {
-    console.log(postId);
     setPostIdToDelete(postId);
 
     deleteCommentRefetch();
@@ -151,7 +150,6 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     }
   }, [isSuccess, deleteCommentIsSuccess]);
 
-  console.log(user);
   return (
     <PostInfoContainer>
       <TopBar page="postInfo" />
