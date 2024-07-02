@@ -2,28 +2,27 @@
 
 import styled from "styled-components";
 
-export const PostCardContainer = styled.div`
+interface CardType {
+  largeCard: boolean;
+}
+
+export const PostCardContainer = styled.div<CardType>`
   display: flex;
   flex-direction: column;
-  height: 14.6875rem;
-  width: 23.5625rem;
+  max-height: ${({ largeCard }) =>
+    largeCard === true ? "53rem" : "14.6875rem"};
+  width: ${({ largeCard }) => (largeCard === true ? "56rem" : "23.5625rem")};
+  border: 2px solid #f0edf6;
   border-radius: 10px;
   background: #f5f5f5;
-  padding: 1.5rem 1.5rem 0 1.5rem;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
 `;
 
-export const ProfileContent = styled.div`
-  display: flex;
-`;
-export const NameAndCommunity = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-export const ContentOfPost = styled.div`
+export const ContentOfPost = styled.div<CardType>`
   display: flex;
   border: 8px;
-  width: 21rem;
-  height: 5.6rem;
+  min-width: 21rem;
+  min-height: 5.6rem;
   flex-direction: column;
   overflow: scroll;
   scrollbar-width: thin;
@@ -32,6 +31,19 @@ export const ContentOfPost = styled.div`
   &:hover {
     cursor: pointer;
   }
+
+  video {
+    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "21rem")};
+    height: ${({ largeCard }) => (largeCard === true ? "30rem" : "5.6rem")};
+  }
+`;
+
+export const ProfileContent = styled.div`
+  display: flex;
+`;
+export const NameAndCommunity = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 export const ContentOfPostWithMedia = styled.div`

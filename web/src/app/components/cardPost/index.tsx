@@ -30,10 +30,15 @@ import { useDeleteLoveMutate } from "@/hooks/deleteLove";
 
 interface CardPostProps {
   post: TextPostWithUser | MediaPostWithUser;
+  largeCard?: boolean;
   refetchPost?: () => void;
 }
 
-export default function CardPost({ post, refetchPost }: CardPostProps) {
+export default function CardPost({
+  post,
+  refetchPost,
+  largeCard,
+}: CardPostProps) {
   const router = useRouter();
   const user = userStore((state) => state.user);
 
@@ -121,7 +126,7 @@ export default function CardPost({ post, refetchPost }: CardPostProps) {
   }, [isSuccess, post, deleteLoveIsSuccess, user]);
 
   return (
-    <PostCardContainer>
+    <PostCardContainer largeCard={largeCard!}>
       <ProfileContent>
         {post.user?.avatar === null ? (
           <AvatarContentWithoutImage>
@@ -141,7 +146,10 @@ export default function CardPost({ post, refetchPost }: CardPostProps) {
           <span>{post.community?.name}</span>
         </NameAndCommunity>
       </ProfileContent>
-      <ContentOfPost onClick={() => router.push(`/postInfo/${post.id}`)}>
+      <ContentOfPost
+        largeCard={largeCard!}
+        onClick={() => router.push(`/postInfo/${post.id}`)}
+      >
         {"content" in post ? (
           <>
             <p>{post.content}</p>
