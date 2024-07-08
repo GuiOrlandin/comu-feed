@@ -88,6 +88,7 @@ export const TextPostContainer = styled.div`
 
   select {
     margin-top: 0.6rem;
+    padding: 0.3rem;
   }
 `;
 
@@ -154,6 +155,11 @@ export const MediaPostContainer = styled.div`
 
   select {
     margin-top: 0.6rem;
+    padding: 0.3rem;
+  }
+  textArea {
+    padding: 0.5rem;
+    margin-top: 0.5rem;
   }
 `;
 

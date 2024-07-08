@@ -9,6 +9,7 @@ interface PostSchema {
   id?: string;
   created_at?: Date;
   user?: User;
+  description?: string;
 }
 
 export class MediaPost {
@@ -56,6 +57,14 @@ export class MediaPost {
 
   set media(media: string) {
     this.props.media = media;
+  }
+
+  get description(): string {
+    return this.props.description;
+  }
+
+  set description(description: string) {
+    this.props.media = description;
   }
 
   get created_at(): Date {

@@ -29,6 +29,7 @@ export class PrismaPostMapper {
     user_id,
     created_at,
     id,
+    description,
   }: MediaPost): MediaPostRaw {
     return {
       community_id,
@@ -37,6 +38,7 @@ export class PrismaPostMapper {
       user_id,
       created_at,
       id,
+      description,
     };
   }
 }

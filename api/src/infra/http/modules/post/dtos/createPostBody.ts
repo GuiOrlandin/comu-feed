@@ -15,5 +15,9 @@ export class CreatePostBody {
 
   @IsString()
   @IsOptional()
+  description: string;
+
+  @IsString()
+  @IsOptional()
   media: string;
 }

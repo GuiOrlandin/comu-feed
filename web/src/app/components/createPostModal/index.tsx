@@ -34,6 +34,10 @@ import {
   CreateTextPostRequest,
   useCreateTextPostMutate,
 } from "@/hooks/createTextPost";
+import {
+  CreateMediaPostRequest,
+  useCreateMediaPostMutate,
+} from "@/hooks/createMediaPost";
 
 interface CreatPostModalProps {
   user: UserResponse;
@@ -52,8 +56,14 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
       community_id: "",
       postType: "textPost",
       title: "",
-      user_id: user.id,
       content: "",
+    });
+  const [createMediaPostDetails, setCreateMediaPostDetails] =
+    useState<CreateMediaPostRequest>({
+      community_id: "",
+      postType: "mediaPost",
+      title: "",
+      description: "",
     });
   const {
     mutate,
@@ -64,8 +74,8 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
     ...(user?.community_Member || []),
     ...(user?.community_Founder || []),
   ];
-  const { mutate: createTextPost, isSuccess: textPostIsSuccess } =
-    useCreateTextPostMutate();
+  const { mutate: createTextPost } = useCreateTextPostMutate();
+  const { mutate: createMediaPost } = useCreateMediaPostMutate();
 
   function onDrop(media: File[]) {
     setMedia(media);
@@ -91,6 +101,20 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
   ) {
     const { value } = event.target;
     setCreateTextPostDetails((prevDetails) => ({
+      ...prevDetails!,
+      [inputTitle]: value,
+    }));
+  }
+
+  function handleChangeCreateMediaPostDetails(
+    event:
+      | ChangeEvent<HTMLTextAreaElement>
+      | ChangeEvent<HTMLSelectElement>
+      | ChangeEvent<HTMLInputElement>,
+    inputTitle: string
+  ) {
+    const { value } = event.target;
+    setCreateMediaPostDetails((prevDetails) => ({
       ...prevDetails!,
       [inputTitle]: value,
     }));
@@ -141,6 +165,11 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
     createTextPost(createTextPostDetails);
   }
 
+  function handleCreateMediaPost() {
+    createMediaPost({ data: createMediaPostDetails, file: media! });
+    console.log(createMediaPostDetails);
+  }
+
   useEffect(() => {
     if (isSuccess) {
       setImagePreview(null);
@@ -158,10 +187,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
     ) {
       removeUser();
     }
-
-    if (textPostIsSuccess) {
-    }
-  }, [isSuccess, createCommunityError, textPostIsSuccess]);
+  }, [isSuccess, createCommunityError]);
   return (
     <Dialog.Portal>
       <Overlay />
@@ -237,15 +263,34 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
           )}
           {tabType === "mediaPost" && (
             <MediaPostContainer>
-              <input type="text" placeholder="Titulo" />
-              <select>
+              <input
+                type="text"
+                placeholder="Titulo"
+                onChange={(event) =>
+                  handleChangeCreateMediaPostDetails(event, "title")
+                }
+              />
+              <select
+                onChange={(event) =>
+                  handleChangeCreateMediaPostDetails(event, "community_id")
+                }
+              >
+                <option>Escolha a comunidade</option>
                 {user &&
                   combinedCommunities.map((community) => (
-                    <option key={community.id} value="">
+                    <option key={community.id} value={community.id}>
                       {community.name}
                     </option>
                   ))}
               </select>
+              <textarea
+                onChange={(event) =>
+                  handleChangeCreateMediaPostDetails(event, "description")
+                }
+                name=""
+                id=""
+                placeholder="descrição do post"
+              ></textarea>
               {dropzone.isDragActive ? (
                 <UploadMediaContainerOnHover {...dropzone.getRootProps()}>
                   <label>
@@ -263,7 +308,9 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
                   <input type="" {...dropzone.getInputProps()} />
                 </UploadMediaContainer>
               )}
-              <SendPostButton>Enviar</SendPostButton>
+              <SendPostButton onClick={() => handleCreateMediaPost()}>
+                Enviar
+              </SendPostButton>
             </MediaPostContainer>
           )}
           {tabType === "createCommunity" && (

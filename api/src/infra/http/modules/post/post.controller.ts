@@ -85,13 +85,14 @@ export class PostController {
     @Request() request: AuthRequestModel,
     @Body() body: CreatePostBody,
   ) {
-    const { community_id, title } = body;
+    const { community_id, title, description } = body;
     const post = await this.createPostUseCase.execute({
       community_id,
       media: file.filename,
       title,
       user_id: request.user.id,
       postType: "mediaPost",
+      description,
     });
 
     if (post instanceof MediaPost) {

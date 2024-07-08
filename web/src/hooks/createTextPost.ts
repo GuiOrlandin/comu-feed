@@ -4,7 +4,6 @@ import { tokenStore } from "@/store/tokenStore";
 
 export interface CreateTextPostRequest {
   title: string;
-  user_id: string;
   content?: string;
   community_id: string;
   postType: "textPost";

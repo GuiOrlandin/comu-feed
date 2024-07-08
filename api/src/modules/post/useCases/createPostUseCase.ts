@@ -10,6 +10,7 @@ interface CreatedPostRequest {
   content?: string;
   media?: string;
   community_id: string;
+  description?: string;
   postType: "textPost" | "mediaPost";
 }
 
@@ -24,6 +25,7 @@ export class CreatePostUseCase {
     community_id,
     postType,
     media,
+    description,
   }: CreatedPostRequest) {
     if (postType === "textPost") {
       const post = new TextPost({
@@ -41,6 +43,7 @@ export class CreatePostUseCase {
         title,
         user_id,
         community_id,
+        description,
       });
 
       await this.postRepository.create(post);
