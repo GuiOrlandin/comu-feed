@@ -41,6 +41,7 @@ export default function CardPost({
 }: CardPostProps) {
   const router = useRouter();
   const user = userStore((state) => state.user);
+  const removeUser = userStore((state) => state.removeUser);
 
   const [loveIdToDelete, setLoveIdToDelete] = useState("");
   const [loveInfo, setLoveInfo] = useState<LoveWithUser>({
@@ -53,9 +54,12 @@ export default function CardPost({
       name: "",
     },
   });
-  const { mutate, isSuccess } = useCreateLoveMutate();
-  const { mutate: deleteLoveMutate, isSuccess: deleteLoveIsSuccess } =
-    useDeleteLoveMutate();
+  const { mutate, isSuccess, error: createLoveError } = useCreateLoveMutate();
+  const {
+    mutate: deleteLoveMutate,
+    isSuccess: deleteLoveIsSuccess,
+    error,
+  } = useDeleteLoveMutate();
 
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
@@ -83,6 +87,13 @@ export default function CardPost({
   }
 
   useEffect(() => {
+    if (
+      error?.message === "Request failed with status code 401" ||
+      createLoveError?.message === "Request failed with status code 401"
+    ) {
+      removeUser();
+    }
+
     if (isSuccess || deleteLoveIsSuccess) {
       refetchPost!();
     }

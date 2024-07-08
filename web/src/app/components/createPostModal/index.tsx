@@ -29,6 +29,11 @@ import {
   useCreateCommunityMutate,
 } from "@/hooks/createCommunity";
 import { UserResponse } from "../topBar";
+import { userStore } from "@/store/userStore";
+import {
+  CreateTextPostRequest,
+  useCreateTextPostMutate,
+} from "@/hooks/createTextPost";
 
 interface CreatPostModalProps {
   user: UserResponse;
@@ -39,13 +44,28 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [communityImage, setCommunityImage] = useState<File[] | null>();
   const [media, setMedia] = useState<File[]>();
+  const removeUser = userStore((state) => state.removeUser);
   const [createCommunityDetails, setCreateCommunityDetails] =
     useState<CreateCommunityDetails>();
-  const { mutate, isSuccess } = useCreateCommunityMutate();
+  const [createTextPostDetails, setCreateTextPostDetails] =
+    useState<CreateTextPostRequest>({
+      community_id: "",
+      postType: "textPost",
+      title: "",
+      user_id: user.id,
+      content: "",
+    });
+  const {
+    mutate,
+    isSuccess,
+    error: createCommunityError,
+  } = useCreateCommunityMutate();
   const combinedCommunities = [
     ...(user?.community_Member || []),
     ...(user?.community_Founder || []),
   ];
+  const { mutate: createTextPost, isSuccess: textPostIsSuccess } =
+    useCreateTextPostMutate();
 
   function onDrop(media: File[]) {
     setMedia(media);
@@ -57,6 +77,20 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
   ) {
     const { value } = event.target;
     setCreateCommunityDetails((prevDetails) => ({
+      ...prevDetails!,
+      [inputTitle]: value,
+    }));
+  }
+
+  function handleChangeCreateTextPostDetails(
+    event:
+      | ChangeEvent<HTMLTextAreaElement>
+      | ChangeEvent<HTMLSelectElement>
+      | ChangeEvent<HTMLInputElement>,
+    inputTitle: string
+  ) {
+    const { value } = event.target;
+    setCreateTextPostDetails((prevDetails) => ({
       ...prevDetails!,
       [inputTitle]: value,
     }));
@@ -86,6 +120,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
   function handleSetTapType(postType: string) {
     return setTabType(postType);
   }
+
   function handleCreateCommunity(data: CreateCommunityDetails) {
     if (data.password === "") {
       setCreateCommunityDetails((prevDetails) => ({
@@ -102,6 +137,10 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
     mutate({ data: createCommunityDetails!, file: communityImage! });
   }
 
+  function handleCreateTextPost() {
+    createTextPost(createTextPostDetails);
+  }
+
   useEffect(() => {
     if (isSuccess) {
       setImagePreview(null);
@@ -113,7 +152,16 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
       });
       setTabType("textPost");
     }
-  }, [isSuccess]);
+
+    if (
+      createCommunityError?.message === "Request failed with status code 401"
+    ) {
+      removeUser();
+    }
+
+    if (textPostIsSuccess) {
+    }
+  }, [isSuccess, createCommunityError, textPostIsSuccess]);
   return (
     <Dialog.Portal>
       <Overlay />
@@ -154,6 +202,41 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
 
           {tabType === "textPost" && (
             <TextPostContainer>
+              <input
+                type="text"
+                placeholder="Titulo"
+                onChange={(event) =>
+                  handleChangeCreateTextPostDetails(event, "title")
+                }
+              />
+              <select
+                onChange={(event) =>
+                  handleChangeCreateTextPostDetails(event, "community_id")
+                }
+              >
+                <option>Escolha a comunidade</option>
+                {user &&
+                  combinedCommunities.map((community) => (
+                    <option key={community.id} value={community.id}>
+                      {community.name}
+                    </option>
+                  ))}
+              </select>
+              <textarea
+                onChange={(event) =>
+                  handleChangeCreateTextPostDetails(event, "content")
+                }
+                name=""
+                id=""
+                placeholder="Conteudo do post"
+              ></textarea>
+              <SendPostButton onClick={() => handleCreateTextPost()}>
+                Enviar
+              </SendPostButton>
+            </TextPostContainer>
+          )}
+          {tabType === "mediaPost" && (
+            <MediaPostContainer>
               <input type="text" placeholder="Titulo" />
               <select>
                 {user &&
@@ -163,14 +246,6 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
                     </option>
                   ))}
               </select>
-              <textarea name="" id="" placeholder="Conteudo do post"></textarea>
-              <SendPostButton>Enviar</SendPostButton>
-            </TextPostContainer>
-          )}
-          {tabType === "mediaPost" && (
-            <MediaPostContainer>
-              <input type="text" placeholder="Titulo" />
-
               {dropzone.isDragActive ? (
                 <UploadMediaContainerOnHover {...dropzone.getRootProps()}>
                   <label>

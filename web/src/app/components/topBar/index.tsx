@@ -90,7 +90,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
   const setEmail = emailStore((state) => state.setEmail);
   const email = emailStore((state) => state.email);
   const setUser = userStore((state) => state.setUser);
-  const userTest = userStore((state) => state.user);
+  const userStored = userStore((state) => state.user);
   const removeUser = userStore((state) => state.removeUser);
   const setToken = tokenStore((state) => state.setToken);
 
@@ -149,8 +149,11 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
     } else {
       setUserAuthenticated(false);
     }
-  }, [token, session, isSuccess]);
 
+    if (!user) {
+      setUserAuthenticated(false);
+    }
+  }, [token, session, isSuccess]);
 
   return (
     <TopBarContainer>

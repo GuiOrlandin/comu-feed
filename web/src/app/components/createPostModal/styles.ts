@@ -151,6 +151,10 @@ export const MediaPostContainer = styled.div`
     border-radius: 5px;
     border: 1px solid #160548;
   }
+
+  select {
+    margin-top: 0.6rem;
+  }
 `;
 
 export const UploadMediaContainerOnHover = styled.div`
