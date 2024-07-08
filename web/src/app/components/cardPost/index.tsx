@@ -146,8 +146,8 @@ export default function CardPost({
         ) : (
           <Image
             src={`http://localhost:3333/files/avatarImage/${post.user?.avatar}`}
-            width={6 * 16}
-            height={6 * 16}
+            width={4 * 16}
+            height={4 * 16}
             alt="Picture of the author"
           />
         )}
@@ -168,8 +168,8 @@ export default function CardPost({
         ) : isImage(post.media) ? (
           <Image
             src={`http://localhost:3333/files/${post.media}`}
-            width={16 * 16}
-            height={9 * 16}
+            width={20 * 16}
+            height={12 * 16}
             alt="Media content"
           />
         ) : (

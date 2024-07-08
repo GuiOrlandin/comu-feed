@@ -217,8 +217,8 @@ export default function PostInfo({ params }: { params: { id: string } }) {
               ) : isImage(post!.media) ? (
                 <Image
                   src={`http://localhost:3333/files/${post!.media}`}
-                  width={16 * 16}
-                  height={9 * 16}
+                  width={54 * 16}
+                  height={37 * 16}
                   alt="Media content"
                 />
               ) : (

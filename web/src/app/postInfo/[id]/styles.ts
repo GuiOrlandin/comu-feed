@@ -35,6 +35,7 @@ export const PostWrapper = styled.div`
 
 export const AvatarContentWithoutImage = styled.div`
   display: flex;
+  margin-left: 0.5rem;
 `;
 
 export const NameAndCommunity = styled.div`

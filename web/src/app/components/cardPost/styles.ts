@@ -33,13 +33,26 @@ export const ContentOfPost = styled.div<CardType>`
   }
 
   video {
-    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "21rem")};
-    height: ${({ largeCard }) => (largeCard === true ? "30rem" : "5.6rem")};
+    border-radius: 8px;
+    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "19.5rem")};
+    height: ${({ largeCard }) => (largeCard === true ? "30rem" : "12rem")};
+  }
+
+  img {
+    border-radius: 8px;
+    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "20rem")};
+    height: ${({ largeCard }) => (largeCard === true ? "30rem" : "12rem")};
   }
 `;
 
 export const ProfileContent = styled.div`
   display: flex;
+
+  img {
+    margin-right: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
 `;
 export const NameAndCommunity = styled.div`
   display: flex;
