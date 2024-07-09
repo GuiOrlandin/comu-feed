@@ -19,6 +19,13 @@ export class PrismaCommunityRepository implements CommunityRepository {
       where: {
         id,
       },
+      include: {
+        mediaPosts: true,
+        textPosts: true,
+        User_Founder: true,
+        User_Members: true,
+        _count: true,
+      },
     });
 
     if (!community) {
@@ -88,6 +95,13 @@ export class PrismaCommunityRepository implements CommunityRepository {
     const communities = await this.prisma.community.findMany({
       where: {
         name,
+      },
+      include: {
+        mediaPosts: true,
+        textPosts: true,
+        User_Founder: true,
+        User_Members: true,
+        _count: true,
       },
     });
 

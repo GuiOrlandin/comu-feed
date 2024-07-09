@@ -85,12 +85,7 @@ export default function News() {
           <NewsContent>
             {posts && posts!.length > 0 ? (
               posts!.map((post) => (
-                <CardPost
-                  key={post.id}
-                  largeCard={true}
-                  post={post}
-                  refetchPost={() => refetch()}
-                />
+                <CardPost key={post.id} largeCard={true} post={post} />
               ))
             ) : (
               <div>Nenhum post disponível</div>

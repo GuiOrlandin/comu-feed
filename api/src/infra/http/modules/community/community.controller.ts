@@ -20,11 +20,13 @@ import { JoinTheCommunityUseCase } from "src/modules/community/useCases/joinTheC
 import { JoinTheCommunityBody } from "./dtos/joinTheCommunityBody";
 import { AuthRequestModel } from "../auth/models/authRequestModel";
 import { DeleteCommunityUseCase } from "src/modules/community/useCases/deleteCommunityUseCase";
+import { FindCommunityByNameUseCase } from "src/modules/community/useCases/findCommunityByNameUseCase";
 
 @Controller("community")
 export class CommunityController {
   constructor(
     private createCommunityUseCase: CreateCommunityUseCase,
+    private findCommunityByName: FindCommunityByNameUseCase,
     private joinTheCommunityUseCase: JoinTheCommunityUseCase,
     private deleteTheCommunityUseCase: DeleteCommunityUseCase,
   ) {}
