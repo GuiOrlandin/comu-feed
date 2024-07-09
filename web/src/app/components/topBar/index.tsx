@@ -150,8 +150,10 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       setUserAuthenticated(false);
     }
 
-    if (!user) {
+    if (!userStored) {
       setUserAuthenticated(false);
+      localStorage.removeItem("storeToken");
+      localStorage.removeItem("storeEmail");
     }
   }, [token, session, isSuccess]);
 

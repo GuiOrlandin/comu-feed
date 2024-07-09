@@ -59,6 +59,19 @@ export const ContentOfPost = styled.div`
   border: 8px;
   padding: 1rem;
 `;
+export const TitleAndContentOfPost = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  span {
+    margin-bottom: 0.5rem;
+  }
+
+`;
 
 export const ContentOfPostWithMedia = styled.div`
   display: flex;

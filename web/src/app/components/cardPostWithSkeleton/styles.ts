@@ -6,8 +6,8 @@ import { Skeleton } from "@mui/material";
 export const PostCardContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 14.6875rem;
-  width: 23.5625rem;
+  height: 18.6875rem;
+  width: 24.5625rem;
   border-radius: 10px;
   background: #f5f5f5;
   padding: 1.5rem;

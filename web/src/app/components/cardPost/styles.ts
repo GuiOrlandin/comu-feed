@@ -10,8 +10,8 @@ export const PostCardContainer = styled.div<CardType>`
   display: flex;
   flex-direction: column;
   max-height: ${({ largeCard }) =>
-    largeCard === true ? "53rem" : "14.6875rem"};
-  width: ${({ largeCard }) => (largeCard === true ? "56rem" : "23.5625rem")};
+    largeCard === true ? "53rem" : "18.6875rem"};
+  width: ${({ largeCard }) => (largeCard === true ? "56rem" : "24.5625rem")};
   border: 2px solid #f0edf6;
   border-radius: 10px;
   background: #f5f5f5;
@@ -34,13 +34,13 @@ export const ContentOfPost = styled.div<CardType>`
 
   video {
     border-radius: 8px;
-    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "19.5rem")};
+    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "20.1rem")};
     height: ${({ largeCard }) => (largeCard === true ? "30rem" : "12rem")};
   }
 
   img {
     border-radius: 8px;
-    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "20rem")};
+    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "20.8rem")};
     height: ${({ largeCard }) => (largeCard === true ? "30rem" : "12rem")};
   }
 `;
@@ -50,7 +50,7 @@ export const ProfileContent = styled.div`
 
   img {
     margin-right: 1rem;
-    border-radius: 8px;
+    border-radius: 999px;
     margin-bottom: 1rem;
   }
 `;
@@ -78,22 +78,4 @@ export const LoveAndCommentContainer = styled.div`
   justify-content: space-between;
   padding: 0;
   padding-top: 0.3rem;
-`;
-export const LoveImageAndLength = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-export const CommentsImageAndLength = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;

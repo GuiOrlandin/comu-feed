@@ -52,6 +52,7 @@ import {
   SkeletonContainer,
   SkeletonLike,
   SkeletonNameAndCommunityContainer,
+  TitleAndContentOfPost,
 } from "./styles";
 
 import { tokenStore } from "@/store/tokenStore";
@@ -211,24 +212,33 @@ export default function PostInfo({ params }: { params: { id: string } }) {
             </ProfileContent>
             <ContentOfPost>
               {"content" in post! ? (
-                <>
+                <TitleAndContentOfPost>
+                  <h1>{post.title}</h1>
                   <p>{post.content}</p>
-                </>
+                </TitleAndContentOfPost>
               ) : isImage(post!.media) ? (
-                <Image
-                  src={`http://localhost:3333/files/${post!.media}`}
-                  width={54 * 16}
-                  height={37 * 16}
-                  alt="Media content"
-                />
+                <TitleAndContentOfPost>
+                  <h1>{post!.title}</h1>
+                  <span>{post!.description}</span>
+                  <Image
+                    src={`http://localhost:3333/files/${post!.media}`}
+                    width={54 * 16}
+                    height={37 * 16}
+                    alt="Media content"
+                  />
+                </TitleAndContentOfPost>
               ) : (
                 <ContentOfPostWithMedia>
-                  <video
-                    src={`http://localhost:3333/files/${post!.media}`}
-                    controls
-                    height={30 * 16}
-                    width={54 * 16}
-                  />
+                  <TitleAndContentOfPost>
+                    <h1>{post!.title}</h1>
+                    <span>{post!.description}</span>
+                    <video
+                      src={`http://localhost:3333/files/${post!.media}`}
+                      controls
+                      height={30 * 16}
+                      width={54 * 16}
+                    />
+                  </TitleAndContentOfPost>
                 </ContentOfPostWithMedia>
               )}
             </ContentOfPost>

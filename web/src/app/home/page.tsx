@@ -2,7 +2,11 @@
 
 import CardPostWithSkeleton from "@/app/components/cardPostWithSkeleton";
 import TopBar from "@/app/components/topBar";
-import { CardsOfPostContainer, HomeContainer } from "@/app/home/styles";
+import {
+  CardsOfPostContainer,
+  HomeContainer,
+  TopBarContainer,
+} from "@/app/home/styles";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import CardPost from "../components/cardPost";
@@ -37,6 +41,7 @@ export interface MediaPostWithUser {
   community_id: string;
   media: string;
   created_at: Date;
+  description: string;
   user?: {
     id: string;
     avatar: string;
@@ -89,7 +94,9 @@ export default function Home() {
 
   return (
     <HomeContainer>
-      <TopBar page="home" />
+      <TopBarContainer>
+        <TopBar page="home" />
+      </TopBarContainer>
       {isLoading ? (
         <CardsOfPostContainer>
           <CardPostWithSkeleton />
@@ -101,13 +108,7 @@ export default function Home() {
           {Array.isArray(posts) &&
             posts
               ?.slice(0, 3)
-              .map((post) => (
-                <CardPost
-                  key={post.id}
-                  post={post}
-                  refetchPost={() => refetch()}
-                />
-              ))}
+              .map((post) => <CardPost key={post.id} post={post} />)}
         </CardsOfPostContainer>
       )}
     </HomeContainer>

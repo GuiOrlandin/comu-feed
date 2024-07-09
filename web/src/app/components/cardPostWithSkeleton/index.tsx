@@ -18,7 +18,7 @@ export default function CardPostWithSkeleton() {
           <SkeletonCommunity width={7 * 16} height={2 * 16} variant="text" />
         </NameAndCommunity>
       </ProfileContent>
-      <SkeletonContent width={20 * 16} height={5 * 16} variant="rectangular" />
+      <SkeletonContent width={20 * 16} height={10 * 16} variant="rectangular" />
     </PostCardContainer>
   );
 }

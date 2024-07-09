@@ -28,6 +28,7 @@ import { FaRegEye } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 
 import { tokenStore } from "@/store/tokenStore";
+import { emailStore } from "@/store/emailStore";
 
 export default function Login() {
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function Login() {
     });
   const [errorMessage, setErrorMessage] = useState("");
   const saveToken = tokenStore((state) => state.setToken);
+  const saveEmail = emailStore((state) => state.setEmail);
   const [inputType, setInputType] = useState("password");
   const [showPassword, setShowPassword] = useState(true);
 
@@ -63,6 +65,7 @@ export default function Login() {
   useEffect(() => {
     if (isSuccess && data) {
       saveToken(data);
+      saveEmail(userAuthenticateCredentials!.email);
 
       if (typeof window !== "undefined") {
         localStorage.setItem("storeToken", data);
