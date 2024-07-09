@@ -11,10 +11,7 @@ import { FaRegCommentAlt } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { MediaPostWithUser, TextPostWithUser } from "@/app/home/page";
 import axios from "axios";
-import {
-  CommentsImageAndLength,
-  LoveImageAndLength,
-} from "@/app/components/cardPost/styles";
+
 import { useEffect, useState } from "react";
 import {
   CreateCommentDetails,
@@ -64,6 +61,7 @@ import {
   SkeletonName,
 } from "@/app/components/cardPostWithSkeleton/styles";
 import { Overlay } from "@/app/components/createPostModal/styles";
+import LikeAndComments from "@/app/components/likeAndComments";
 
 export default function PostInfo({ params }: { params: { id: string } }) {
   const { mutate, isSuccess } = useCreateCommentMutate();
@@ -242,32 +240,7 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                 </ContentOfPostWithMedia>
               )}
             </ContentOfPost>
-            <LoveAndCommentContainer>
-              <LoveImageAndLength>
-                <CiHeart color="#CB4444" size={25} />
-                {post!.love ? (
-                  post!.love.length <= 1 ? (
-                    <p>{post!.love.length} curtida</p>
-                  ) : (
-                    <p>{post!.love.length} curtidas</p>
-                  )
-                ) : (
-                  <p>0 curtidas</p>
-                )}
-              </LoveImageAndLength>
-              <CommentsImageAndLength>
-                <FaRegCommentAlt color="#CB4444" size={18} />
-                {post?.comments ? (
-                  post!.comments!.length <= 1 ? (
-                    <p>{post!.comments!.length} comentário</p>
-                  ) : (
-                    <p> {post!.comments!.length} comentários</p>
-                  )
-                ) : (
-                  <p>0 comentários</p>
-                )}
-              </CommentsImageAndLength>
-            </LoveAndCommentContainer>
+            <LikeAndComments post={post!} />
             <CommentsAndCreateCommentContainer>
               {"content" in post! ? (
                 <>

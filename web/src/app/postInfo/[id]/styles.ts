@@ -70,7 +70,6 @@ export const TitleAndContentOfPost = styled.div`
   span {
     margin-bottom: 0.5rem;
   }
-
 `;
 
 export const ContentOfPostWithMedia = styled.div`
@@ -112,6 +111,7 @@ export const NameAndContentOfComment = styled.div`
 
 export const CommentsAndCreateCommentContainer = styled.div`
   display: flex;
+  margin-top: 1rem;
   flex-direction: column;
   position: relative;
 

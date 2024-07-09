@@ -94,7 +94,7 @@ export default function LikeAndComments({ post }: LikeAndComments) {
   }, [error, createLoveError, deleteLoveIsSuccess]);
 
   useEffect(() => {
-    if (post && user) {
+    if (post && post.love && user) {
       const loveInfoFound = post!.love!.find(
         (love) => love.user.id === user.id
       );
@@ -132,11 +132,12 @@ export default function LikeAndComments({ post }: LikeAndComments) {
                 size={25}
                 onClick={() => handleDislikePost()}
               />
-              {post!.love!.length <= 1 ? (
-                <p>{post!.love!.length} curtida</p>
-              ) : (
-                <p> {post!.love!.length} curtidas</p>
-              )}
+              {post.love &&
+                (post!.love!.length <= 1 ? (
+                  <p>{post!.love!.length} curtida</p>
+                ) : (
+                  <p> {post!.love!.length} curtidas</p>
+                ))}
             </LoveImageAndLength>
           ) : (
             <LoveImageAndLength>
@@ -146,11 +147,12 @@ export default function LikeAndComments({ post }: LikeAndComments) {
                 size={25}
                 onClick={() => handleDislikePost()}
               />
-              {post.love.length <= 1 ? (
-                <p>{post.love.length} curtida</p>
-              ) : (
-                <p> {post.love.length} curtidas</p>
-              )}
+              {post.love &&
+                (post.love!.length <= 1 ? (
+                  <p>{post.love!.length} curtida</p>
+                ) : (
+                  <p> {post.love!.length} curtidas</p>
+                ))}
             </LoveImageAndLength>
           )}
         </>
@@ -163,11 +165,12 @@ export default function LikeAndComments({ post }: LikeAndComments) {
                 size={25}
                 onClick={() => handleLikePost(post.id, "textPost")}
               />
-              {post!.love!.length <= 1 ? (
-                <p>{post!.love!.length} curtida</p>
-              ) : (
-                <p> {post!.love!.length} curtidas</p>
-              )}
+              {post.love &&
+                (post!.love!.length <= 1 ? (
+                  <p>{post!.love!.length} curtida</p>
+                ) : (
+                  <p> {post!.love!.length} curtidas</p>
+                ))}
             </LoveImageAndLength>
           ) : (
             <LoveImageAndLength>
@@ -176,11 +179,12 @@ export default function LikeAndComments({ post }: LikeAndComments) {
                 size={25}
                 onClick={() => handleLikePost(post.id, "mediaPost")}
               />
-              {post.love.length <= 1 ? (
-                <p>{post.love.length} curtida</p>
-              ) : (
-                <p> {post.love.length} curtidas</p>
-              )}
+              {post.love &&
+                (post.love!.length <= 1 ? (
+                  <p>{post.love!.length} curtida</p>
+                ) : (
+                  <p> {post.love!.length} curtidas</p>
+                ))}
             </LoveImageAndLength>
           )}
         </>
@@ -190,11 +194,12 @@ export default function LikeAndComments({ post }: LikeAndComments) {
           onClick={() => router.push(`/postInfo/${post.id}`)}
         >
           <FaRegCommentAlt color="#CB4444" size={18} />
-          {post.comments!.length <= 1 ? (
-            <p>{post.comments!.length} comentário</p>
-          ) : (
-            <p> {post.comments!.length} comentários</p>
-          )}
+          {post.comments &&
+            (post.comments!.length <= 1 ? (
+              <p>{post.comments!.length} comentário</p>
+            ) : (
+              <p> {post.comments!.length} comentários</p>
+            ))}
         </CommentsImageAndLength>
       </LoveAndCommentContainer>
     </LoveAndCommentContainer>
