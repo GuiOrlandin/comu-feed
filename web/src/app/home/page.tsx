@@ -53,6 +53,7 @@ export interface MediaPostWithUser {
   comments?: CommentWithUser[];
   community?: {
     name: string;
+    id: string;
   };
 }
 
@@ -74,6 +75,7 @@ export interface TextPostWithUser {
   love?: LoveWithUser[];
   community?: {
     name: string;
+    id: string;
   };
 }
 

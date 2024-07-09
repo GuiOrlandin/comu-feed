@@ -53,6 +53,12 @@ export const ProfileContent = styled.div`
 export const NameAndCommunity = styled.div`
   display: flex;
   flex-direction: column;
+
+  span {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const ContentOfPostWithMedia = styled.div`

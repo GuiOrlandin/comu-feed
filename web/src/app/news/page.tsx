@@ -9,7 +9,6 @@ import {
   NewsContainer,
   NewsContent,
   NewsWrapper,
-  NewsWrapperInLoading,
   SkeletonAvatarNameAndCommunityContainer,
   SkeletonComment,
   SkeletonCommentAndLikeContainer,

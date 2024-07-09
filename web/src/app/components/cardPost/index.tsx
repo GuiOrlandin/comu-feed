@@ -13,7 +13,6 @@ import {
   PostCardContainer,
   ProfileContent,
 } from "./styles";
-import { userStore } from "@/store/userStore";
 import AvatarImage from "../avatarImg";
 import LikeAndComments from "../likeAndComments";
 
@@ -45,7 +44,11 @@ export default function CardPost({ post, largecard }: CardPostProps) {
 
         <NameAndCommunity>
           <h2>{post.user?.name}</h2>
-          <span>{post.community?.name}</span>
+          <span
+            onClick={() => router.push(`/communityInfo/${post.community_id}`)}
+          >
+            {post.community?.name}
+          </span>
         </NameAndCommunity>
       </ProfileContent>
       <ContentOfPost
