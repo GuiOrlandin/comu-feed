@@ -1,12 +1,17 @@
 import { User } from "src/modules/user/entities/User";
 import { Community } from "../entities/community";
-import { CommunityRepository } from "./communityRepository";
+import {
+  CommunityRepository,
+  CommunityResponseForIdRequest,
+} from "./communityRepository";
 
 export class CommunityRepositoryInMemory implements CommunityRepository {
   public communities: Community[] = [];
   public users: User[] = [];
 
-  async findById(id: string): Promise<Community | null> {
+  async findById(
+    id: string,
+  ): Promise<Community | CommunityResponseForIdRequest | null> {
     const community = this.communities.find((community) => community.id === id);
 
     if (!community) {

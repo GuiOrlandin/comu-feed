@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tokenStore } from "@/store/tokenStore";
 
 export interface CreateLoveDetails {
@@ -20,6 +20,7 @@ async function postData(data: CreateLoveDetails, authToken: string) {
 export function useCreateLoveMutate() {
   const setToken = tokenStore((state) => state.setToken);
   const authToken = tokenStore((state) => state.token);
+  const queryClient = useQueryClient();
 
   if (typeof window !== "undefined") {
     const storeToken = localStorage.getItem("storeToken");
@@ -31,6 +32,9 @@ export function useCreateLoveMutate() {
   const mutate = useMutation({
     mutationFn: ({ data }: { data: CreateLoveDetails }) =>
       postData(data, authToken),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+    },
   });
   return mutate;
 }

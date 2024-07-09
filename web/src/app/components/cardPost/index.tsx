@@ -24,7 +24,6 @@ interface CardPostProps {
 
 export default function CardPost({ post, largeCard }: CardPostProps) {
   const router = useRouter();
-  const user = userStore((state) => state.user);
 
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);

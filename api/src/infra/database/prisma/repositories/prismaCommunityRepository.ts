@@ -1,8 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { CommunityRepository } from "src/modules/community/repositories/communityRepository";
+import {
+  CommunityRepository,
+  CommunityResponseForIdRequest,
+} from "src/modules/community/repositories/communityRepository";
 import { Community } from "src/modules/community/entities/community";
 import { PrismaCommunityMapper } from "../mappers/prismaCommunityMapper";
+import {
+  MediaPostWithUser,
+  TextPostWithUser,
+} from "src/modules/post/repositories/postRepository";
 
 @Injectable()
 export class PrismaCommunityRepository implements CommunityRepository {
@@ -14,25 +21,198 @@ export class PrismaCommunityRepository implements CommunityRepository {
       },
     });
   }
-  async findById(id: string): Promise<Community> {
-    const community = await this.prisma.community.findFirst({
-      where: {
-        id,
-      },
+
+  async findById(id: string): Promise<CommunityResponseForIdRequest | null> {
+    const communityRecord = await this.prisma.community.findFirst({
+      where: { id },
       include: {
-        mediaPosts: true,
-        textPosts: true,
-        User_Founder: true,
-        User_Members: true,
-        _count: true,
+        mediaPosts: {
+          include: {
+            user: {
+              select: {
+                avatar: true,
+                email: true,
+                name: true,
+              },
+            },
+            comments: {
+              select: {
+                content: true,
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    avatar: true,
+                    email: true,
+                    name: true,
+                  },
+                },
+                created_at: true,
+              },
+            },
+            community: {
+              select: {
+                name: true,
+              },
+            },
+            love: {
+              select: {
+                id: true,
+                media_post_id: true,
+                text_post_id: true,
+                user: {
+                  select: {
+                    avatar: true,
+                    name: true,
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        textPosts: {
+          include: {
+            user: {
+              select: {
+                avatar: true,
+                email: true,
+                name: true,
+              },
+            },
+            comments: {
+              select: {
+                content: true,
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    avatar: true,
+                    email: true,
+                    name: true,
+                  },
+                },
+                created_at: true,
+              },
+            },
+            community: {
+              select: {
+                name: true,
+              },
+            },
+            love: {
+              select: {
+                id: true,
+                media_post_id: true,
+                text_post_id: true,
+                user: {
+                  select: {
+                    avatar: true,
+                    name: true,
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
-    if (!community) {
+    if (!communityRecord) {
       return null;
     }
 
-    return PrismaCommunityMapper.toDomain(community);
+    const textPosts: TextPostWithUser[] = communityRecord.textPosts.map(
+      (record) => ({
+        id: record.id,
+        title: record.title,
+        user_id: record.user_id,
+        community_id: record.community_id,
+        content: record.content,
+        created_at: record.created_at,
+        user: {
+          avatar: record.user.avatar,
+          email: record.user.email,
+          name: record.user.name,
+        },
+        community: {
+          name: record.community.name,
+        },
+        love: record.love.map((love) => ({
+          id: love.id,
+          media_post_id: love.media_post_id,
+          text_post_id: love.text_post_id,
+          user: {
+            avatar: love.user.avatar,
+            name: love.user.name,
+            id: love.user.id,
+          },
+        })),
+        comments: record.comments.map((comment) => ({
+          content: comment.content,
+          id: comment.id,
+          user: {
+            id: comment.user.id,
+            avatar: comment.user.avatar,
+            email: comment.user.email,
+            name: comment.user.name,
+          },
+          created_at: comment.created_at,
+        })),
+      }),
+    );
+
+    const mediaPosts: MediaPostWithUser[] = communityRecord.mediaPosts.map(
+      (record) => ({
+        id: record.id,
+        title: record.title,
+        user_id: record.user_id,
+        community_id: record.community_id,
+        media: record.media,
+        created_at: record.created_at,
+        description: record.description,
+        user: {
+          avatar: record.user.avatar,
+          email: record.user.email,
+          name: record.user.name,
+        },
+        community: {
+          name: record.community.name,
+        },
+        love: record.love.map((love) => ({
+          id: love.id,
+          media_post_id: love.media_post_id,
+          text_post_id: love.text_post_id,
+          user: {
+            avatar: love.user.avatar,
+            name: love.user.name,
+            id: love.user.id,
+          },
+        })),
+        comments: record.comments.map((comment) => ({
+          content: comment.content,
+          id: comment.id,
+          user: {
+            id: comment.user.id,
+            avatar: comment.user.avatar,
+            email: comment.user.email,
+            name: comment.user.name,
+          },
+          created_at: comment.created_at,
+        })),
+      }),
+    );
+
+    return {
+      id: communityRecord.id,
+      name: communityRecord.name,
+      description: communityRecord.description,
+      created_at: communityRecord.created_at,
+      founder_id: communityRecord.founder_id,
+      textPosts,
+      mediaPosts,
+    };
   }
 
   async joinTheCommunity(

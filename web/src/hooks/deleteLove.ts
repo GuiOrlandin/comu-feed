@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tokenStore } from "@/store/tokenStore";
 
 async function postData(loveId: string, authToken: string) {
@@ -15,6 +15,7 @@ async function postData(loveId: string, authToken: string) {
 export function useDeleteLoveMutate() {
   const setToken = tokenStore((state) => state.setToken);
   const authToken = tokenStore((state) => state.token);
+  const queryClient = useQueryClient();
 
   if (typeof window !== "undefined") {
     const storeToken = localStorage.getItem("storeToken");
@@ -25,6 +26,9 @@ export function useDeleteLoveMutate() {
   }
   const mutate = useMutation({
     mutationFn: async (loveId: string) => postData(loveId, authToken),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+    },
   });
   return mutate;
 }

@@ -4,6 +4,7 @@ import { CommunityController } from "./community.controller";
 import { CreateCommunityUseCase } from "src/modules/community/useCases/createCommunityUseCase";
 import { JoinTheCommunityUseCase } from "src/modules/community/useCases/joinTheCommunityUseCase";
 import { DeleteCommunityUseCase } from "src/modules/community/useCases/deleteCommunityUseCase";
+import { FindCommunityByIdUseCase } from "src/modules/community/useCases/findCommunityByIdUseCase";
 
 @Module({
   imports: [DatabaseModule],
@@ -12,6 +13,7 @@ import { DeleteCommunityUseCase } from "src/modules/community/useCases/deleteCom
     CreateCommunityUseCase,
     JoinTheCommunityUseCase,
     DeleteCommunityUseCase,
+    FindCommunityByIdUseCase,
   ],
 })
 export class CommunityModule {}
