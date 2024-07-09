@@ -278,38 +278,41 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
         </>
       )}
 
-      {page === "postInfo" && (
-        <>
-          <TwoOptionsRedirectOnBarContainerInOthersPages>
-            <Link href="/home">Home</Link>
-            <Link href="/news">Novidades</Link>
-            <Link href="/mostLoved">Mais amados</Link>
-          </TwoOptionsRedirectOnBarContainerInOthersPages>
-          {userAuthenticated ? (
-            <ButtonsOnBarContainer>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                </Dialog.Trigger>
-                <CreatePostModal user={user!} />
-              </Dialog.Root>
+      {page === "postInfo" ||
+        ("communityInfo" && (
+          <>
+            <TwoOptionsRedirectOnBarContainerInOthersPages>
+              <Link href="/home">Home</Link>
+              <Link href="/news">Novidades</Link>
+              <Link href="/mostLoved">Mais amados</Link>
+            </TwoOptionsRedirectOnBarContainerInOthersPages>
+            {userAuthenticated ? (
+              <ButtonsOnBarContainer>
+                <Dialog.Root>
+                  <Dialog.Trigger asChild>
+                    <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
+                  </Dialog.Trigger>
+                  <CreatePostModal user={user!} />
+                </Dialog.Root>
 
-              <ButtonOnBarContainer onClick={() => handleLogout()}>
-                Sair
-              </ButtonOnBarContainer>
-            </ButtonsOnBarContainer>
-          ) : (
-            <ButtonsOnBarContainer>
-              <ButtonOnBarContainer onClick={() => handleRedirect("login")}>
-                Entrar
-              </ButtonOnBarContainer>
-              <ButtonOnBarContainer onClick={() => handleRedirect("register")}>
-                Cadastrar
-              </ButtonOnBarContainer>
-            </ButtonsOnBarContainer>
-          )}
-        </>
-      )}
+                <ButtonOnBarContainer onClick={() => handleLogout()}>
+                  Sair
+                </ButtonOnBarContainer>
+              </ButtonsOnBarContainer>
+            ) : (
+              <ButtonsOnBarContainer>
+                <ButtonOnBarContainer onClick={() => handleRedirect("login")}>
+                  Entrar
+                </ButtonOnBarContainer>
+                <ButtonOnBarContainer
+                  onClick={() => handleRedirect("register")}
+                >
+                  Cadastrar
+                </ButtonOnBarContainer>
+              </ButtonsOnBarContainer>
+            )}
+          </>
+        ))}
     </TopBarContainer>
   );
 }

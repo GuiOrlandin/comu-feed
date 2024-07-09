@@ -34,6 +34,7 @@ export function useCreateLoveMutate() {
       postData(data, authToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+      queryClient.invalidateQueries({ queryKey: ["community-info"] });
     },
   });
   return mutate;

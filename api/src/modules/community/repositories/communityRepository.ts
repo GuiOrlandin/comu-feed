@@ -8,10 +8,10 @@ export interface CommunityResponseForIdRequest {
   id: string;
   name: string;
   description: string;
+  community_image: string;
   created_at: Date;
   founder_id: string;
-  textPosts: TextPostWithUser[];
-  mediaPosts: MediaPostWithUser[];
+  allPosts: (TextPostWithUser | MediaPostWithUser)[];
 }
 
 export abstract class CommunityRepository {

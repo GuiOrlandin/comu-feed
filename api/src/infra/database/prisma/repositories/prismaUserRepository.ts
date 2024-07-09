@@ -14,6 +14,7 @@ export class PrismaUserRepository implements UserRepository {
       where: {
         email,
       },
+
       include: {
         community_Founder: true,
         community_Member: true,
@@ -28,7 +29,10 @@ export class PrismaUserRepository implements UserRepository {
       return null;
     }
 
-    return user;
+    return {
+      ...user,
+      password_hash: undefined,
+    };
   }
 
   async findById(id: string): Promise<User | null> {

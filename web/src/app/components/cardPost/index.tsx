@@ -19,10 +19,10 @@ import LikeAndComments from "../likeAndComments";
 
 interface CardPostProps {
   post: TextPostWithUser | MediaPostWithUser;
-  largeCard?: boolean;
+  largecard?: string;
 }
 
-export default function CardPost({ post, largeCard }: CardPostProps) {
+export default function CardPost({ post, largecard }: CardPostProps) {
   const router = useRouter();
 
   function isImage(filePath: string): boolean {
@@ -30,7 +30,7 @@ export default function CardPost({ post, largeCard }: CardPostProps) {
   }
 
   return (
-    <PostCardContainer largeCard={largeCard!}>
+    <PostCardContainer largecard={largecard!}>
       <ProfileContent>
         {post.user?.avatar === null ? (
           <AvatarContentWithoutImage>
@@ -49,7 +49,7 @@ export default function CardPost({ post, largeCard }: CardPostProps) {
         </NameAndCommunity>
       </ProfileContent>
       <ContentOfPost
-        largeCard={largeCard!}
+        largecard={largecard!}
         onClick={() => router.push(`/postInfo/${post.id}`)}
       >
         {"content" in post ? (

@@ -167,7 +167,6 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
 
   function handleCreateMediaPost() {
     createMediaPost({ data: createMediaPostDetails, file: media! });
-    console.log(createMediaPostDetails);
   }
 
   useEffect(() => {

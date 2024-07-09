@@ -10,7 +10,6 @@ export interface CreateTextPostRequest {
 }
 
 async function postData(data: CreateTextPostRequest, authToken: string) {
-  console.log(data);
   if (authToken) {
     const config = {
       headers: {
@@ -38,6 +37,7 @@ export function useCreateTextPostMutate() {
     mutationFn: (data: CreateTextPostRequest) => postData(data, authToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+      queryClient.invalidateQueries({ queryKey: ["community-info"] });
     },
   });
   return mutate;

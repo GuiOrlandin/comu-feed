@@ -204,14 +204,19 @@ export class PrismaCommunityRepository implements CommunityRepository {
       }),
     );
 
+    const allPosts: (TextPostWithUser | MediaPostWithUser)[] = [
+      ...textPosts,
+      ...mediaPosts,
+    ];
+
     return {
       id: communityRecord.id,
       name: communityRecord.name,
       description: communityRecord.description,
       created_at: communityRecord.created_at,
       founder_id: communityRecord.founder_id,
-      textPosts,
-      mediaPosts,
+      community_image: communityRecord.community_image,
+      allPosts: allPosts,
     };
   }
 

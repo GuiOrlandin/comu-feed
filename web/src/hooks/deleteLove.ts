@@ -28,6 +28,7 @@ export function useDeleteLoveMutate() {
     mutationFn: async (loveId: string) => postData(loveId, authToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+      queryClient.invalidateQueries({ queryKey: ["community-info"] });
     },
   });
   return mutate;

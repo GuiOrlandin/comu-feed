@@ -51,6 +51,8 @@ export default function LikeAndComments({ post }: LikeAndComments) {
     deleteLoveMutate(loveIdToDelete);
   }
 
+  console.log(post);
+
   function handleLikePost(postId: string, postType: string) {
     if (postType === "textPost") {
       return mutate({
@@ -116,10 +118,6 @@ export default function LikeAndComments({ post }: LikeAndComments) {
       }
     }
   }, [isSuccess, post, user]);
-
-  console.log(loveInfo);
-  console.log(post);
-  console.log(user);
 
   return (
     <LoveAndCommentContainer>

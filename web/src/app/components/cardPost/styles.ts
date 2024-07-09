@@ -2,23 +2,19 @@
 
 import styled from "styled-components";
 
-interface CardType {
-  largeCard: boolean;
-}
-
-export const PostCardContainer = styled.div<CardType>`
+export const PostCardContainer = styled.div<{ largecard: string }>`
   display: flex;
   flex-direction: column;
-  max-height: ${({ largeCard }) =>
-    largeCard === true ? "53rem" : "18.6875rem"};
-  width: ${({ largeCard }) => (largeCard === true ? "56rem" : "24.5625rem")};
+  max-height: ${(props) =>
+    props.largecard === "true" ? "53rem" : "18.6875rem"};
+  width: ${(props) => (props.largecard === "true" ? "56rem" : "24.5625rem")};
   border: 2px solid #f0edf6;
   border-radius: 10px;
   background: #f5f5f5;
   padding: 1.5rem 1.5rem 1rem 1.5rem;
 `;
 
-export const ContentOfPost = styled.div<CardType>`
+export const ContentOfPost = styled.div<{ largecard: string }>`
   display: flex;
   border: 8px;
   min-width: 21rem;
@@ -34,14 +30,14 @@ export const ContentOfPost = styled.div<CardType>`
 
   video {
     border-radius: 8px;
-    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "20.1rem")};
-    height: ${({ largeCard }) => (largeCard === true ? "30rem" : "12rem")};
+    width: ${(props) => (props.largecard === "true" ? "52rem" : "20.1rem")};
+    height: ${(props) => (props.largecard === "true" ? "30rem" : "12rem")};
   }
 
   img {
     border-radius: 8px;
-    width: ${({ largeCard }) => (largeCard === true ? "52rem" : "20.8rem")};
-    height: ${({ largeCard }) => (largeCard === true ? "30rem" : "12rem")};
+    width: ${(props) => (props.largecard === "true" ? "52rem" : "20.8rem")};
+    height: ${(props) => (props.largecard === "true" ? "30rem" : "12rem")};
   }
 `;
 

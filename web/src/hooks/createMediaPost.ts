@@ -14,7 +14,6 @@ async function postData(
   authToken: string,
   file: File[]
 ) {
-  console.log(data);
   if (authToken) {
     const config = {
       headers: {
@@ -59,6 +58,7 @@ export function useCreateMediaPostMutate() {
     }) => postData(data, authToken, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+      queryClient.invalidateQueries({ queryKey: ["community-info"] });
     },
   });
   return mutate;
