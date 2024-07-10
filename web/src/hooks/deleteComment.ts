@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tokenStore } from "@/store/tokenStore";
 import { useEffect } from "react";
 
-async function deleteData(community_id: string, authToken: string) {
+async function deleteData(postIdToDelete: string, authToken: string) {
   if (authToken) {
     const config = {
       headers: {
@@ -12,13 +12,13 @@ async function deleteData(community_id: string, authToken: string) {
     };
 
     await axios.delete(
-      `http://localhost:3333/community/${community_id}`,
+      `http://localhost:3333/comment/${postIdToDelete}`,
       config
     );
   }
 }
 
-export function useDeleteCommunityMutate() {
+export function useDeleteCommentMutate() {
   const setToken = tokenStore((state) => state.setToken);
   const authToken = tokenStore((state) => state.token);
   const queryClient = useQueryClient();
@@ -31,15 +31,15 @@ export function useDeleteCommunityMutate() {
         setToken(storeToken);
       }
     }
-  }, [authToken]);
-
+  }, [setToken]);
+  
   const mutate = useMutation({
     mutationFn: (community_id: string) => deleteData(community_id, authToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
       queryClient.invalidateQueries({ queryKey: ["community-info"] });
+      queryClient.invalidateQueries({ queryKey: ["post-info"] });
     },
   });
-
   return mutate;
 }

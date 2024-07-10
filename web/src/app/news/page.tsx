@@ -27,11 +27,9 @@ import {
 } from "../components/cardPostWithSkeleton/styles";
 
 export default function News() {
-  const {
-    data: posts,
-    refetch,
-    isLoading,
-  } = useQuery<(TextPostWithUser | MediaPostWithUser)[]>({
+  const { data: posts, isLoading } = useQuery<
+    (TextPostWithUser | MediaPostWithUser)[]
+  >({
     queryKey: ["posts-info"],
 
     queryFn: async () => {

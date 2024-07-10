@@ -1,16 +1,15 @@
 "use client";
 
+import axios from "axios";
+
 import TopBar from "@/app/components/topBar";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import Image from "next/image";
 import { RxAvatar } from "react-icons/rx";
-import { CiHeart } from "react-icons/ci";
-import { FaRegCommentAlt } from "react-icons/fa";
 
 import { useQuery } from "@tanstack/react-query";
 import { MediaPostWithUser, TextPostWithUser } from "@/app/home/page";
-import axios from "axios";
 
 import { useEffect, useState } from "react";
 import {
@@ -30,12 +29,10 @@ import {
   Content,
   ContentOfPost,
   ContentOfPostWithMedia,
-  DialogClose,
   DialogDeleteCommentContainer,
   DialogDeleteTriggerButton,
   DialogTitle,
   DialogTrigger,
-  LoveAndCommentContainer,
   NameAndCommunity,
   NameAndContentOfComment,
   PostContainer,
@@ -52,7 +49,6 @@ import {
   TitleAndContentOfPost,
 } from "./styles";
 
-import { tokenStore } from "@/store/tokenStore";
 import { userStore } from "@/store/userStore";
 import {
   SkeletonAvatar,
@@ -62,23 +58,22 @@ import {
 } from "@/app/components/cardPostWithSkeleton/styles";
 import { Overlay } from "@/app/components/createPostModal/styles";
 import LikeAndComments from "@/app/components/likeAndComments";
+import { useDeleteCommentMutate } from "@/hooks/deleteComment";
+import { useRouter } from "next/navigation";
 
 export default function PostInfo({ params }: { params: { id: string } }) {
+  const router = useRouter();
+
   const { mutate, isSuccess } = useCreateCommentMutate();
-  const authToken = tokenStore((state) => state.token);
   const user = userStore((state) => state.user);
-  const [commentContent, setCommentContent] = useState("");
-  const [postIdToDelete, setPostIdToDelete] = useState("");
+  const [commentContent, setCommentContent] = useState<string>();
   const [createCommentDetails, setCreateCommentDetails] =
-    useState<CreateCommentDetails>({
-      content: "",
-    });
-  const {
-    data: post,
-    refetch,
-    isLoading,
-  } = useQuery<TextPostWithUser | MediaPostWithUser>({
-    queryKey: ["posts-info"],
+    useState<CreateCommentDetails>();
+
+  const { data: post, isLoading } = useQuery<
+    TextPostWithUser | MediaPostWithUser
+  >({
+    queryKey: ["post-info"],
 
     queryFn: async () => {
       return axios
@@ -87,23 +82,7 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     },
   });
 
-  const { refetch: deleteCommentRefetch, isSuccess: deleteCommentIsSuccess } =
-    useQuery({
-      queryKey: ["delete-comment"],
-      enabled: false,
-
-      queryFn: async () => {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        };
-
-        return axios
-          .delete(`http://localhost:3333/comment/${postIdToDelete}`, config)
-          .then((response) => response.data);
-      },
-    });
+  const { mutate: deleteComment } = useDeleteCommentMutate();
 
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
@@ -130,24 +109,17 @@ export default function PostInfo({ params }: { params: { id: string } }) {
   }
 
   function handleCreateComment() {
-    mutate({ data: createCommentDetails });
+    mutate({ data: createCommentDetails! });
   }
   function handleDeleteComment(postId: string) {
-    setPostIdToDelete(postId);
-
-    deleteCommentRefetch();
+    deleteComment(postId);
   }
 
   useEffect(() => {
     if (isSuccess) {
-      refetch();
       setCommentContent("");
     }
-
-    if (deleteCommentIsSuccess) {
-      refetch();
-    }
-  }, [isSuccess, deleteCommentIsSuccess]);
+  }, [isSuccess]);
 
   return (
     <PostInfoContainer>
@@ -205,7 +177,13 @@ export default function PostInfo({ params }: { params: { id: string } }) {
               </AvatarContentWithoutImage>
               <NameAndCommunity>
                 <h2>{post?.user?.name}</h2>
-                <span>{post?.community?.name}</span>
+                <span
+                  onClick={() =>
+                    router.push(`/communityInfo/${post!.community_id}`)
+                  }
+                >
+                  {post?.community?.name}
+                </span>
               </NameAndCommunity>
             </ProfileContent>
             <ContentOfPost>

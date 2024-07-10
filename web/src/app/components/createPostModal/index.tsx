@@ -28,7 +28,7 @@ import {
   CreateCommunityDetails,
   useCreateCommunityMutate,
 } from "@/hooks/createCommunity";
-import { UserResponse } from "../topBar";
+import { CommunityResponse, UserResponse } from "../topBar";
 import { userStore } from "@/store/userStore";
 import {
   CreateTextPostRequest,
@@ -51,6 +51,8 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
   const removeUser = userStore((state) => state.removeUser);
   const [createCommunityDetails, setCreateCommunityDetails] =
     useState<CreateCommunityDetails>();
+  const [combinedCommunities, setCombinedCommunities] =
+    useState<CommunityResponse[]>();
   const [createTextPostDetails, setCreateTextPostDetails] =
     useState<CreateTextPostRequest>({
       community_id: "",
@@ -70,10 +72,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
     isSuccess,
     error: createCommunityError,
   } = useCreateCommunityMutate();
-  const combinedCommunities = [
-    ...(user?.community_Member || []),
-    ...(user?.community_Founder || []),
-  ];
+
   const { mutate: createTextPost } = useCreateTextPostMutate();
   const { mutate: createMediaPost } = useCreateMediaPostMutate();
 
@@ -181,12 +180,20 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
       setTabType("textPost");
     }
 
+    if (user) {
+      const allCommunities = [
+        ...user!.community_Member!,
+        ...user?.community_Founder!,
+      ];
+      setCombinedCommunities(allCommunities);
+    }
+
     if (
       createCommunityError?.message === "Request failed with status code 401"
     ) {
       removeUser();
     }
-  }, [isSuccess, createCommunityError]);
+  }, [isSuccess, createCommunityError, user]);
   return (
     <Dialog.Portal>
       <Overlay />
@@ -194,7 +201,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
         <CreatePostalModalContainer>
           <Close>X</Close>
           <OptionsOfPostContainer>
-            {combinedCommunities.length > 0 ? (
+            {combinedCommunities && combinedCommunities!.length > 0 ? (
               <>
                 <TextPost
                   variant={tabType}
@@ -241,7 +248,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
               >
                 <option>Escolha a comunidade</option>
                 {user &&
-                  combinedCommunities.map((community) => (
+                  combinedCommunities!.map((community) => (
                     <option key={community.id} value={community.id}>
                       {community.name}
                     </option>
@@ -276,7 +283,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
               >
                 <option>Escolha a comunidade</option>
                 {user &&
-                  combinedCommunities.map((community) => (
+                  combinedCommunities!.map((community) => (
                     <option key={community.id} value={community.id}>
                       {community.name}
                     </option>

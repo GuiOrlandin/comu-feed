@@ -22,10 +22,9 @@ import { userStore } from "@/store/userStore";
 
 interface TopBarProps {
   page: string;
-  isLoged?: boolean;
 }
 
-interface CommunityResponse {
+export interface CommunityResponse {
   id: string;
   created_at: Date;
   community_image?: string | null;
@@ -83,9 +82,9 @@ export interface UserResponse {
   love: LoveResponse[];
 }
 
-export default function TopBar({ page, isLoged }: TopBarProps) {
+export default function TopBar({ page }: TopBarProps) {
   const router = useRouter();
-  const [userAuthenticated, setUserAuthenticated] = useState(isLoged);
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>();
   const token = tokenStore((state) => state.token);
   const setEmail = emailStore((state) => state.setEmail);
   const email = emailStore((state) => state.email);
@@ -114,6 +113,7 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
     isSuccess,
   } = useQuery<UserResponse>({
     queryKey: ["user-info"],
+    enabled: false,
 
     queryFn: async () => {
       if (email) {
@@ -139,25 +139,20 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
       setEmail(emailStorage!);
     }
 
-    if (isSuccess) {
+    if (token && email) {
+      refetch();
+    }
+
+    if (user) {
       setUser(user!);
     }
 
-    if (token && email) {
+    if (userStore!) {
       setUserAuthenticated(true);
-      refetch();
     } else {
       setUserAuthenticated(false);
     }
-
-    if (!userStored) {
-      setUserAuthenticated(false);
-      localStorage.removeItem("storeToken");
-      localStorage.removeItem("storeEmail");
-    }
-  }, [token, session, isSuccess]);
-
-  console.log(userStore);
+  }, [token, session, isSuccess, email, user]);
 
   return (
     <TopBarContainer>

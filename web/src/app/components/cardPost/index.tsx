@@ -29,7 +29,7 @@ export default function CardPost({ post, largecard }: CardPostProps) {
   }
 
   return (
-    <PostCardContainer largecard={largecard!}>
+    <PostCardContainer $largecard={largecard!}>
       <ProfileContent>
         {post.user?.avatar === null ? (
           <AvatarContentWithoutImage>
@@ -52,7 +52,7 @@ export default function CardPost({ post, largecard }: CardPostProps) {
         </NameAndCommunity>
       </ProfileContent>
       <ContentOfPost
-        largecard={largecard!}
+        $largecard={largecard!}
         onClick={() => router.push(`/postInfo/${post.id}`)}
       >
         {"content" in post ? (

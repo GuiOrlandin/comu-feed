@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { tokenStore } from "@/store/tokenStore";
+import { useEffect } from "react";
 
 export interface CreateCommunityDetails {
   name: string;
@@ -41,13 +42,16 @@ export function useCreateCommunityMutate() {
   const setToken = tokenStore((state) => state.setToken);
   const authToken = tokenStore((state) => state.token);
 
-  if (typeof window !== "undefined") {
-    const storeToken = localStorage.getItem("storeToken");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storeToken = localStorage.getItem("storeToken");
 
-    if (storeToken) {
-      setToken(storeToken);
+      if (storeToken) {
+        setToken(storeToken);
+      }
     }
-  }
+  }, [setToken]);
+
   const mutate = useMutation({
     mutationFn: ({
       data,

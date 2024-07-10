@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tokenStore } from "@/store/tokenStore";
+import { useEffect } from "react";
 
 export interface CreateMediaPostRequest {
   community_id: string;
@@ -41,13 +42,16 @@ export function useCreateMediaPostMutate() {
   const authToken = tokenStore((state) => state.token);
   const queryClient = useQueryClient();
 
-  if (typeof window !== "undefined") {
-    const storeToken = localStorage.getItem("storeToken");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storeToken = localStorage.getItem("storeToken");
 
-    if (storeToken) {
-      setToken(storeToken);
+      if (storeToken) {
+        setToken(storeToken);
+      }
     }
-  }
+  }, [setToken]);
+
   const mutate = useMutation({
     mutationFn: ({
       data,

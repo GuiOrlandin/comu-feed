@@ -29,6 +29,7 @@ export function useDeleteLoveMutate() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
       queryClient.invalidateQueries({ queryKey: ["community-info"] });
+      queryClient.invalidateQueries({ queryKey: ["post-info"] });
     },
   });
   return mutate;

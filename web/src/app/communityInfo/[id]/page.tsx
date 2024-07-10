@@ -66,7 +66,11 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
   const router = useRouter();
   const removeUser = userStore((state) => state.removeUser);
   const { mutate, isSuccess, error } = useDeleteCommunityMutate();
-  const { data: communityInfo, isLoading } = useQuery<CommunityResponse>({
+  const {
+    data: communityInfoById,
+    isLoading,
+    error: communiytiError,
+  } = useQuery<CommunityResponse>({
     queryKey: ["community-info"],
 
     queryFn: async () => {
@@ -93,7 +97,11 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
 
       router.refresh();
     }
-  }, [isSuccess, error]);
+
+    if (communiytiError?.message === "Request failed with status code 404") {
+      router.push("/");
+    }
+  }, [isSuccess, error, communiytiError]);
 
   return (
     <CommunityInfoContainer>
@@ -156,21 +164,21 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
           ) : (
             <>
               <CommunityInfoContent>
-                {communityInfo?.community_image === null ? (
+                {communityInfoById?.community_image === null ? (
                   <CommunityAvatarWithoutImage>
                     <RxAvatar size={60} />
                   </CommunityAvatarWithoutImage>
                 ) : (
                   <AvatarImage
                     avatarImgDimensions={4}
-                    urlImg={`http://localhost:3333/files/communityImage/${communityInfo?.community_image}`}
+                    urlImg={`http://localhost:3333/files/communityImage/${communityInfoById?.community_image}`}
                   />
                 )}
                 <NameAndDescription>
-                  <h1>{communityInfo?.name}</h1>
-                  <h2>{communityInfo?.description}</h2>
+                  <h1>{communityInfoById?.name}</h1>
+                  <h2>{communityInfoById?.description}</h2>
                 </NameAndDescription>
-                {user.id === communityInfo?.founder_id && (
+                {user.id === communityInfoById?.founder_id && (
                   <Dialog.Root>
                     <DialogTrigger asChild>
                       <button>Deletar</button>
@@ -185,7 +193,7 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                           <ButtonsOfDialogContainer>
                             <ConfirmButton
                               onClick={() =>
-                                handleDeleteCommunity(communityInfo.id)
+                                handleDeleteCommunity(communityInfoById.id)
                               }
                             >
                               Confirmar
@@ -199,7 +207,7 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                 )}
               </CommunityInfoContent>
               <PostsOfCommunityContainer>
-                {communityInfo?.allPosts.map((post) => (
+                {communityInfoById?.allPosts.map((post) => (
                   <CardPost key={post.id} post={post} largecard={"true"} />
                 ))}
               </PostsOfCommunityContainer>

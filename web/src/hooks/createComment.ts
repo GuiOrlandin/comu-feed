@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tokenStore } from "@/store/tokenStore";
+import { useEffect } from "react";
 
 export interface CreateCommentDetails {
   content: string;
@@ -21,17 +22,26 @@ async function postData(data: CreateCommentDetails, authToken: string) {
 export function useCreateCommentMutate() {
   const setToken = tokenStore((state) => state.setToken);
   const authToken = tokenStore((state) => state.token);
+  const queryClient = useQueryClient();
 
-  if (typeof window !== "undefined") {
-    const storeToken = localStorage.getItem("storeToken");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storeToken = localStorage.getItem("storeToken");
 
-    if (storeToken) {
-      setToken(storeToken);
+      if (storeToken) {
+        setToken(storeToken);
+      }
     }
-  }
+  }, [setToken]);
+
   const mutate = useMutation({
     mutationFn: ({ data }: { data: CreateCommentDetails }) =>
       postData(data, authToken),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+      queryClient.invalidateQueries({ queryKey: ["community-info"] });
+      queryClient.invalidateQueries({ queryKey: ["post-info"] });
+    },
   });
   return mutate;
 }
