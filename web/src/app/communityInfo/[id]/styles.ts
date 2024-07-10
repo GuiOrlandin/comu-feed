@@ -20,12 +20,23 @@ export const PostAndCommunityWrapper = styled.div`
 
 export const CommunityInfoContent = styled.div`
   display: flex;
+  align-items: flex-start;
   gap: 1rem;
   padding-bottom: 2rem;
   border-bottom: 2px solid #f0edf6;
 
   h2 {
     font-weight: 400;
+  }
+
+  button {
+    margin-left: 22rem;
+    padding: 0.5rem;
+    background: #cb4444;
+    color: #f5f5f5;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
   }
 `;
 export const NameAndDescription = styled.div`

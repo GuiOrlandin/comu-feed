@@ -15,6 +15,18 @@ import {
 export class PrismaCommunityRepository implements CommunityRepository {
   constructor(private prisma: PrismaService) {}
   async delete(id: string): Promise<void> {
+    await this.prisma.mediaPost.deleteMany({
+      where: {
+        community_id: id,
+      },
+    });
+
+    await this.prisma.textPost.deleteMany({
+      where: {
+        community_id: id,
+      },
+    });
+
     await this.prisma.community.delete({
       where: {
         id,

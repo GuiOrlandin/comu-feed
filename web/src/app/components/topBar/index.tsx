@@ -157,6 +157,8 @@ export default function TopBar({ page, isLoged }: TopBarProps) {
     }
   }, [token, session, isSuccess]);
 
+  console.log(userStore);
+
   return (
     <TopBarContainer>
       {page === "home" && (

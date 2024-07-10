@@ -90,6 +90,11 @@ export default function LikeAndComments({ post }: LikeAndComments) {
       createLoveError?.message === "Request failed with status code 401"
     ) {
       removeUser();
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("storeToken");
+        localStorage.removeItem("storeEmail");
+      }
+      router.refresh();
     }
   }, [error, createLoveError, deleteLoveIsSuccess]);
 

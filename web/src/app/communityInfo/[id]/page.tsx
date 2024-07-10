@@ -33,6 +33,23 @@ import {
   SkeletonName,
 } from "@/app/components/cardPostWithSkeleton/styles";
 import { ProfileContent } from "@/app/components/cardPost/styles";
+import { userStore } from "@/store/userStore";
+import { useDeleteCommunityMutate } from "@/hooks/deleteCommunity";
+import { useEffect } from "react";
+
+import { useRouter } from "next/navigation";
+import * as Dialog from "@radix-ui/react-dialog";
+import {
+  ButtonsOfDialogContainer,
+  CancelButton,
+  ConfirmButton,
+  Content,
+  DialogDeleteCommentContainer,
+  DialogDeleteTriggerButton,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/postInfo/[id]/styles";
+import { Overlay } from "@/app/components/createPostModal/styles";
 
 export interface CommunityResponse {
   id: string;
@@ -45,6 +62,10 @@ export interface CommunityResponse {
 }
 
 export default function CommunityInfo({ params }: { params: { id: string } }) {
+  const user = userStore((state) => state.user);
+  const router = useRouter();
+  const removeUser = userStore((state) => state.removeUser);
+  const { mutate, isSuccess, error } = useDeleteCommunityMutate();
   const { data: communityInfo, isLoading } = useQuery<CommunityResponse>({
     queryKey: ["community-info"],
 
@@ -54,6 +75,25 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
         .then((response) => response.data);
     },
   });
+
+  function handleDeleteCommunity(community_id: string) {
+    mutate(community_id);
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push("/");
+    }
+    if (error?.message === "Request failed with status code 401") {
+      removeUser();
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("storeToken");
+        localStorage.removeItem("storeEmail");
+      }
+
+      router.refresh();
+    }
+  }, [isSuccess, error]);
 
   return (
     <CommunityInfoContainer>
@@ -130,6 +170,33 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                   <h1>{communityInfo?.name}</h1>
                   <h2>{communityInfo?.description}</h2>
                 </NameAndDescription>
+                {user.id === communityInfo?.founder_id && (
+                  <Dialog.Root>
+                    <DialogTrigger asChild>
+                      <button>Deletar</button>
+                    </DialogTrigger>
+                    <Dialog.Portal>
+                      <Overlay />
+                      <Content>
+                        <DialogTitle>
+                          Você deseja deletar a comunidade?
+                        </DialogTitle>
+                        <DialogDeleteCommentContainer>
+                          <ButtonsOfDialogContainer>
+                            <ConfirmButton
+                              onClick={() =>
+                                handleDeleteCommunity(communityInfo.id)
+                              }
+                            >
+                              Confirmar
+                            </ConfirmButton>
+                            <CancelButton>Cancelar</CancelButton>
+                          </ButtonsOfDialogContainer>
+                        </DialogDeleteCommentContainer>
+                      </Content>
+                    </Dialog.Portal>
+                  </Dialog.Root>
+                )}
               </CommunityInfoContent>
               <PostsOfCommunityContainer>
                 {communityInfo?.allPosts.map((post) => (
