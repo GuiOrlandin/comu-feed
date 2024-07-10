@@ -23,7 +23,7 @@ export const NewsContent = styled.div`
   height: 100%;
   background: #f5f5f5;
   border-radius: 10px;
-  margin-top: 10rem;
+  margin-top: 2rem;
 `;
 
 export const NewsWrapper = styled.div`
@@ -32,8 +32,6 @@ export const NewsWrapper = styled.div`
 
   width: 100%;
   height: 100%;
-
-  margin-top: 1rem;
 `;
 export const NewsWrapperInLoading = styled.div`
   display: flex;

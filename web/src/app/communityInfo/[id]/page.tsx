@@ -5,6 +5,7 @@ import {
   CommunityAvatarWithoutImage,
   CommunityInfoContainer,
   CommunityInfoContent,
+  CommunitySkeleton,
   NameAndDescription,
   PostAndCommunityInfoContainer,
   PostAndCommunityWrapper,
@@ -17,6 +18,21 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import AvatarImage from "@/app/components/avatarImg";
 import CardPost from "@/app/components/cardPost";
+import {
+  SkeletonAvatarNameAndCommunityContainer,
+  SkeletonComment,
+  SkeletonCommentAndLikeContainer,
+  SkeletonContainer,
+  SkeletonLike,
+  SkeletonNameAndCommunityContainer,
+} from "@/app/news/styles";
+import {
+  SkeletonAvatar,
+  SkeletonCommunity,
+  SkeletonContent,
+  SkeletonName,
+} from "@/app/components/cardPostWithSkeleton/styles";
+import { ProfileContent } from "@/app/components/cardPost/styles";
 
 export interface CommunityResponse {
   id: string;
@@ -45,7 +61,58 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
       <PostAndCommunityWrapper>
         <PostAndCommunityInfoContainer>
           {isLoading ? (
-            <>a</>
+            <>
+              <CommunitySkeleton>
+                <SkeletonAvatar
+                  width={6 * 16}
+                  height={6 * 16}
+                  variant="rectangular"
+                />
+                <SkeletonNameAndCommunityContainer>
+                  <SkeletonName
+                    width={14 * 16}
+                    height={3 * 16}
+                    variant="text"
+                  />
+                  <SkeletonCommunity
+                    width={7 * 16}
+                    height={2 * 16}
+                    variant="text"
+                  />
+                </SkeletonNameAndCommunityContainer>
+              </CommunitySkeleton>
+
+              {[...Array(3)].map((_, index) => (
+                <SkeletonContainer key={index}>
+                  <ProfileContent>
+                    <SkeletonAvatarNameAndCommunityContainer>
+                      <SkeletonAvatar
+                        width={6 * 16}
+                        height={6 * 16}
+                        variant="rectangular"
+                      />
+                      <SkeletonNameAndCommunityContainer>
+                        <SkeletonName
+                          width={14 * 16}
+                          height={3 * 16}
+                          variant="text"
+                        />
+                        <SkeletonCommunity
+                          width={7 * 16}
+                          height={2 * 16}
+                          variant="text"
+                        />
+                      </SkeletonNameAndCommunityContainer>
+                    </SkeletonAvatarNameAndCommunityContainer>
+                  </ProfileContent>
+                  <SkeletonContent height={5 * 16} variant="rectangular" />
+                  <SkeletonCommentAndLikeContainer>
+                    <SkeletonLike height={3 * 16} width={6 * 16} />
+                    <SkeletonComment height={3 * 16} width={6 * 16} />
+                  </SkeletonCommentAndLikeContainer>
+                </SkeletonContainer>
+              ))}
+            </>
           ) : (
             <>
               <CommunityInfoContent>

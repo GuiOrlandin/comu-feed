@@ -32,6 +32,7 @@ export const NameAndDescription = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 export const PostsOfCommunityContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -55,4 +56,11 @@ export const CommunityAvatarWithoutImage = styled.div`
   flex-direction: column;
   margin-right: 1rem;
   margin-bottom: 1rem;
+`;
+
+export const CommunitySkeleton = styled.div`
+  display: flex;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #f0edf6;
 `;
