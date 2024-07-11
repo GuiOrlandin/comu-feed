@@ -84,7 +84,7 @@ export class PrismaPostRepository implements PostRepository {
     }
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, user_id: string): Promise<void> {
     const textPost = await this.prisma.textPost.findFirst({
       where: {
         id,
@@ -108,9 +108,15 @@ export class PrismaPostRepository implements PostRepository {
         },
       });
 
-      if (!user) {
+      const community = await this.prisma.community.findFirst({
+        where: {
+          id: textPost.community_id,
+        },
+      });
+
+      if (!user || community.founder_id !== user_id) {
         throw new postWithoutPermissionException({
-          actionName: "acessar",
+          actionName: "deletar",
         });
       }
 
@@ -128,9 +134,15 @@ export class PrismaPostRepository implements PostRepository {
         },
       });
 
-      if (!user) {
+      const community = await this.prisma.community.findFirst({
+        where: {
+          id: mediaPost.community_id,
+        },
+      });
+
+      if (!user || community.founder_id !== user_id) {
         throw new postWithoutPermissionException({
-          actionName: "acessar",
+          actionName: "deletar",
         });
       }
 

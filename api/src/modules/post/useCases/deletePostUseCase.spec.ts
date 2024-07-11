@@ -52,6 +52,34 @@ describe("Delete post", () => {
 
     expect(postRepositoryInMemory.post).toEqual([]);
   });
+  it("The user should be able to delete a post if they are the community founder", async () => {
+    const user = makeUser({
+      password_hash: "123456",
+    });
+
+    const community = await createCommunityUseCase.execute({
+      founder_id: user.id,
+      key_access: "false",
+      description: "test",
+
+      name: "GuiiosCommunity",
+    });
+
+    const post = await createPostUseCase.execute({
+      community_id: community.id,
+      content: "conteudo do post",
+      title: "titulo do post",
+      postType: "textPost",
+      user_id: user.id,
+    });
+
+    await deletePostUseCase.execute({
+      post_id: post.id,
+      userId: community.founder_id,
+    });
+
+    expect(postRepositoryInMemory.post).toEqual([]);
+  });
 
   it("Should not be able to delete post if the user is not the creator", async () => {
     const user = makeUser({

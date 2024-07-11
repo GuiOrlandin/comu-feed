@@ -36,6 +36,7 @@ export function useCreateLoveMutate() {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
       queryClient.invalidateQueries({ queryKey: ["community-info"] });
       queryClient.invalidateQueries({ queryKey: ["post-info"] });
+      queryClient.invalidateQueries({ queryKey: ["user-info"] });
     },
   });
   return mutate;

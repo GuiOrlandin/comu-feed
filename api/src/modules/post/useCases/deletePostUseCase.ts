@@ -20,12 +20,6 @@ export class DeletePostUseCase {
       throw new PostNotFoundException();
     }
 
-    if (post.user_id !== userId) {
-      throw new postWithoutPermissionException({
-        actionName: "deletar",
-      });
-    }
-
-    await this.postRepository.delete(post.id);
+    await this.postRepository.delete(post.id, userId);
   }
 }
