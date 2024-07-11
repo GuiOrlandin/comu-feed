@@ -157,6 +157,11 @@ export class PrismaPostRepository implements PostRepository {
 
   async findAllPosts(): Promise<(TextPostWithUser | MediaPostWithUser)[]> {
     const textPostRecords = await this.prisma.textPost.findMany({
+      where: {
+        community: {
+          key_access: "false",
+        },
+      },
       include: {
         user: {
           select: {
@@ -210,6 +215,11 @@ export class PrismaPostRepository implements PostRepository {
     });
 
     const mediaPostRecords = await this.prisma.mediaPost.findMany({
+      where: {
+        community: {
+          key_access: "false",
+        },
+      },
       include: {
         user: {
           select: {
