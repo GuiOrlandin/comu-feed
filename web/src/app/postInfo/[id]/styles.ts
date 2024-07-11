@@ -41,6 +41,12 @@ export const AvatarContentWithoutImage = styled.div`
 export const NameAndCommunity = styled.div`
   display: flex;
   flex-direction: column;
+
+  span {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const ProfileContent = styled.div`

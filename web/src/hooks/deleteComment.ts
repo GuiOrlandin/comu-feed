@@ -32,7 +32,7 @@ export function useDeleteCommentMutate() {
       }
     }
   }, [setToken]);
-  
+
   const mutate = useMutation({
     mutationFn: (community_id: string) => deleteData(community_id, authToken),
     onSuccess: () => {

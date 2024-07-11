@@ -10,6 +10,10 @@ export interface CommunityResponseForIdRequest {
   description: string;
   community_image: string;
   created_at: Date;
+  key_access?: string;
+  User_Members: {
+    id: string;
+  }[];
   founder_id: string;
   allPosts: (TextPostWithUser | MediaPostWithUser)[];
 }
@@ -26,9 +30,4 @@ export abstract class CommunityRepository {
     communityId: string,
     password?: string,
   ): Promise<void>;
-  //   abstract findManyPostsByCommunity(
-  //     communityId: string,
-  //     page: number,
-  //     perPage: number,
-  //   ): Promise<Community[]>;
 }

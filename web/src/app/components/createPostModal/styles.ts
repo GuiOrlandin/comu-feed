@@ -4,7 +4,7 @@ import styled from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
 
 interface PostType {
-  variant: string;
+  $variant: string;
 }
 
 export const CreatePostalModalContainer = styled.div`
@@ -60,8 +60,8 @@ export const TextPost = styled.button<PostType>`
   color: #2f1b7e;
   height: 1.6rem;
   border: none;
-  border-bottom: ${({ variant }) =>
-    variant === "textPost" ? "2px solid #160548" : ""};
+  border-bottom: ${({ $variant }) =>
+    $variant === "textPost" ? "2px solid #160548" : ""};
 `;
 export const TextPostContainer = styled.div`
   display: flex;
@@ -77,7 +77,7 @@ export const TextPostContainer = styled.div`
   }
 
   textarea {
-    margin-top: 1rem;
+    margin-top: 0.7rem;
     resize: vertical;
     min-height: 10rem;
     border-radius: 5px;
@@ -89,6 +89,11 @@ export const TextPostContainer = styled.div`
   select {
     margin-top: 0.6rem;
     padding: 0.3rem;
+  }
+
+  span {
+    margin-top: 0.4rem;
+    color: #f21818;
   }
 `;
 
@@ -104,8 +109,8 @@ export const MediaPost = styled.button<PostType>`
   color: #2f1b7e;
   height: 1.6rem;
   border: none;
-  border-bottom: ${({ variant }) =>
-    variant === "mediaPost" ? "2px solid #160548" : ""};
+  border-bottom: ${({ $variant }) =>
+    $variant === "mediaPost" ? "2px solid #160548" : ""};
 `;
 
 export const CreateCommunity = styled.button<PostType>`
@@ -116,8 +121,8 @@ export const CreateCommunity = styled.button<PostType>`
   color: #2f1b7e;
   height: 1.6rem;
   border: none;
-  border-bottom: ${({ variant }) =>
-    variant === "createCommunity" ? "2px solid #160548" : ""};
+  border-bottom: ${({ $variant }) =>
+    $variant === "createCommunity" ? "2px solid #160548" : ""};
 `;
 
 export const SendPostButton = styled.button`

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tokenStore } from "@/store/tokenStore";
 import { useEffect } from "react";
 
@@ -28,12 +28,18 @@ async function postData(
     formData.append("name", data.name);
     formData.append("password", data.password || "");
     formData.append("description", data.description);
-    formData.append("key_access", data.key_access);
+    if (data.key_access === undefined) {
+      formData.append("key_access", "true");
+    } else {
+      formData.append("key_access", data.key_access);
+    }
 
     file.forEach((file) => {
       formData.append(`file`, file);
     });
 
+    console.log(formData);
+    console.log(data);
     await axios.post("http://localhost:3333/community", formData, config);
   }
 }
@@ -41,6 +47,7 @@ async function postData(
 export function useCreateCommunityMutate() {
   const setToken = tokenStore((state) => state.setToken);
   const authToken = tokenStore((state) => state.token);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -60,6 +67,10 @@ export function useCreateCommunityMutate() {
       data: CreateCommunityDetails;
       file: File[];
     }) => postData(data, authToken, file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-info"] });
+      queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+    },
   });
   return mutate;
 }

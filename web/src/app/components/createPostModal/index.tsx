@@ -48,6 +48,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [communityImage, setCommunityImage] = useState<File[] | null>();
   const [media, setMedia] = useState<File[]>();
+  const [mutateError, setMutateError] = useState<string>();
   const removeUser = userStore((state) => state.removeUser);
   const [createCommunityDetails, setCreateCommunityDetails] =
     useState<CreateCommunityDetails>();
@@ -73,7 +74,8 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
     error: createCommunityError,
   } = useCreateCommunityMutate();
 
-  const { mutate: createTextPost } = useCreateTextPostMutate();
+  const { mutate: createTextPost, isError: textPostError } =
+    useCreateTextPostMutate();
   const { mutate: createMediaPost } = useCreateMediaPostMutate();
 
   function onDrop(media: File[]) {
@@ -161,6 +163,9 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
   }
 
   function handleCreateTextPost() {
+    if (createTextPostDetails.community_id === "") {
+      setMutateError("Escolha uma comunidade!");
+    }
     createTextPost(createTextPostDetails);
   }
 
@@ -194,6 +199,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
       removeUser();
     }
   }, [isSuccess, createCommunityError, user]);
+
   return (
     <Dialog.Portal>
       <Overlay />
@@ -204,19 +210,19 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
             {combinedCommunities && combinedCommunities!.length > 0 ? (
               <>
                 <TextPost
-                  variant={tabType}
+                  $variant={tabType}
                   onClick={() => handleSetTapType("textPost")}
                 >
                   Texto
                 </TextPost>
                 <MediaPost
-                  variant={tabType}
+                  $variant={tabType}
                   onClick={() => handleSetTapType("mediaPost")}
                 >
                   Imagem & Video
                 </MediaPost>
                 <CreateCommunity
-                  variant={tabType}
+                  $variant={tabType}
                   onClick={() => handleSetTapType("createCommunity")}
                 >
                   Comunidade
@@ -224,7 +230,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
               </>
             ) : (
               <CreateCommunity
-                variant={tabType}
+                $variant={tabType}
                 onClick={() => handleSetTapType("createCommunity")}
               >
                 Comunidade
@@ -254,6 +260,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
                     </option>
                   ))}
               </select>
+              <span>{mutateError}</span>
               <textarea
                 onChange={(event) =>
                   handleChangeCreateTextPostDetails(event, "content")
@@ -360,7 +367,7 @@ export default function CreatePostModal({ user }: CreatPostModalProps) {
                   <textarea
                     name=""
                     id=""
-                    placeholder="Descrição da comunidade*"
+                    placeholder="Descrição da comunidade (opcional)"
                     onChange={(value) =>
                       handleChangeCreateCommunityDetails(value, "description")
                     }

@@ -3,7 +3,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tokenStore } from "@/store/tokenStore";
 import { useEffect } from "react";
 
-async function deleteData(community_id: string, authToken: string) {
+interface JoinCommunityProps {
+  community_id: string;
+  password?: string;
+}
+
+async function putData(data: JoinCommunityProps, authToken: string) {
   if (authToken) {
     const config = {
       headers: {
@@ -11,14 +16,15 @@ async function deleteData(community_id: string, authToken: string) {
       },
     };
 
-    await axios.delete(
-      `http://localhost:3333/community/${community_id}`,
+    await axios.put(
+      `http://localhost:3333/community/${data.community_id}`,
+      data,
       config
     );
   }
 }
 
-export function useDeleteCommunityMutate() {
+export function useJoinCommunityMutate() {
   const setToken = tokenStore((state) => state.setToken);
   const authToken = tokenStore((state) => state.token);
   const queryClient = useQueryClient();
@@ -34,10 +40,10 @@ export function useDeleteCommunityMutate() {
   }, [authToken]);
 
   const mutate = useMutation({
-    mutationFn: (community_id: string) => deleteData(community_id, authToken),
+    mutationFn: (data: JoinCommunityProps) => putData(data, authToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
-      queryClient.invalidateQueries({ queryKey: ["user-info"] });
+      queryClient.invalidateQueries({ queryKey: ["community-info"] });
     },
   });
 

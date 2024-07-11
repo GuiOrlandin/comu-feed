@@ -193,7 +193,7 @@ export class PrismaPostRepository implements PostRepository {
         },
       },
       orderBy: {
-        created_at: "asc",
+        created_at: "desc",
       },
     });
 
@@ -246,7 +246,7 @@ export class PrismaPostRepository implements PostRepository {
         },
       },
       orderBy: {
-        created_at: "asc",
+        created_at: "desc",
       },
     });
 

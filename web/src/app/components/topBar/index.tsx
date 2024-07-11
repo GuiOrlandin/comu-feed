@@ -87,11 +87,13 @@ export default function TopBar({ page }: TopBarProps) {
   const [userAuthenticated, setUserAuthenticated] = useState<boolean>();
   const token = tokenStore((state) => state.token);
   const setEmail = emailStore((state) => state.setEmail);
+  const removeEmail = emailStore((state) => state.removeEmail);
   const email = emailStore((state) => state.email);
   const setUser = userStore((state) => state.setUser);
   const userStored = userStore((state) => state.user);
   const removeUser = userStore((state) => state.removeUser);
   const setToken = tokenStore((state) => state.setToken);
+  const removeToken = tokenStore((state) => state.removeToken);
 
   const { data: session } = useSession();
 
@@ -100,11 +102,13 @@ export default function TopBar({ page }: TopBarProps) {
   }
   function handleLogout() {
     signOut();
+    removeUser();
+    removeToken();
+    removeEmail();
     if (typeof window !== "undefined") {
       localStorage.removeItem("storeToken");
       localStorage.removeItem("storeEmail");
     }
-    removeUser();
   }
 
   const {
@@ -113,7 +117,6 @@ export default function TopBar({ page }: TopBarProps) {
     isSuccess,
   } = useQuery<UserResponse>({
     queryKey: ["user-info"],
-    enabled: false,
 
     queryFn: async () => {
       if (email) {
@@ -147,12 +150,13 @@ export default function TopBar({ page }: TopBarProps) {
       setUser(user!);
     }
 
-    if (userStore!) {
+    if (userStored!.name !== "") {
       setUserAuthenticated(true);
     } else {
       setUserAuthenticated(false);
     }
-  }, [token, session, isSuccess, email, user]);
+  }, [token, session, isSuccess, email, user, userStored]);
+
 
   return (
     <TopBarContainer>

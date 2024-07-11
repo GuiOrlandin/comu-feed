@@ -95,7 +95,7 @@ export default function Login() {
 
   return (
     <LoginPageContainer>
-      <TopBar page="login" isLoged={false} />
+      <TopBar page="login" />
       <LoginContentContainer>
         <LoginContent>
           <EmailInputContainer>

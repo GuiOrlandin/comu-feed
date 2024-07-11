@@ -21,7 +21,6 @@ import { JoinTheCommunityUseCase } from "src/modules/community/useCases/joinTheC
 import { JoinTheCommunityBody } from "./dtos/joinTheCommunityBody";
 import { AuthRequestModel } from "../auth/models/authRequestModel";
 import { DeleteCommunityUseCase } from "src/modules/community/useCases/deleteCommunityUseCase";
-import { FindCommunityByNameUseCase } from "src/modules/community/useCases/findCommunityByNameUseCase";
 import { FindCommunityByIdUseCase } from "src/modules/community/useCases/findCommunityByIdUseCase";
 import { Public } from "../auth/decorators/isPublic";
 
@@ -100,4 +99,3 @@ export class CommunityController {
     });
   }
 }
-

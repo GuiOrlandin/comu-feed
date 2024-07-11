@@ -2,11 +2,18 @@
 
 import TopBar from "@/app/components/topBar";
 import {
+  CancelJoinCommunityButton,
   CommunityAvatarWithoutImage,
   CommunityInfoContainer,
   CommunityInfoContent,
+  CommunityInfoContentWithOutButton,
   CommunitySkeleton,
+  CommunityWithoutPostsContainer,
+  DeleteCommunityButton,
+  JoinCommunityButton,
+  JoinCommunityConfirmButton,
   NameAndDescription,
+  PasswordInput,
   PostAndCommunityInfoContainer,
   PostAndCommunityWrapper,
   PostsOfCommunityContainer,
@@ -35,7 +42,7 @@ import {
 import { ProfileContent } from "@/app/components/cardPost/styles";
 import { userStore } from "@/store/userStore";
 import { useDeleteCommunityMutate } from "@/hooks/deleteCommunity";
-import { useEffect } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -45,11 +52,11 @@ import {
   ConfirmButton,
   Content,
   DialogDeleteCommentContainer,
-  DialogDeleteTriggerButton,
   DialogTitle,
   DialogTrigger,
 } from "@/app/postInfo/[id]/styles";
 import { Overlay } from "@/app/components/createPostModal/styles";
+import { useJoinCommunityMutate } from "@/hooks/joinCommunity";
 
 export interface CommunityResponse {
   id: string;
@@ -57,6 +64,10 @@ export interface CommunityResponse {
   description: string;
   created_at: Date;
   founder_id: string;
+  key_access?: string;
+  User_Members: {
+    id: string;
+  }[];
   community_image: string;
   allPosts: (TextPostWithUser | MediaPostWithUser)[];
 }
@@ -64,12 +75,17 @@ export interface CommunityResponse {
 export default function CommunityInfo({ params }: { params: { id: string } }) {
   const user = userStore((state) => state.user);
   const router = useRouter();
+  const [communityPassword, setCommunityPassword] = useState<string>();
+  const [userFiltered, setUserFiltered] = useState<string | undefined>(
+    undefined
+  );
   const removeUser = userStore((state) => state.removeUser);
   const { mutate, isSuccess, error } = useDeleteCommunityMutate();
+  const { mutate: joinCommunity } = useJoinCommunityMutate();
   const {
     data: communityInfoById,
     isLoading,
-    error: communiytiError,
+    error: communityError,
   } = useQuery<CommunityResponse>({
     queryKey: ["community-info"],
 
@@ -82,6 +98,14 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
 
   function handleDeleteCommunity(community_id: string) {
     mutate(community_id);
+  }
+
+  function handleJoinCommunityWithoutPassword(community_id: string) {
+    joinCommunity({ community_id: community_id });
+  }
+
+  function handleJoinCommunityWithPassword(community_id: string) {
+    joinCommunity({ community_id: community_id, password: communityPassword });
   }
 
   useEffect(() => {
@@ -98,10 +122,27 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
       router.refresh();
     }
 
-    if (communiytiError?.message === "Request failed with status code 404") {
+    if (communityError?.message === "Request failed with status code 404") {
       router.push("/");
     }
-  }, [isSuccess, error, communiytiError]);
+
+    if (communityInfoById?.User_Members) {
+      const userFilteredArray = communityInfoById.User_Members.filter(
+        (userInCommunity) => userInCommunity.id === user.id
+      );
+
+      if (userFilteredArray.length > 0) {
+        const userId = userFilteredArray[0].id;
+
+        if (userId) {
+          setUserFiltered(userId!);
+        }
+      }
+    }
+  }, [isSuccess, error, communityError, communityInfoById]);
+
+  console.log(communityInfoById?.founder_id);
+  console.log(user);
 
   return (
     <CommunityInfoContainer>
@@ -163,25 +204,27 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
             </>
           ) : (
             <>
-              <CommunityInfoContent>
-                {communityInfoById?.community_image === null ? (
-                  <CommunityAvatarWithoutImage>
-                    <RxAvatar size={60} />
-                  </CommunityAvatarWithoutImage>
-                ) : (
-                  <AvatarImage
-                    avatarImgDimensions={4}
-                    urlImg={`http://localhost:3333/files/communityImage/${communityInfoById?.community_image}`}
-                  />
-                )}
-                <NameAndDescription>
-                  <h1>{communityInfoById?.name}</h1>
-                  <h2>{communityInfoById?.description}</h2>
-                </NameAndDescription>
+              <CommunityInfoContentWithOutButton>
+                <CommunityInfoContent>
+                  {communityInfoById?.community_image === null ? (
+                    <CommunityAvatarWithoutImage>
+                      <RxAvatar size={60} />
+                    </CommunityAvatarWithoutImage>
+                  ) : (
+                    <AvatarImage
+                      avatarImgDimensions={4}
+                      urlImg={`http://localhost:3333/files/communityImage/${communityInfoById?.community_image}`}
+                    />
+                  )}
+                  <NameAndDescription>
+                    <h1>{communityInfoById?.name}</h1>
+                    <h2>{communityInfoById?.description}</h2>
+                  </NameAndDescription>
+                </CommunityInfoContent>
                 {user.id === communityInfoById?.founder_id && (
                   <Dialog.Root>
                     <DialogTrigger asChild>
-                      <button>Deletar</button>
+                      <DeleteCommunityButton>Deletar</DeleteCommunityButton>
                     </DialogTrigger>
                     <Dialog.Portal>
                       <Overlay />
@@ -205,12 +248,79 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                     </Dialog.Portal>
                   </Dialog.Root>
                 )}
-              </CommunityInfoContent>
-              <PostsOfCommunityContainer>
-                {communityInfoById?.allPosts.map((post) => (
-                  <CardPost key={post.id} post={post} largecard={"true"} />
-                ))}
-              </PostsOfCommunityContainer>
+
+                {userFiltered !== user.id &&
+                  communityInfoById?.founder_id !== user.id &&
+                  user.name !== "" && (
+                    <>
+                      {communityInfoById?.key_access === "true" ? (
+                        <Dialog.Root>
+                          <DialogTrigger asChild>
+                            <JoinCommunityButton>Entrar</JoinCommunityButton>
+                          </DialogTrigger>
+                          <Dialog.Portal>
+                            <Overlay />
+                            <Content>
+                              <DialogTitle>
+                                Digite a senha para entrar na comunidade
+                              </DialogTitle>
+                              <PasswordInput
+                                type="text"
+                                onChange={(value) =>
+                                  setCommunityPassword(value.target.value)
+                                }
+                              />
+                              <DialogDeleteCommentContainer>
+                                <ButtonsOfDialogContainer>
+                                  <JoinCommunityConfirmButton
+                                    onClick={() =>
+                                      handleJoinCommunityWithPassword(
+                                        communityInfoById.id
+                                      )
+                                    }
+                                  >
+                                    Confirmar
+                                  </JoinCommunityConfirmButton>
+                                  <CancelJoinCommunityButton>
+                                    Cancelar
+                                  </CancelJoinCommunityButton>
+                                </ButtonsOfDialogContainer>
+                              </DialogDeleteCommentContainer>
+                            </Content>
+                          </Dialog.Portal>
+                        </Dialog.Root>
+                      ) : (
+                        <JoinCommunityButton
+                          onClick={() =>
+                            handleJoinCommunityWithoutPassword(
+                              communityInfoById!.id
+                            )
+                          }
+                        >
+                          Entrar
+                        </JoinCommunityButton>
+                      )}
+                    </>
+                  )}
+              </CommunityInfoContentWithOutButton>
+              {(communityInfoById?.key_access === "false" &&
+                (userFiltered === user.id ||
+                  communityInfoById?.founder_id === user.id)) ||
+              (communityInfoById?.key_access === "true" &&
+                (userFiltered === user.id ||
+                  communityInfoById?.founder_id === user.id)) ? (
+                <PostsOfCommunityContainer>
+                  {communityInfoById?.allPosts.map((post) => (
+                    <CardPost key={post.id} post={post} largecard={"true"} />
+                  ))}
+                </PostsOfCommunityContainer>
+              ) : (
+                <CommunityWithoutPostsContainer>
+                  <h1>
+                    Para acessar os posts é necessário entrar na comunidade!
+                  </h1>
+                </CommunityWithoutPostsContainer>
+              )}
             </>
           )}
         </PostAndCommunityInfoContainer>

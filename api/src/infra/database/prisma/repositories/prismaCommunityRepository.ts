@@ -10,10 +10,30 @@ import {
   MediaPostWithUser,
   TextPostWithUser,
 } from "src/modules/post/repositories/postRepository";
+import * as fs from "fs";
+import * as path from "path";
 
 @Injectable()
 export class PrismaCommunityRepository implements CommunityRepository {
   constructor(private prisma: PrismaService) {}
+
+  private async deleteFile(filePath: string): Promise<void> {
+    const fullPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "..",
+      "..",
+      "uploads",
+      "communityImage",
+      filePath,
+    );
+    if (fs.existsSync(fullPath)) {
+      fs.unlinkSync(fullPath);
+    }
+  }
+
   async delete(id: string): Promise<void> {
     await this.prisma.mediaPost.deleteMany({
       where: {
@@ -27,6 +47,14 @@ export class PrismaCommunityRepository implements CommunityRepository {
       },
     });
 
+    const community = await this.prisma.community.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    await this.deleteFile(community.community_image);
+
     await this.prisma.community.delete({
       where: {
         id,
@@ -38,7 +66,15 @@ export class PrismaCommunityRepository implements CommunityRepository {
     const communityRecord = await this.prisma.community.findFirst({
       where: { id },
       include: {
+        User_Members: {
+          select: {
+            id: true,
+          },
+        },
         mediaPosts: {
+          orderBy: {
+            created_at: "desc",
+          },
           include: {
             user: {
               select: {
@@ -84,6 +120,9 @@ export class PrismaCommunityRepository implements CommunityRepository {
           },
         },
         textPosts: {
+          orderBy: {
+            created_at: "desc",
+          },
           include: {
             user: {
               select: {
@@ -228,6 +267,8 @@ export class PrismaCommunityRepository implements CommunityRepository {
       created_at: communityRecord.created_at,
       founder_id: communityRecord.founder_id,
       community_image: communityRecord.community_image,
+      key_access: communityRecord.key_access,
+      User_Members: communityRecord.User_Members,
       allPosts: allPosts,
     };
   }
@@ -262,6 +303,7 @@ export class PrismaCommunityRepository implements CommunityRepository {
 
     const isMember = await this.prisma.community.findFirst({
       where: {
+        id: communityId,
         User_Members: {
           some: {
             id: user.id,
