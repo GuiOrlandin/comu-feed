@@ -110,7 +110,9 @@ export default function Home() {
           {Array.isArray(posts) &&
             posts
               ?.slice(0, 3)
-              .map((post) => <CardPost key={post.id} post={post} />)}
+              .map((post) => (
+                <CardPost key={post.id} post={post} page="home" />
+              ))}
         </CardsOfPostContainer>
       )}
     </HomeContainer>

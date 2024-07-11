@@ -43,6 +43,7 @@ export const ContentOfPost = styled.div<{ $largecard: string }>`
 
 export const ProfileContent = styled.div`
   display: flex;
+  justify-content: space-between;
 
   img {
     margin-right: 1rem;
@@ -80,4 +81,8 @@ export const LoveAndCommentContainer = styled.div`
   justify-content: space-between;
   padding: 0;
   padding-top: 0.3rem;
+`;
+
+export const NameCommunityAndAvatarContainer = styled.div`
+  display: flex;
 `;

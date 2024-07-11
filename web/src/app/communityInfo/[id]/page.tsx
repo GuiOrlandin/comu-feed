@@ -48,8 +48,6 @@ import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   ButtonsOfDialogContainer,
-  CancelButton,
-  ConfirmButton,
   Content,
   DialogDeleteCommentContainer,
   DialogTitle,
@@ -57,6 +55,7 @@ import {
 } from "@/app/postInfo/[id]/styles";
 import { Overlay } from "@/app/components/createPostModal/styles";
 import { useJoinCommunityMutate } from "@/hooks/joinCommunity";
+import DeleteDialog from "@/app/components/deleteDialog";
 
 export interface CommunityResponse {
   id: string;
@@ -222,31 +221,13 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                   </NameAndDescription>
                 </CommunityInfoContent>
                 {user.id === communityInfoById?.founder_id && (
-                  <Dialog.Root>
-                    <DialogTrigger asChild>
-                      <DeleteCommunityButton>Deletar</DeleteCommunityButton>
-                    </DialogTrigger>
-                    <Dialog.Portal>
-                      <Overlay />
-                      <Content>
-                        <DialogTitle>
-                          Você deseja deletar a comunidade?
-                        </DialogTitle>
-                        <DialogDeleteCommentContainer>
-                          <ButtonsOfDialogContainer>
-                            <ConfirmButton
-                              onClick={() =>
-                                handleDeleteCommunity(communityInfoById.id)
-                              }
-                            >
-                              Confirmar
-                            </ConfirmButton>
-                            <CancelButton>Cancelar</CancelButton>
-                          </ButtonsOfDialogContainer>
-                        </DialogDeleteCommentContainer>
-                      </Content>
-                    </Dialog.Portal>
-                  </Dialog.Root>
+                  <DeleteDialog
+                    title=" Você deseja deletar a comunidade?"
+                    handleDeleteAction={() =>
+                      handleDeleteCommunity(communityInfoById.id)
+                    }
+                    deleteButtonText="Deletar"
+                  />
                 )}
 
                 {userFiltered !== user.id &&
@@ -311,7 +292,12 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                   communityInfoById?.founder_id === user.id)) ? (
                 <PostsOfCommunityContainer>
                   {communityInfoById?.allPosts.map((post) => (
-                    <CardPost key={post.id} post={post} largecard={"true"} />
+                    <CardPost
+                      key={post.id}
+                      post={post}
+                      largecard={"true"}
+                      founder_id={communityInfoById.founder_id}
+                    />
                   ))}
                 </PostsOfCommunityContainer>
               ) : (

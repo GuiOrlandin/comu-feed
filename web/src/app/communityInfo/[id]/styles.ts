@@ -103,6 +103,11 @@ export const JoinCommunityButton = styled.button`
 `;
 export const DeleteCommunityButton = styled(JoinCommunityButton)`
   background: #cb4444;
+
+  &:hover {
+    background: #cf6161;
+    cursor: pointer;
+  }
 `;
 
 export const PasswordInput = styled.input`
