@@ -12,7 +12,9 @@ import {
   NameAndCommunity,
   NameCommunityAndAvatarContainer,
   PostCardContainer,
+  ProfileAndPostContainer,
   ProfileContent,
+  TextContentContainer,
 } from "./styles";
 import AvatarImage from "../avatarImg";
 import LikeAndComments from "../likeAndComments";
@@ -45,66 +47,71 @@ export default function CardPost({
   console.log(post);
   return (
     <PostCardContainer $largecard={largecard!}>
-      <ProfileContent>
-        <NameCommunityAndAvatarContainer>
-          {post.user?.avatar === null ? (
-            <AvatarContentWithoutImage>
-              <RxAvatar size={60} />
-            </AvatarContentWithoutImage>
-          ) : (
-            <AvatarImage
-              avatarImgDimensions={4}
-              urlImg={`http://localhost:3333/files/avatarImage/${post.user?.avatar}`}
-            />
-          )}
-
-          <NameAndCommunity>
-            <h2>{post.user?.name}</h2>
-            <span
-              onClick={() => router.push(`/communityInfo/${post.community_id}`)}
-            >
-              {post.community?.name}
-            </span>
-          </NameAndCommunity>
-        </NameCommunityAndAvatarContainer>
-        {page !== "home" && (
-          <>
-            {(user.id === post.user_id || founder_id === post.user_id) && (
-              <DeleteDialog
-                title="Deseja deletar o post?"
-                handleDeleteAction={() => mutate(post.id)}
-                deleteButtonText="X"
+      <ProfileAndPostContainer>
+        <ProfileContent>
+          <NameCommunityAndAvatarContainer>
+            {post.user?.avatar === null ? (
+              <AvatarContentWithoutImage>
+                <RxAvatar size={60} />
+              </AvatarContentWithoutImage>
+            ) : (
+              <AvatarImage
+                avatarImgDimensions={4}
+                urlImg={`http://localhost:3333/files/avatarImage/${post.user?.avatar}`}
               />
             )}
-          </>
-        )}
-      </ProfileContent>
-      <ContentOfPost
-        $largecard={largecard!}
-        onClick={() => router.push(`/postInfo/${post.id}`)}
-      >
-        {"content" in post ? (
-          <>
-            <p>{post.content}</p>
-          </>
-        ) : isImage(post.media) ? (
-          <Image
-            src={`http://localhost:3333/files/${post.media}`}
-            width={20 * 16}
-            height={12 * 16}
-            alt="Media content"
-          />
-        ) : (
-          <ContentOfPostWithMedia>
-            <video
+
+            <NameAndCommunity>
+              <h2>{post.user?.name}</h2>
+              <span
+                onClick={() =>
+                  router.push(`/communityInfo/${post.community_id}`)
+                }
+              >
+                {post.community?.name}
+              </span>
+            </NameAndCommunity>
+          </NameCommunityAndAvatarContainer>
+          {page !== "home" && (
+            <>
+              {(user.id === post.user_id || founder_id === post.user_id) && (
+                <DeleteDialog
+                  title="Deseja deletar o post?"
+                  handleDeleteAction={() => mutate(post.id)}
+                  deleteButtonText="X"
+                />
+              )}
+            </>
+          )}
+        </ProfileContent>
+        <ContentOfPost
+          $largecard={largecard!}
+          onClick={() => router.push(`/postInfo/${post.id}`)}
+        >
+          {"content" in post ? (
+            <TextContentContainer $largecard={largecard!}>
+              <p>{post.content}</p>
+            </TextContentContainer>
+          ) : isImage(post.media) ? (
+            <Image
               src={`http://localhost:3333/files/${post.media}`}
               width={20 * 16}
               height={12 * 16}
-              controls
+              alt="Media content"
+              quality={100}
             />
-          </ContentOfPostWithMedia>
-        )}
-      </ContentOfPost>
+          ) : (
+            <ContentOfPostWithMedia $largecard={largecard!}>
+              <video
+                src={`http://localhost:3333/files/${post.media}`}
+                width={20 * 16}
+                height={12 * 16}
+                controls
+              />
+            </ContentOfPostWithMedia>
+          )}
+        </ContentOfPost>
+      </ProfileAndPostContainer>
       <LikeAndComments post={post} />
     </PostCardContainer>
   );

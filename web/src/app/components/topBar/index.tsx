@@ -9,7 +9,7 @@ import {
   TwoOptionsRedirectOnBarContainerInOthersPages,
 } from "./styles";
 import { useRouter } from "next/navigation";
-import CreatePostModal from "../createPostModal";
+import CreatePostModal from "../createPostAndCommunityModal";
 import * as Dialog from "@radix-ui/react-dialog";
 import { signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
@@ -157,7 +157,6 @@ export default function TopBar({ page }: TopBarProps) {
     }
   }, [token, session, isSuccess, email, user, userStored]);
 
-
   return (
     <TopBarContainer>
       {page === "home" && (
@@ -168,13 +167,7 @@ export default function TopBar({ page }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInHome>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                </Dialog.Trigger>
-                <CreatePostModal user={user!} />
-              </Dialog.Root>
-
+              <CreatePostModal user={user!} />
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>
@@ -224,12 +217,7 @@ export default function TopBar({ page }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                </Dialog.Trigger>
-                <CreatePostModal user={user!} />
-              </Dialog.Root>
+              <CreatePostModal user={user!} />
 
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
@@ -255,12 +243,7 @@ export default function TopBar({ page }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                </Dialog.Trigger>
-                <CreatePostModal user={user!} />
-              </Dialog.Root>
+              <CreatePostModal user={user!} />
 
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
@@ -288,13 +271,7 @@ export default function TopBar({ page }: TopBarProps) {
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <ButtonOnBarContainer>Criar</ButtonOnBarContainer>
-                </Dialog.Trigger>
-                <CreatePostModal user={user!} />
-              </Dialog.Root>
-
+              <CreatePostModal user={user!} />
               <ButtonOnBarContainer onClick={() => handleLogout()}>
                 Sair
               </ButtonOnBarContainer>

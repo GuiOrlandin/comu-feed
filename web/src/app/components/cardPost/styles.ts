@@ -37,7 +37,7 @@ export const ContentOfPost = styled.div<{ $largecard: string }>`
   img {
     border-radius: 8px;
     width: ${(props) => (props.$largecard === "true" ? "52rem" : "20.8rem")};
-    height: ${(props) => (props.$largecard === "true" ? "30rem" : "12rem")};
+    height: ${(props) => (props.$largecard === "true" ? "30rem" : "9rem")};
   }
 `;
 
@@ -62,9 +62,10 @@ export const NameAndCommunity = styled.div`
   }
 `;
 
-export const ContentOfPostWithMedia = styled.div`
+export const ContentOfPostWithMedia = styled.div<{ $largecard: string }>`
   display: flex;
   flex-direction: column;
+  height: ${(props) => (props.$largecard === "true" ? "30rem" : "9rem")};
   border-radius: 10px;
   overflow: scroll;
   scrollbar-width: thin;
@@ -85,4 +86,14 @@ export const LoveAndCommentContainer = styled.div`
 
 export const NameCommunityAndAvatarContainer = styled.div`
   display: flex;
+`;
+export const ProfileAndPostContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+export const TextContentContainer = styled.div<{ $largecard: string }>`
+  display: flex;
+
+  height: ${(props) => (props.$largecard === "true" ? "" : "9rem")};
 `;

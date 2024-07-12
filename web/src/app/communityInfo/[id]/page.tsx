@@ -53,7 +53,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/postInfo/[id]/styles";
-import { Overlay } from "@/app/components/createPostModal/styles";
+import { Overlay } from "@/app/components/createPostAndCommunityModal/styles";
 import { useJoinCommunityMutate } from "@/hooks/joinCommunity";
 import DeleteDialog from "@/app/components/deleteDialog";
 

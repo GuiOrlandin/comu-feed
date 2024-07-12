@@ -48,9 +48,13 @@ export const NameAndCommunity = styled.div`
     }
   }
 `;
+export const NameCommunityAndAvatar = styled.div`
+  display: flex;
+`;
 
 export const ProfileContent = styled.div`
   display: flex;
+  justify-content: space-between;
 
   img {
     margin-right: 1rem;

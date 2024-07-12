@@ -35,6 +35,7 @@ import {
   DialogTrigger,
   NameAndCommunity,
   NameAndContentOfComment,
+  NameCommunityAndAvatar,
   PostContainer,
   PostInfoContainer,
   PostWrapper,
@@ -56,10 +57,12 @@ import {
   SkeletonContent,
   SkeletonName,
 } from "@/app/components/cardPostWithSkeleton/styles";
-import { Overlay } from "@/app/components/createPostModal/styles";
+import { Overlay } from "@/app/components/createPostAndCommunityModal/styles";
 import LikeAndComments from "@/app/components/likeAndComments";
 import { useDeleteCommentMutate } from "@/hooks/deleteComment";
 import { useRouter } from "next/navigation";
+import DeleteDialog from "@/app/components/deleteDialog";
+import { useDeletePostMutate } from "@/hooks/deletePost";
 
 export default function PostInfo({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -83,6 +86,8 @@ export default function PostInfo({ params }: { params: { id: string } }) {
   });
 
   const { mutate: deleteComment } = useDeleteCommentMutate();
+  const { mutate: deletePost, isSuccess: postDeletedSuccessfully } =
+    useDeletePostMutate();
 
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
@@ -119,7 +124,11 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     if (isSuccess) {
       setCommentContent("");
     }
-  }, [isSuccess]);
+
+    if (postDeletedSuccessfully) {
+      router.push("/");
+    }
+  }, [isSuccess, postDeletedSuccessfully]);
 
   return (
     <PostInfoContainer>
@@ -161,30 +170,39 @@ export default function PostInfo({ params }: { params: { id: string } }) {
         <PostWrapper>
           <PostContainer>
             <ProfileContent>
-              <AvatarContentWithoutImage>
-                {post!.user?.avatar === null ? (
-                  <AvatarContentWithoutImage>
-                    <RxAvatar size={60} />
-                  </AvatarContentWithoutImage>
-                ) : (
-                  <AvatarImage
-                    urlImg={`http://localhost:3333/files/avatarImage/${
-                      post!.user?.avatar
-                    }`}
-                    avatarImgDimensions={6}
-                  />
-                )}
-              </AvatarContentWithoutImage>
-              <NameAndCommunity>
-                <h2>{post?.user?.name}</h2>
-                <span
-                  onClick={() =>
-                    router.push(`/communityInfo/${post!.community_id}`)
-                  }
-                >
-                  {post?.community?.name}
-                </span>
-              </NameAndCommunity>
+              <NameCommunityAndAvatar>
+                <AvatarContentWithoutImage>
+                  {post!.user?.avatar === null ? (
+                    <AvatarContentWithoutImage>
+                      <RxAvatar size={60} />
+                    </AvatarContentWithoutImage>
+                  ) : (
+                    <AvatarImage
+                      urlImg={`http://localhost:3333/files/avatarImage/${
+                        post!.user?.avatar
+                      }`}
+                      avatarImgDimensions={6}
+                    />
+                  )}
+                </AvatarContentWithoutImage>
+                <NameAndCommunity>
+                  <h2>{post?.user?.name}</h2>
+                  <span
+                    onClick={() =>
+                      router.push(`/communityInfo/${post!.community_id}`)
+                    }
+                  >
+                    {post?.community?.name}
+                  </span>
+                </NameAndCommunity>
+              </NameCommunityAndAvatar>
+              {user.id === post?.user_id && (
+                <DeleteDialog
+                  deleteButtonText="Deletar"
+                  handleDeleteAction={() => deletePost(post.id)}
+                  title="Deseja deletar o post?"
+                />
+              )}
             </ProfileContent>
             <ContentOfPost>
               {"content" in post! ? (
