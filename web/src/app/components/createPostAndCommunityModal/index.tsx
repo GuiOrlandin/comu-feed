@@ -192,8 +192,8 @@ export default function createPostAndCommunityModal({
 
     if (user) {
       const allCommunities = [
-        ...user!.community_Member!,
-        ...user?.community_Founder!,
+        ...(user!.community_Member! || []),
+        ...(user?.community_Founder! || []),
       ];
       setCombinedCommunities(allCommunities);
     }

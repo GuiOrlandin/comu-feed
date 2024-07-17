@@ -5,6 +5,7 @@ import { CreateCommunityUseCase } from "src/modules/community/useCases/createCom
 import { JoinTheCommunityUseCase } from "src/modules/community/useCases/joinTheCommunityUseCase";
 import { DeleteCommunityUseCase } from "src/modules/community/useCases/deleteCommunityUseCase";
 import { FindCommunityByIdUseCase } from "src/modules/community/useCases/findCommunityByIdUseCase";
+import { FindCommunityByNameUseCase } from "src/modules/community/useCases/findCommunityByNameUseCase";
 
 @Module({
   imports: [DatabaseModule],
@@ -14,6 +15,7 @@ import { FindCommunityByIdUseCase } from "src/modules/community/useCases/findCom
     JoinTheCommunityUseCase,
     DeleteCommunityUseCase,
     FindCommunityByIdUseCase,
+    FindCommunityByNameUseCase,
   ],
 })
 export class CommunityModule {}

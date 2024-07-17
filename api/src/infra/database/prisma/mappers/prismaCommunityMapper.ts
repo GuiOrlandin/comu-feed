@@ -31,11 +31,13 @@ export class PrismaCommunityMapper {
     name,
     key_access,
     description,
+    community_image,
   }: CommunityRaw): Community {
     return new Community({
       key_access,
       created_at,
       founder_id,
+      community_image,
       id,
       name,
       description,

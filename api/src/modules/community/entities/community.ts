@@ -9,7 +9,7 @@ interface CommunitySchema {
   key_access: string;
   created_at?: Date;
   password?: string;
-  community_image?: string | null;
+  community_image: string | null;
   User_Members?: User[];
 }
 

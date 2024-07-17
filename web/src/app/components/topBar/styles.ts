@@ -2,15 +2,64 @@
 
 import styled from "styled-components";
 
+interface TopBarType {
+  $variant: string;
+}
+
 export const TopBarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-export const SearchCommunity = styled.input`
+export const SearchCommunity = styled.input<TopBarType>`
+  padding: 0.5rem;
+  z-index: 1;
+  min-width: 25.85rem;
+  width: 100%;
+  border: none;
+  overflow: hidden;
+  border: 1px solid #160548;
+  border-radius: 12px;
+  color: #160548;
+  font-weight: 600;
+`;
+export const SearchCommunityContainer = styled.div`
   display: flex;
-  gap: 1rem;
+  position: relative;
+`;
+export const AvatarAndNameOfCommunityContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  span {
+    font-weight: 600;
+  }
+`;
+export const SearchCommunityCompleteContainer = styled.div`
+  position: absolute;
+  flex-direction: column;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 0;
+  min-width: 25.75rem;
+  padding: 2.3rem 0.5rem 0.5rem 0.5rem;
+  border-radius: 12px;
+  background: white;
+`;
+export const CommunitiesResultContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+export const AvatarContentWithoutImage = styled.div`
+  display: flex;
+  margin-left: -0.26rem;
+  margin-right: -0.3rem;
 `;
 
 export const TwoOptionsRedirectOnBarContainerInHome = styled.div`

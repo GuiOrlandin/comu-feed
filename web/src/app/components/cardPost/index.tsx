@@ -25,7 +25,7 @@ import { userStore } from "@/store/userStore";
 interface CardPostProps {
   post: TextPostWithUser | MediaPostWithUser;
   largecard?: string;
-  founder_id?: string;
+  userIsFounder?: boolean;
   page?: string;
 }
 
@@ -33,7 +33,7 @@ export default function CardPost({
   post,
   largecard,
   page,
-  founder_id,
+  userIsFounder,
 }: CardPostProps) {
   const router = useRouter();
   const user = userStore((state) => state.user);
@@ -44,7 +44,7 @@ export default function CardPost({
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
   }
 
-  console.log(post);
+
   return (
     <PostCardContainer $largecard={largecard!}>
       <ProfileAndPostContainer>
@@ -74,7 +74,7 @@ export default function CardPost({
           </NameCommunityAndAvatarContainer>
           {page !== "home" && (
             <>
-              {(user.id === post.user_id || founder_id === post.user_id) && (
+              {(user.id === post.user_id || userIsFounder) && (
                 <DeleteDialog
                   title="Deseja deletar o post?"
                   handleDeleteAction={() => mutate(post.id)}

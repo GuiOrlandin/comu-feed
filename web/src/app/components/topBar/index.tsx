@@ -2,8 +2,14 @@
 
 import Link from "next/link";
 import {
+  AvatarAndNameOfCommunityContainer,
+  AvatarContentWithoutImage,
   ButtonOnBarContainer,
   ButtonsOnBarContainer,
+  CommunitiesResultContainer,
+  SearchCommunity,
+  SearchCommunityCompleteContainer,
+  SearchCommunityContainer,
   TopBarContainer,
   TwoOptionsRedirectOnBarContainerInHome,
   TwoOptionsRedirectOnBarContainerInOthersPages,
@@ -12,26 +18,30 @@ import { useRouter } from "next/navigation";
 import CreatePostModal from "../createPostAndCommunityModal";
 import * as Dialog from "@radix-ui/react-dialog";
 import { signOut } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { tokenStore } from "@/store/tokenStore";
 import { emailStore } from "@/store/emailStore";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { userStore } from "@/store/userStore";
+import AvatarImage from "../avatarImg";
+import { RxAvatar } from "react-icons/rx";
 
 interface TopBarProps {
   page: string;
 }
 
 export interface CommunityResponse {
-  id: string;
-  created_at: Date;
-  community_image?: string | null;
-  email: string;
-  founder_id: string;
-  key_access: string;
-  name: string;
+  props: {
+    id: string;
+    created_at: Date;
+    community_image?: string | null;
+    email: string;
+    founder_id: string;
+    key_access: string;
+    name: string;
+  };
 }
 interface CommentsResponse {
   id: string;
@@ -85,6 +95,10 @@ export interface UserResponse {
 export default function TopBar({ page }: TopBarProps) {
   const router = useRouter();
   const [userAuthenticated, setUserAuthenticated] = useState<boolean>();
+  const [communityName, setCommunityName] = useState<string>();
+  const [communities, setCommunities] = useState<
+    CommunityResponse[] | null | undefined
+  >();
   const token = tokenStore((state) => state.token);
   const setEmail = emailStore((state) => state.setEmail);
   const removeEmail = emailStore((state) => state.removeEmail);
@@ -127,6 +141,28 @@ export default function TopBar({ page }: TopBarProps) {
     },
   });
 
+  const {
+    data: communitiesData,
+    refetch: refetchFindCommunitiesByName,
+    isSuccess: foundCommunities,
+  } = useQuery<CommunityResponse[]>({
+    queryKey: ["communities-info"],
+
+    queryFn: async () => {
+      if (communityName) {
+        return axios
+          .get(`http://localhost:3333/community?name=${communityName}`)
+          .then((response) => response.data);
+      }
+    },
+  });
+
+  function handleSearchCommunities(event: ChangeEvent<HTMLInputElement>) {
+    const nameOrCharactersForSearch = event.target.value;
+
+    setCommunityName(nameOrCharactersForSearch!);
+  }
+
   useEffect(() => {
     if (session) {
       localStorage.setItem("storeToken", session.expires);
@@ -157,6 +193,24 @@ export default function TopBar({ page }: TopBarProps) {
     }
   }, [token, session, isSuccess, email, user, userStored]);
 
+  useEffect(() => {
+    if (communityName) {
+      refetchFindCommunitiesByName();
+    }
+
+    if (communitiesData && communitiesData!.length > 0) {
+      setCommunities(communitiesData!);
+    }
+
+    if (!communityName) {
+      setCommunities(undefined);
+    }
+  }, [communityName, communitiesData]);
+
+  if (communities) {
+    console.log(communities);
+  }
+
   return (
     <TopBarContainer>
       {page === "home" && (
@@ -165,6 +219,45 @@ export default function TopBar({ page }: TopBarProps) {
             <Link href="/news">Novidades</Link>
             <Link href="/mostLoved">Mais Amados</Link>
           </TwoOptionsRedirectOnBarContainerInHome>
+
+          <SearchCommunityContainer>
+            <SearchCommunity
+              $variant={communities ? "true" : "false"}
+              type="text"
+              placeholder="Digite o nome da comunidade que pretende encontrar"
+              onChange={(event) => handleSearchCommunities(event)}
+            />
+            {communities && communities!.length > 0 && (
+              <SearchCommunityCompleteContainer>
+                {communities.map((community) => (
+                  <CommunitiesResultContainer
+                    key={community.props.id}
+                    onClick={() =>
+                      router.push(`/communityInfo/${community.props.id}`)
+                    }
+                  >
+                    {community.props.community_image === null ? (
+                      <AvatarAndNameOfCommunityContainer>
+                        <AvatarContentWithoutImage>
+                          <RxAvatar size={55} color="" />
+                        </AvatarContentWithoutImage>
+                        <span>{community.props.name}</span>
+                      </AvatarAndNameOfCommunityContainer>
+                    ) : (
+                      <AvatarAndNameOfCommunityContainer>
+                        <AvatarImage
+                          urlImg={`http://localhost:3333/files/communityImage/${community!
+                            .props.community_image!}`}
+                          avatarImgDimensions={3.1375}
+                        />
+                        <span>{community.props.name}</span>
+                      </AvatarAndNameOfCommunityContainer>
+                    )}
+                  </CommunitiesResultContainer>
+                ))}
+              </SearchCommunityCompleteContainer>
+            )}
+          </SearchCommunityContainer>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <CreatePostModal user={user!} />

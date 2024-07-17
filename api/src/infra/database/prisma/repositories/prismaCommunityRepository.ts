@@ -331,9 +331,12 @@ export class PrismaCommunityRepository implements CommunityRepository {
   }
 
   async findByName(name: string): Promise<Community | Community[] | null> {
-    const communities = await this.prisma.community.findMany({
+    const communityRecord = await this.prisma.community.findMany({
       where: {
-        name,
+        name: {
+          contains: name,
+          mode: "insensitive",
+        },
       },
       include: {
         mediaPosts: true,
@@ -344,11 +347,15 @@ export class PrismaCommunityRepository implements CommunityRepository {
       },
     });
 
-    if (!communities) {
+    if (!communityRecord) {
       return null;
     }
 
-    return communities.map(PrismaCommunityMapper.toDomain);
+    const communities: Community[] = communityRecord.map((record) =>
+      PrismaCommunityMapper.toDomain(record),
+    );
+
+    return communities;
   }
 
   async create(community: Community): Promise<void> {

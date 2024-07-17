@@ -9,6 +9,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from "@nestjs/common";
 import { diskStorage } from "multer";
 import { extname } from "path";
@@ -23,12 +24,14 @@ import { AuthRequestModel } from "../auth/models/authRequestModel";
 import { DeleteCommunityUseCase } from "src/modules/community/useCases/deleteCommunityUseCase";
 import { FindCommunityByIdUseCase } from "src/modules/community/useCases/findCommunityByIdUseCase";
 import { Public } from "../auth/decorators/isPublic";
+import { FindCommunityByNameUseCase } from "src/modules/community/useCases/findCommunityByNameUseCase";
 
 @Controller("community")
 export class CommunityController {
   constructor(
     private createCommunityUseCase: CreateCommunityUseCase,
     private findCommunityById: FindCommunityByIdUseCase,
+    private findCommunityByName: FindCommunityByNameUseCase,
     private joinTheCommunityUseCase: JoinTheCommunityUseCase,
     private deleteTheCommunityUseCase: DeleteCommunityUseCase,
   ) {}
@@ -84,6 +87,14 @@ export class CommunityController {
   @Public()
   async getCommunityById(@Param("id") communityId: string) {
     const community = await this.findCommunityById.execute(communityId);
+
+    return community;
+  }
+
+  @Get()
+  @Public()
+  async getCommunityByName(@Query("name") communityName: string) {
+    const community = await this.findCommunityByName.execute(communityName);
 
     return community;
   }

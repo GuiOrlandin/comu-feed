@@ -19,7 +19,7 @@ export const PostContainer = styled.div`
   width: 61.3125rem;
   background: #f5f5f5;
   border-radius: 10px;
-  margin-top: 6rem;
+  margin-top: 2rem;
   padding: 3rem;
 `;
 

@@ -63,15 +63,20 @@ import { useDeleteCommentMutate } from "@/hooks/deleteComment";
 import { useRouter } from "next/navigation";
 import DeleteDialog from "@/app/components/deleteDialog";
 import { useDeletePostMutate } from "@/hooks/deletePost";
+import { emailStore } from "@/store/emailStore";
+import { tokenStore } from "@/store/tokenStore";
 
 export default function PostInfo({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   const { mutate, isSuccess } = useCreateCommentMutate();
+  const removeUser = userStore((state) => state.removeUser);
   const user = userStore((state) => state.user);
   const [commentContent, setCommentContent] = useState<string>();
   const [createCommentDetails, setCreateCommentDetails] =
     useState<CreateCommentDetails>();
+  const removeEmail = emailStore((state) => state.removeEmail);
+  const removeToken = tokenStore((state) => state.removeToken);
 
   const { data: post, isLoading } = useQuery<
     TextPostWithUser | MediaPostWithUser
@@ -86,8 +91,11 @@ export default function PostInfo({ params }: { params: { id: string } }) {
   });
 
   const { mutate: deleteComment } = useDeleteCommentMutate();
-  const { mutate: deletePost, isSuccess: postDeletedSuccessfully } =
-    useDeletePostMutate();
+  const {
+    mutate: deletePost,
+    isSuccess: postDeletedSuccessfully,
+    error,
+  } = useDeletePostMutate();
 
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
@@ -128,7 +136,21 @@ export default function PostInfo({ params }: { params: { id: string } }) {
     if (postDeletedSuccessfully) {
       router.push("/");
     }
-  }, [isSuccess, postDeletedSuccessfully]);
+
+    if (error?.message === "Request failed with status code 401") {
+      removeUser();
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("storeToken");
+        localStorage.removeItem("storeEmail");
+      }
+
+      removeUser();
+      removeEmail();
+      removeToken();
+
+      router.refresh();
+    }
+  }, [isSuccess, postDeletedSuccessfully, error]);
 
   return (
     <PostInfoContainer>

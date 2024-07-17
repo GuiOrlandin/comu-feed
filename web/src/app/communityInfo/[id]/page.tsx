@@ -9,7 +9,6 @@ import {
   CommunityInfoContentWithOutButton,
   CommunitySkeleton,
   CommunityWithoutPostsContainer,
-  DeleteCommunityButton,
   JoinCommunityButton,
   JoinCommunityConfirmButton,
   NameAndDescription,
@@ -56,6 +55,8 @@ import {
 import { Overlay } from "@/app/components/createPostAndCommunityModal/styles";
 import { useJoinCommunityMutate } from "@/hooks/joinCommunity";
 import DeleteDialog from "@/app/components/deleteDialog";
+import { emailStore } from "@/store/emailStore";
+import { tokenStore } from "@/store/tokenStore";
 
 export interface CommunityResponse {
   id: string;
@@ -75,9 +76,13 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
   const user = userStore((state) => state.user);
   const router = useRouter();
   const [communityPassword, setCommunityPassword] = useState<string>();
+  const [userIsFounder, setUserIsFounder] = useState<boolean>(false);
   const [userFiltered, setUserFiltered] = useState<string | undefined>(
     undefined
   );
+  const removeEmail = emailStore((state) => state.removeEmail);
+  const removeToken = tokenStore((state) => state.removeToken);
+
   const removeUser = userStore((state) => state.removeUser);
   const { mutate, isSuccess, error } = useDeleteCommunityMutate();
   const { mutate: joinCommunity } = useJoinCommunityMutate();
@@ -112,11 +117,14 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
       router.push("/");
     }
     if (error?.message === "Request failed with status code 401") {
-      removeUser();
       if (typeof window !== "undefined") {
         localStorage.removeItem("storeToken");
         localStorage.removeItem("storeEmail");
       }
+
+      removeUser();
+      removeEmail();
+      removeToken();
 
       router.refresh();
     }
@@ -138,10 +146,11 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
         }
       }
     }
-  }, [isSuccess, error, communityError, communityInfoById]);
 
-  console.log(communityInfoById?.founder_id);
-  console.log(user);
+    if (user && communityInfoById?.founder_id === user.id) {
+      setUserIsFounder(true);
+    }
+  }, [isSuccess, error, communityError, communityInfoById, user]);
 
   return (
     <CommunityInfoContainer>
@@ -284,9 +293,7 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                     </>
                   )}
               </CommunityInfoContentWithOutButton>
-              {(communityInfoById?.key_access === "false" &&
-                (userFiltered === user.id ||
-                  communityInfoById?.founder_id === user.id)) ||
+              {communityInfoById?.key_access === "false" ||
               (communityInfoById?.key_access === "true" &&
                 (userFiltered === user.id ||
                   communityInfoById?.founder_id === user.id)) ? (
@@ -296,7 +303,7 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                       key={post.id}
                       post={post}
                       largecard={"true"}
-                      founder_id={communityInfoById.founder_id}
+                      userIsFounder={userIsFounder}
                     />
                   ))}
                 </PostsOfCommunityContainer>

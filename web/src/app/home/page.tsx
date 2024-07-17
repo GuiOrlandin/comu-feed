@@ -80,13 +80,10 @@ export interface TextPostWithUser {
 }
 
 export default function Home() {
-  const {
-    data: posts,
-    refetch,
-    isLoading,
-  } = useQuery<(TextPostWithUser | MediaPostWithUser)[]>({
+  const { data: posts, isLoading } = useQuery<
+    (TextPostWithUser | MediaPostWithUser)[]
+  >({
     queryKey: ["posts-info"],
-
     queryFn: async () => {
       return axios
         .get(`http://localhost:3333/post`)

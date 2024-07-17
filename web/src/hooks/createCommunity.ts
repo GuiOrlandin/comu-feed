@@ -38,8 +38,6 @@ async function postData(
       formData.append(`file`, file);
     });
 
-    console.log(formData);
-    console.log(data);
     await axios.post("http://localhost:3333/community", formData, config);
   }
 }

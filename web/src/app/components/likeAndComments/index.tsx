@@ -18,6 +18,8 @@ import { useDeleteLoveMutate } from "@/hooks/deleteLove";
 import { useCreateLoveMutate } from "@/hooks/createLove";
 import { userStore } from "@/store/userStore";
 import { useRouter } from "next/navigation";
+import { emailStore } from "@/store/emailStore";
+import { tokenStore } from "@/store/tokenStore";
 
 interface LikeAndComments {
   post: TextPostWithUser | MediaPostWithUser;
@@ -28,6 +30,10 @@ export default function LikeAndComments({ post }: LikeAndComments) {
   const removeUser = userStore((state) => state.removeUser);
   const router = useRouter();
   const user = userStore((state) => state.user);
+  const removeEmail = emailStore((state) => state.removeEmail);
+  const removeToken = tokenStore((state) => state.removeToken);
+
+  console.log(user);
 
   const {
     mutate: deleteLoveMutate,
@@ -89,11 +95,14 @@ export default function LikeAndComments({ post }: LikeAndComments) {
       error?.message === "Request failed with status code 401" ||
       createLoveError?.message === "Request failed with status code 401"
     ) {
-      removeUser();
       if (typeof window !== "undefined") {
         localStorage.removeItem("storeToken");
         localStorage.removeItem("storeEmail");
       }
+      removeUser();
+      removeEmail();
+      removeToken();
+
       router.refresh();
     }
   }, [error, createLoveError, deleteLoveIsSuccess]);
