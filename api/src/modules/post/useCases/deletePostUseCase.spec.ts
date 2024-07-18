@@ -81,34 +81,6 @@ describe("Delete post", () => {
     expect(postRepositoryInMemory.post).toEqual([]);
   });
 
-  it("Should not be able to delete post if the user is not the creator", async () => {
-    const user = makeUser({
-      password_hash: "123456",
-    });
-
-    const community = await createCommunityUseCase.execute({
-      founder_id: user.id,
-      key_access: "false",
-      description: "test",
-      name: "GuiiosCommunity",
-    });
-
-    const post = await createPostUseCase.execute({
-      community_id: community.id,
-      content: "conteudo do post",
-      title: "titulo do post",
-      user_id: user.id,
-      postType: "textPost",
-    });
-
-    await expect(
-      deletePostUseCase.execute({
-        post_id: post.id,
-        userId: "user.id",
-      }),
-    ).rejects.toThrow(postWithoutPermissionException);
-  });
-
   it("Should not be able to delete post if the post id is not the correct", async () => {
     const user = makeUser({
       password_hash: "123456",

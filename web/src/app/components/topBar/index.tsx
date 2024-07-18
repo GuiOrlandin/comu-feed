@@ -198,17 +198,18 @@ export default function TopBar({ page }: TopBarProps) {
       refetchFindCommunitiesByName();
     }
 
-    if (communitiesData && communitiesData!.length > 0) {
+    if (foundCommunities) {
       setCommunities(communitiesData!);
     }
 
     if (!communityName) {
       setCommunities(undefined);
     }
-  }, [communityName, communitiesData]);
+  }, [communityName, communitiesData, foundCommunities]);
 
   if (communities) {
     console.log(communities);
+    console.log(communitiesData);
   }
 
   return (
@@ -224,7 +225,7 @@ export default function TopBar({ page }: TopBarProps) {
             <SearchCommunity
               $variant={communities ? "true" : "false"}
               type="text"
-              placeholder="Digite o nome da comunidade que pretende encontrar"
+              placeholder="Procurar comunidade"
               onChange={(event) => handleSearchCommunities(event)}
             />
             {communities && communities!.length > 0 && (
@@ -308,6 +309,44 @@ export default function TopBar({ page }: TopBarProps) {
             <Link href="/home">Home</Link>
             <Link href="/news">Novidades</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
+          <SearchCommunityContainer>
+            <SearchCommunity
+              $variant={communities ? "true" : "false"}
+              type="text"
+              placeholder="Procurar comunidade"
+              onChange={(event) => handleSearchCommunities(event)}
+            />
+            {communities && communities!.length > 0 && (
+              <SearchCommunityCompleteContainer>
+                {communities.map((community) => (
+                  <CommunitiesResultContainer
+                    key={community.props.id}
+                    onClick={() =>
+                      router.push(`/communityInfo/${community.props.id}`)
+                    }
+                  >
+                    {community.props.community_image === null ? (
+                      <AvatarAndNameOfCommunityContainer>
+                        <AvatarContentWithoutImage>
+                          <RxAvatar size={55} color="" />
+                        </AvatarContentWithoutImage>
+                        <span>{community.props.name}</span>
+                      </AvatarAndNameOfCommunityContainer>
+                    ) : (
+                      <AvatarAndNameOfCommunityContainer>
+                        <AvatarImage
+                          urlImg={`http://localhost:3333/files/communityImage/${community!
+                            .props.community_image!}`}
+                          avatarImgDimensions={3.1375}
+                        />
+                        <span>{community.props.name}</span>
+                      </AvatarAndNameOfCommunityContainer>
+                    )}
+                  </CommunitiesResultContainer>
+                ))}
+              </SearchCommunityCompleteContainer>
+            )}
+          </SearchCommunityContainer>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <CreatePostModal user={user!} />
@@ -334,6 +373,44 @@ export default function TopBar({ page }: TopBarProps) {
             <Link href="/home">Home</Link>
             <Link href="/mostLoved">Mais amados</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
+          <SearchCommunityContainer>
+            <SearchCommunity
+              $variant={communities ? "true" : "false"}
+              type="text"
+              placeholder="Procurar comunidade"
+              onChange={(event) => handleSearchCommunities(event)}
+            />
+            {communities && communities!.length > 0 && (
+              <SearchCommunityCompleteContainer>
+                {communities.map((community) => (
+                  <CommunitiesResultContainer
+                    key={community.props.id}
+                    onClick={() =>
+                      router.push(`/communityInfo/${community.props.id}`)
+                    }
+                  >
+                    {community.props.community_image === null ? (
+                      <AvatarAndNameOfCommunityContainer>
+                        <AvatarContentWithoutImage>
+                          <RxAvatar size={55} color="" />
+                        </AvatarContentWithoutImage>
+                        <span>{community.props.name}</span>
+                      </AvatarAndNameOfCommunityContainer>
+                    ) : (
+                      <AvatarAndNameOfCommunityContainer>
+                        <AvatarImage
+                          urlImg={`http://localhost:3333/files/communityImage/${community!
+                            .props.community_image!}`}
+                          avatarImgDimensions={3.1375}
+                        />
+                        <span>{community.props.name}</span>
+                      </AvatarAndNameOfCommunityContainer>
+                    )}
+                  </CommunitiesResultContainer>
+                ))}
+              </SearchCommunityCompleteContainer>
+            )}
+          </SearchCommunityContainer>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <CreatePostModal user={user!} />
@@ -362,6 +439,44 @@ export default function TopBar({ page }: TopBarProps) {
             <Link href="/news">Novidades</Link>
             <Link href="/mostLoved">Mais amados</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
+          <SearchCommunityContainer>
+            <SearchCommunity
+              $variant={communities ? "true" : "false"}
+              type="text"
+              placeholder="Procurar comunidade"
+              onChange={(event) => handleSearchCommunities(event)}
+            />
+            {communities && communities!.length > 0 && (
+              <SearchCommunityCompleteContainer>
+                {communities.map((community) => (
+                  <CommunitiesResultContainer
+                    key={community.props.id}
+                    onClick={() =>
+                      router.push(`/communityInfo/${community.props.id}`)
+                    }
+                  >
+                    {community.props.community_image === null ? (
+                      <AvatarAndNameOfCommunityContainer>
+                        <AvatarContentWithoutImage>
+                          <RxAvatar size={55} color="" />
+                        </AvatarContentWithoutImage>
+                        <span>{community.props.name}</span>
+                      </AvatarAndNameOfCommunityContainer>
+                    ) : (
+                      <AvatarAndNameOfCommunityContainer>
+                        <AvatarImage
+                          urlImg={`http://localhost:3333/files/communityImage/${community!
+                            .props.community_image!}`}
+                          avatarImgDimensions={3.1375}
+                        />
+                        <span>{community.props.name}</span>
+                      </AvatarAndNameOfCommunityContainer>
+                    )}
+                  </CommunitiesResultContainer>
+                ))}
+              </SearchCommunityCompleteContainer>
+            )}
+          </SearchCommunityContainer>
           {userAuthenticated ? (
             <ButtonsOnBarContainer>
               <CreatePostModal user={user!} />

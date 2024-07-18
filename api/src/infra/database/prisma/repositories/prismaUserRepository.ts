@@ -4,10 +4,29 @@ import { UserRepository } from "src/modules/user/repositories/userRepository";
 import { PrismaService } from "../prisma.service";
 import { PrismaUserMapper } from "../mappers/prismaUserMapper";
 import { EmailAlreadyInUseException } from "src/modules/user/exceptions/emailAlreadyInUse";
+import * as fs from "fs";
+import * as path from "path";
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
   constructor(private prisma: PrismaService) {}
+
+  private async deleteFile(filePath: string): Promise<void> {
+    const fullPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "..",
+      "..",
+      "uploads",
+      "userAvatar",
+      filePath,
+    );
+    if (fs.existsSync(fullPath)) {
+      fs.unlinkSync(fullPath);
+    }
+  }
 
   async findByEmail(email: string): Promise<Partial<User> | null> {
     const user = await this.prisma.user.findFirst({
@@ -64,6 +83,27 @@ export class PrismaUserRepository implements UserRepository {
 
     await this.prisma.user.create({
       data: userRaw,
+    });
+  }
+
+  async save(user: User): Promise<void> {
+    const userRaw = PrismaUserMapper.toDomain(user);
+
+    const userUnmodified = await this.prisma.user.findFirst({
+      where: {
+        id: userRaw.id,
+      },
+    });
+
+    if (user.avatar !== userUnmodified.avatar) {
+      await this.deleteFile(userUnmodified.avatar);
+    }
+
+    await this.prisma.user.update({
+      data: userRaw,
+      where: {
+        id: userRaw.id,
+      },
     });
   }
 }

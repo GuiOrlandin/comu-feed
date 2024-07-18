@@ -19,10 +19,13 @@ export const SearchCommunity = styled.input<TopBarType>`
   width: 100%;
   border: none;
   overflow: hidden;
-  border: 1px solid #160548;
   border-radius: 12px;
   color: #160548;
   font-weight: 600;
+
+  &::placeholder {
+    color: #2f1b7e;
+  }
 `;
 export const SearchCommunityContainer = styled.div`
   display: flex;
