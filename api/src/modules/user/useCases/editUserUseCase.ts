@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../repositories/userRepository";
-import { User } from "../entities/User";
-import { hash } from "bcrypt";
+
 import { UserNotFoundException } from "../exceptions/userNotFound";
 import { UserWithoutPermissionException } from "../exceptions/userWithoutPermission";
 

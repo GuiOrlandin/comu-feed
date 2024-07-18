@@ -207,11 +207,6 @@ export default function TopBar({ page }: TopBarProps) {
     }
   }, [communityName, communitiesData, foundCommunities]);
 
-  if (communities) {
-    console.log(communities);
-    console.log(communitiesData);
-  }
-
   return (
     <TopBarContainer>
       {page === "home" && (

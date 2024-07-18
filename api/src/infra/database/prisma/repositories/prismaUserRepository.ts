@@ -23,6 +23,7 @@ export class PrismaUserRepository implements UserRepository {
       "userAvatar",
       filePath,
     );
+
     if (fs.existsSync(fullPath)) {
       fs.unlinkSync(fullPath);
     }
@@ -87,7 +88,7 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async save(user: User): Promise<void> {
-    const userRaw = PrismaUserMapper.toDomain(user);
+    const userRaw = PrismaUserMapper.toPrisma(user);
 
     const userUnmodified = await this.prisma.user.findFirst({
       where: {
@@ -95,14 +96,30 @@ export class PrismaUserRepository implements UserRepository {
       },
     });
 
-    if (user.avatar !== userUnmodified.avatar) {
+    if (user.avatar !== null && userUnmodified.avatar !== null) {
       await this.deleteFile(userUnmodified.avatar);
+
+      await this.prisma.user.update({
+        data: userRaw,
+        where: {
+          id: userUnmodified.id,
+        },
+      });
+    }
+
+    if (userUnmodified.avatar === null) {
+      await this.prisma.user.update({
+        data: userRaw,
+        where: {
+          id: userUnmodified.id,
+        },
+      });
     }
 
     await this.prisma.user.update({
-      data: userRaw,
+      data: { ...userRaw, avatar: userUnmodified.avatar },
       where: {
-        id: userRaw.id,
+        id: userUnmodified.id,
       },
     });
   }

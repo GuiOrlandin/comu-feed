@@ -4,6 +4,8 @@ import {
   Get,
   Param,
   Post,
+  Request,
+  Put,
   Query,
   UploadedFile,
   UseInterceptors,
@@ -16,16 +18,33 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname } from "path";
 import { FindUserByEmailUseCase } from "src/modules/user/useCases/findUserByEmail";
+import { EditUserUseCase } from "src/modules/user/useCases/editUserUseCase";
+import { AuthRequestModel } from "../auth/models/authRequestModel";
+import { EditUserBody } from "./dtos/editUserBody";
 
 @Controller("users")
 export class UserController {
   constructor(
     private createUserUseCase: CreateUserUseCase,
+    private editUserUseCase: EditUserUseCase,
     private findUserByEmail: FindUserByEmailUseCase,
   ) {}
 
   @Post()
   @Public()
+  async createUser(@Body() body: CreateUserBody) {
+    const { email, name, password_hash } = body;
+
+    const user = await this.createUserUseCase.execute({
+      email,
+      name,
+      password_hash,
+    });
+
+    return UserViewModel.toHttp(user);
+  }
+
+  @Put()
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
@@ -40,26 +59,26 @@ export class UserController {
       }),
     }),
   )
-  async createUser(
+  async editUser(
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: CreateUserBody,
+    @Request() request: AuthRequestModel,
+    @Body() body: EditUserBody,
   ) {
-    const { email, name, password_hash, created_at, id } = body;
+    const { name } = body;
 
     if (file) {
-      const user = await this.createUserUseCase.execute({
-        email,
+      const user = await this.editUserUseCase.execute({
         name,
-        password_hash,
-        avatar: file.filename,
+        avatarUrl: file.filename,
+        user_id: request.user.id,
       });
 
       return UserViewModel.toHttp(user);
     }
-    const user = await this.createUserUseCase.execute({
-      email,
+
+    const user = await this.editUserUseCase.execute({
       name,
-      password_hash,
+      user_id: request.user.id,
     });
 
     return UserViewModel.toHttp(user);

@@ -33,8 +33,6 @@ export default function LikeAndComments({ post }: LikeAndComments) {
   const removeEmail = emailStore((state) => state.removeEmail);
   const removeToken = tokenStore((state) => state.removeToken);
 
-  console.log(user);
-
   const {
     mutate: deleteLoveMutate,
     isSuccess: deleteLoveIsSuccess,
