@@ -11,7 +11,7 @@ export const RegisterContentContainer = styled.div`
 export const RegisterPageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 1rem;
   width: 100%;
   height: 100%;
   background: #f0edf6;

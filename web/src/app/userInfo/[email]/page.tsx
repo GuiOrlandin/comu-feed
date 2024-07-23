@@ -20,6 +20,7 @@ import {
   PostsDontFoundContainer,
   PostsOrCommentsButtonsContainer,
   PostsOrCommentsContainer,
+  SkeletonButtons,
   UserContent,
   UserInfoContainer,
   UserWrapper,
@@ -31,6 +32,21 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CardPost from "@/app/components/cardPost";
 import { MediaPostWithUser, TextPostWithUser } from "@/app/home/page";
+import {
+  SkeletonAvatar,
+  SkeletonCommunity,
+  SkeletonContent,
+  SkeletonName,
+} from "@/app/components/cardPostWithSkeleton/styles";
+import {
+  SkeletonAvatarNameAndCommunityContainer,
+  SkeletonComment,
+  SkeletonCommentAndLikeContainer,
+  SkeletonContainer,
+  SkeletonLike,
+  SkeletonNameAndCommunityContainer,
+} from "@/app/news/styles";
+import { ProfileContent } from "@/app/components/cardPost/styles";
 
 export default function UserInfo({ params }: { params: { email: string } }) {
   const router = useRouter();
@@ -78,148 +94,211 @@ export default function UserInfo({ params }: { params: { email: string } }) {
   return (
     <UserInfoContainer>
       <TopBar page="userInfo" />
-      {isLoading ? (
-        <>Carregando..</>
-      ) : (
-        <UserWrapper>
-          <UserContent>
-            <AvatarAndNameAndButtonsContainer>
-              <AvatarAndNameContainer>
-                {user?.avatar === null ? (
-                  <>
-                    <RxAvatar size={55} color="" />
-                  </>
-                ) : (
-                  <AvatarImage
-                    urlImg={`http://localhost:3333/files/avatarImage/${user!
-                      .avatar!}`}
-                    avatarImgDimensions={6}
+      <UserWrapper>
+        <UserContent>
+          {isLoading ? (
+            <>
+              <AvatarAndNameAndButtonsContainer>
+                <AvatarAndNameContainer>
+                  <SkeletonAvatar
+                    width={6 * 16}
+                    height={6 * 16}
+                    variant="circular"
                   />
-                )}
-                <h1>{user?.name}</h1>
-              </AvatarAndNameContainer>
-              <PostsOrCommentsButtonsContainer>
-                <PostsButton
-                  $variant={tabSelected}
-                  onClick={() => handleSetTabSelected("posts")}
-                >
-                  Posts
-                </PostsButton>
-                <CommentsButton
-                  $variant={tabSelected}
-                  onClick={() => handleSetTabSelected("comments")}
-                >
-                  Comentários
-                </CommentsButton>
-              </PostsOrCommentsButtonsContainer>
-            </AvatarAndNameAndButtonsContainer>
-            <PostsOrCommentsContainer>
-              {tabSelected === "posts" ? (
-                <>
-                  {posts && posts!.length >= 1 ? (
+                  <SkeletonName
+                    width={14 * 16}
+                    height={3 * 16}
+                    variant="text"
+                  />
+                </AvatarAndNameContainer>
+                <PostsOrCommentsButtonsContainer>
+                  <SkeletonButtons
+                    width={4 * 16}
+                    height={3 * 16}
+                    variant="text"
+                  />
+                  <SkeletonButtons
+                    width={4 * 16}
+                    height={3 * 16}
+                    variant="text"
+                  />
+                </PostsOrCommentsButtonsContainer>
+              </AvatarAndNameAndButtonsContainer>
+              <PostsOrCommentsContainer>
+                <SkeletonContainer>
+                  <ProfileContent>
+                    <SkeletonAvatarNameAndCommunityContainer>
+                      <SkeletonAvatar
+                        width={6 * 16}
+                        height={6 * 16}
+                        variant="rectangular"
+                      />
+                      <SkeletonNameAndCommunityContainer>
+                        <SkeletonName
+                          width={14 * 16}
+                          height={3 * 16}
+                          variant="text"
+                        />
+                        <SkeletonCommunity
+                          width={7 * 16}
+                          height={2 * 16}
+                          variant="text"
+                        />
+                      </SkeletonNameAndCommunityContainer>
+                    </SkeletonAvatarNameAndCommunityContainer>
+                  </ProfileContent>
+                  <SkeletonContent height={5 * 16} variant="rectangular" />
+                  <SkeletonCommentAndLikeContainer>
+                    <SkeletonLike height={3 * 16} width={6 * 16} />
+                    <SkeletonComment height={3 * 16} width={6 * 16} />
+                  </SkeletonCommentAndLikeContainer>
+                </SkeletonContainer>
+              </PostsOrCommentsContainer>
+            </>
+          ) : (
+            <>
+              <AvatarAndNameAndButtonsContainer>
+                <AvatarAndNameContainer>
+                  {user?.avatar === null ? (
                     <>
-                      {posts!.map((post) => (
-                        <CardPost post={post!} largecard="true" key={post.id} />
-                      ))}
+                      <RxAvatar size={55} color="" />
                     </>
                   ) : (
-                    <PostsDontFoundContainer>
-                      Nenhum post publicado!
-                    </PostsDontFoundContainer>
+                    <AvatarImage
+                      urlImg={`http://localhost:3333/files/avatarImage/${user!
+                        .avatar!}`}
+                      avatarImgDimensions={6}
+                    />
                   )}
-                </>
-              ) : (
-                <>
-                  {user && user!.comments!.length >= 1 ? (
-                    <CommentsContainer>
-                      {user.comments?.map((comment) => (
-                        <CommentContainer key={comment.id}>
-                          <CommentContent>
-                            {comment.media_post_id ? (
-                              <>
-                                <CommunityNameAndPostTitleContainer>
-                                  <CommunityNameContainer
-                                    onClick={() =>
-                                      router.push(
-                                        `/communityInfo/${
-                                          comment!.text_post!.community.id
-                                        }`
-                                      )
-                                    }
-                                  >
-                                    {comment.media_post?.community.name}
-                                  </CommunityNameContainer>
-                                  -
-                                  <PostNameContainer
+                  <h1>{user?.name}</h1>
+                </AvatarAndNameContainer>
+                <PostsOrCommentsButtonsContainer>
+                  <PostsButton
+                    $variant={tabSelected}
+                    onClick={() => handleSetTabSelected("posts")}
+                  >
+                    Posts
+                  </PostsButton>
+                  <CommentsButton
+                    $variant={tabSelected}
+                    onClick={() => handleSetTabSelected("comments")}
+                  >
+                    Comentários
+                  </CommentsButton>
+                </PostsOrCommentsButtonsContainer>
+              </AvatarAndNameAndButtonsContainer>
+              <PostsOrCommentsContainer>
+                {tabSelected === "posts" ? (
+                  <>
+                    {posts && posts!.length >= 1 ? (
+                      <>
+                        {posts!.map((post) => (
+                          <CardPost
+                            post={post!}
+                            largecard="true"
+                            key={post.id}
+                          />
+                        ))}
+                      </>
+                    ) : (
+                      <PostsDontFoundContainer>
+                        Nenhum post publicado!
+                      </PostsDontFoundContainer>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {user && user!.comments!.length >= 1 ? (
+                      <CommentsContainer>
+                        {user.comments?.map((comment) => (
+                          <CommentContainer key={comment.id}>
+                            <CommentContent>
+                              {comment.media_post_id ? (
+                                <>
+                                  <CommunityNameAndPostTitleContainer>
+                                    <CommunityNameContainer
+                                      onClick={() =>
+                                        router.push(
+                                          `/communityInfo/${
+                                            comment!.text_post!.community.id
+                                          }`
+                                        )
+                                      }
+                                    >
+                                      {comment.media_post?.community.name}
+                                    </CommunityNameContainer>
+                                    -
+                                    <PostNameContainer
+                                      onClick={() =>
+                                        router.push(
+                                          `/postInfo/${comment!.media_post!.id}`
+                                        )
+                                      }
+                                    >
+                                      {comment.media_post?.title}
+                                    </PostNameContainer>
+                                  </CommunityNameAndPostTitleContainer>
+
+                                  <CommentContentContainer
                                     onClick={() =>
                                       router.push(
                                         `/postInfo/${comment!.media_post!.id}`
                                       )
                                     }
                                   >
-                                    {comment.media_post?.title}
-                                  </PostNameContainer>
-                                </CommunityNameAndPostTitleContainer>
-
-                                <CommentContentContainer
-                                  onClick={() =>
-                                    router.push(
-                                      `/postInfo/${comment!.media_post!.id}`
-                                    )
-                                  }
-                                >
-                                  {comment.content}
-                                </CommentContentContainer>
-                              </>
-                            ) : (
-                              <>
-                                <CommunityNameAndPostTitleContainer>
-                                  <CommunityNameContainer
-                                    onClick={() =>
-                                      router.push(
-                                        `/communityInfo/${
-                                          comment!.text_post!.community.id
-                                        }`
-                                      )
-                                    }
-                                  >
-                                    {comment.text_post?.community.name}
-                                  </CommunityNameContainer>
-                                  -
-                                  <PostNameContainer
+                                    {comment.content}
+                                  </CommentContentContainer>
+                                </>
+                              ) : (
+                                <>
+                                  <CommunityNameAndPostTitleContainer>
+                                    <CommunityNameContainer
+                                      onClick={() =>
+                                        router.push(
+                                          `/communityInfo/${
+                                            comment!.text_post!.community.id
+                                          }`
+                                        )
+                                      }
+                                    >
+                                      {comment.text_post?.community.name}
+                                    </CommunityNameContainer>
+                                    -
+                                    <PostNameContainer
+                                      onClick={() =>
+                                        router.push(
+                                          `/postInfo/${comment!.text_post!.id}`
+                                        )
+                                      }
+                                    >
+                                      {comment.text_post?.title}
+                                    </PostNameContainer>
+                                  </CommunityNameAndPostTitleContainer>
+                                  <CommentContentContainer
                                     onClick={() =>
                                       router.push(
                                         `/postInfo/${comment!.text_post!.id}`
                                       )
                                     }
                                   >
-                                    {comment.text_post?.title}
-                                  </PostNameContainer>
-                                </CommunityNameAndPostTitleContainer>
-                                <CommentContentContainer
-                                  onClick={() =>
-                                    router.push(
-                                      `/postInfo/${comment!.text_post!.id}`
-                                    )
-                                  }
-                                >
-                                  {comment.content}
-                                </CommentContentContainer>
-                              </>
-                            )}
-                          </CommentContent>
-                        </CommentContainer>
-                      ))}
-                    </CommentsContainer>
-                  ) : (
-                    <>Nenhum comentário feito!</>
-                  )}
-                </>
-              )}
-            </PostsOrCommentsContainer>
-          </UserContent>
-        </UserWrapper>
-      )}
+                                    {comment.content}
+                                  </CommentContentContainer>
+                                </>
+                              )}
+                            </CommentContent>
+                          </CommentContainer>
+                        ))}
+                      </CommentsContainer>
+                    ) : (
+                      <>Nenhum comentário feito!</>
+                    )}
+                  </>
+                )}
+              </PostsOrCommentsContainer>
+            </>
+          )}
+        </UserContent>
+      </UserWrapper>
     </UserInfoContainer>
   );
 }

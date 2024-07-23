@@ -9,7 +9,7 @@ export const CommunityInfoContainer = styled.div`
   background: #f0edf6;
   width: 100%;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
 `;
 
 export const PostAndCommunityWrapper = styled.div`

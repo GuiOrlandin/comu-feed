@@ -7,7 +7,7 @@ import { Skeleton } from "@mui/material";
 export const PostInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 1rem;
   width: 100%;
   min-height: 100vh;
   background: #f0edf6;

@@ -11,8 +11,7 @@ interface TapSelected {
 export const UserInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
-  width: 100%;
+  padding: 1rem;
   min-height: 100vh;
   background: #f0edf6;
 `;
@@ -30,6 +29,8 @@ export const UserContent = styled.div`
   display: flex;
   flex-direction: column;
   background: #f5f5f5;
+  min-width: 58rem;
+  min-height: 100vh;
   padding: 2rem;
 `;
 export const AvatarAndNameAndButtonsContainer = styled.div`
@@ -124,3 +125,5 @@ export const CommentsButton = styled(PostsButton)<TapSelected>`
   background: ${({ $variant }) =>
     $variant === "comments" ? "#cdc3ea" : "#f0edf6"};
 `;
+
+export const SkeletonButtons = styled(Skeleton)``;

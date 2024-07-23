@@ -11,7 +11,7 @@ export const LoginContentContainer = styled.div`
 export const LoginPageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 1rem;
   width: 100%;
   height: 100vh;
   background: #f0edf6;

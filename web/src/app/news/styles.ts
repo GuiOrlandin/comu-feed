@@ -5,8 +5,7 @@ import styled from "styled-components";
 
 export const NewsContainer = styled.div`
   display: flex;
-
-  padding: 2rem;
+  padding: 1rem;
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
