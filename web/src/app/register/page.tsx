@@ -73,7 +73,7 @@ export default function Register() {
 
   return (
     <RegisterPageContainer>
-      <TopBar page="register" isLoged={false} />
+      <TopBar page="register" />
       <RegisterContentContainer>
         <RegisterContent>
           <EmailInputContainer>

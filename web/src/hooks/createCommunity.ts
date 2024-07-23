@@ -66,7 +66,7 @@ export function useCreateCommunityMutate() {
       file: File[];
     }) => postData(data, authToken, file),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-info"] });
+      queryClient.invalidateQueries({ queryKey: ["user-authenticated"] });
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
     },
   });

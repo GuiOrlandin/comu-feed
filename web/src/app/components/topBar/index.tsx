@@ -16,7 +16,6 @@ import {
 } from "./styles";
 import { useRouter } from "next/navigation";
 import CreatePostModal from "../createPostAndCommunityModal";
-import * as Dialog from "@radix-ui/react-dialog";
 import { signOut } from "next-auth/react";
 import { useState, useEffect, ChangeEvent } from "react";
 import { tokenStore } from "@/store/tokenStore";
@@ -49,9 +48,25 @@ interface CommentsResponse {
   user_id: string;
   text_post_id: string;
   media_post_id: string;
+  text_post?: {
+    community: {
+      name: string;
+      id: string;
+    };
+    id: string;
+    title: string;
+  };
+  media_post?: {
+    community: {
+      name: string;
+      id: string;
+    };
+    id: string;
+    title: string;
+  };
   content: string;
 }
-interface MediaPostsResponse {
+export interface MediaPostsResponse {
   id: string;
   created_at: Date;
   user_id: string;
@@ -60,7 +75,7 @@ interface MediaPostsResponse {
   media: string;
   love: LoveResponse[];
 }
-interface TextPostsResponse {
+export interface TextPostsResponse {
   id: string;
   created_at: Date;
   user_id: string;
@@ -87,8 +102,8 @@ export interface UserResponse {
   community_Founder?: CommunityResponse[];
   community_Member?: CommunityResponse[];
   comments?: CommentsResponse[];
-  mediaResponse?: MediaPostsResponse[];
-  textResponse?: TextPostsResponse[];
+  mediaPosts?: MediaPostsResponse[];
+  textPosts?: TextPostsResponse[];
   love: LoveResponse[];
 }
 
@@ -130,7 +145,7 @@ export default function TopBar({ page }: TopBarProps) {
     refetch,
     isSuccess,
   } = useQuery<UserResponse>({
-    queryKey: ["user-info"],
+    queryKey: ["user-authenticated"],
 
     queryFn: async () => {
       if (email) {
@@ -213,7 +228,6 @@ export default function TopBar({ page }: TopBarProps) {
         <>
           <TwoOptionsRedirectOnBarContainerInHome>
             <Link href="/news">Novidades</Link>
-            <Link href="/mostLoved">Mais Amados</Link>
           </TwoOptionsRedirectOnBarContainerInHome>
 
           <SearchCommunityContainer>
@@ -298,75 +312,10 @@ export default function TopBar({ page }: TopBarProps) {
         </>
       )}
 
-      {page === "mostLoved" && (
-        <>
-          <TwoOptionsRedirectOnBarContainerInOthersPages>
-            <Link href="/home">Home</Link>
-            <Link href="/news">Novidades</Link>
-          </TwoOptionsRedirectOnBarContainerInOthersPages>
-          <SearchCommunityContainer>
-            <SearchCommunity
-              $variant={communities ? "true" : "false"}
-              type="text"
-              placeholder="Procurar comunidade"
-              onChange={(event) => handleSearchCommunities(event)}
-            />
-            {communities && communities!.length > 0 && (
-              <SearchCommunityCompleteContainer>
-                {communities.map((community) => (
-                  <CommunitiesResultContainer
-                    key={community.props.id}
-                    onClick={() =>
-                      router.push(`/communityInfo/${community.props.id}`)
-                    }
-                  >
-                    {community.props.community_image === null ? (
-                      <AvatarAndNameOfCommunityContainer>
-                        <AvatarContentWithoutImage>
-                          <RxAvatar size={55} color="" />
-                        </AvatarContentWithoutImage>
-                        <span>{community.props.name}</span>
-                      </AvatarAndNameOfCommunityContainer>
-                    ) : (
-                      <AvatarAndNameOfCommunityContainer>
-                        <AvatarImage
-                          urlImg={`http://localhost:3333/files/communityImage/${community!
-                            .props.community_image!}`}
-                          avatarImgDimensions={3.1375}
-                        />
-                        <span>{community.props.name}</span>
-                      </AvatarAndNameOfCommunityContainer>
-                    )}
-                  </CommunitiesResultContainer>
-                ))}
-              </SearchCommunityCompleteContainer>
-            )}
-          </SearchCommunityContainer>
-          {userAuthenticated ? (
-            <ButtonsOnBarContainer>
-              <CreatePostModal user={user!} />
-
-              <ButtonOnBarContainer onClick={() => handleLogout()}>
-                Sair
-              </ButtonOnBarContainer>
-            </ButtonsOnBarContainer>
-          ) : (
-            <ButtonsOnBarContainer>
-              <ButtonOnBarContainer onClick={() => handleRedirect("login")}>
-                Entrar
-              </ButtonOnBarContainer>
-              <ButtonOnBarContainer onClick={() => handleRedirect("register")}>
-                Cadastrar
-              </ButtonOnBarContainer>
-            </ButtonsOnBarContainer>
-          )}
-        </>
-      )}
       {page === "news" && (
         <>
           <TwoOptionsRedirectOnBarContainerInOthersPages>
             <Link href="/home">Home</Link>
-            <Link href="/mostLoved">Mais amados</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           <SearchCommunityContainer>
             <SearchCommunity
@@ -427,12 +376,13 @@ export default function TopBar({ page }: TopBarProps) {
         </>
       )}
 
-      {(page === "postInfo" || page === "communityInfo") && (
+      {(page === "postInfo" ||
+        page === "communityInfo" ||
+        page === "userInfo") && (
         <>
           <TwoOptionsRedirectOnBarContainerInOthersPages>
             <Link href="/home">Home</Link>
             <Link href="/news">Novidades</Link>
-            <Link href="/mostLoved">Mais amados</Link>
           </TwoOptionsRedirectOnBarContainerInOthersPages>
           <SearchCommunityContainer>
             <SearchCommunity

@@ -38,7 +38,37 @@ export class PrismaUserRepository implements UserRepository {
       include: {
         community_Founder: true,
         community_Member: true,
-        comments: true,
+        comments: {
+          select: {
+            content: true,
+            media_post: {
+              select: {
+                community: {
+                  select: {
+                    name: true,
+                    id: true,
+                  },
+                },
+                title: true,
+                id: true,
+              },
+            },
+            text_post: {
+              select: {
+                community: {
+                  select: {
+                    name: true,
+                    id: true,
+                  },
+                },
+                title: true,
+                id: true,
+              },
+            },
+            media_post_id: true,
+            text_post_id: true,
+          },
+        },
         mediaPosts: true,
         textPosts: true,
         love: true,

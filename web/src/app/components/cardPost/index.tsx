@@ -44,7 +44,6 @@ export default function CardPost({
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
   }
 
-
   return (
     <PostCardContainer $largecard={largecard!}>
       <ProfileAndPostContainer>
@@ -56,7 +55,7 @@ export default function CardPost({
               </AvatarContentWithoutImage>
             ) : (
               <AvatarImage
-                avatarImgDimensions={4}
+                avatarImgDimensions={3.4}
                 urlImg={`http://localhost:3333/files/avatarImage/${post.user?.avatar}`}
               />
             )}

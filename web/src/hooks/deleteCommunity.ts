@@ -37,7 +37,7 @@ export function useDeleteCommunityMutate() {
     mutationFn: (community_id: string) => deleteData(community_id, authToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
-      queryClient.invalidateQueries({ queryKey: ["user-info"] });
+      queryClient.invalidateQueries({ queryKey: ["user-authenticated"] });
     },
   });
 

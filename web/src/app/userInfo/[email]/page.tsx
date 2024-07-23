@@ -1,0 +1,225 @@
+"use client";
+
+import TopBar, { UserResponse } from "@/app/components/topBar";
+
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+
+import {
+  AvatarAndNameAndButtonsContainer,
+  AvatarAndNameContainer,
+  CommentContainer,
+  CommentContent,
+  CommentContentContainer,
+  CommentsButton,
+  CommentsContainer,
+  CommunityNameAndPostTitleContainer,
+  CommunityNameContainer,
+  PostNameContainer,
+  PostsButton,
+  PostsDontFoundContainer,
+  PostsOrCommentsButtonsContainer,
+  PostsOrCommentsContainer,
+  UserContent,
+  UserInfoContainer,
+  UserWrapper,
+} from "./styles";
+import AvatarImage from "@/app/components/avatarImg";
+import { RxAvatar } from "react-icons/rx";
+import { useRouter } from "next/navigation";
+
+import { useEffect, useState } from "react";
+import CardPost from "@/app/components/cardPost";
+import { MediaPostWithUser, TextPostWithUser } from "@/app/home/page";
+
+export default function UserInfo({ params }: { params: { email: string } }) {
+  const router = useRouter();
+  const [posts, setPosts] = useState<
+    (TextPostWithUser | MediaPostWithUser)[] | undefined
+  >();
+  const [tabSelected, setTabSelected] = useState<string>("posts");
+  const { data: user, isLoading } = useQuery<UserResponse>({
+    queryKey: ["user-info"],
+
+    queryFn: async () => {
+      return axios
+        .get(`http://localhost:3333/users?email=${params.email}`)
+        .then((response) => response.data);
+    },
+  });
+
+  const { data: allThePosts, isLoading: allThePostsLoading } = useQuery<
+    (TextPostWithUser | MediaPostWithUser)[]
+  >({
+    queryKey: ["posts-info"],
+    queryFn: async () => {
+      return axios
+        .get(`http://localhost:3333/post`)
+        .then((response) => response.data);
+    },
+  });
+
+  useEffect(() => {
+    if (allThePosts) {
+      const allPosts = allThePosts.filter(
+        (posts) => posts.user_id === user?.id
+      );
+
+      setPosts(allPosts);
+    }
+  }, [allThePosts]);
+
+  console.log(user);
+
+  function handleSetTabSelected(tabSelected: string) {
+    setTabSelected(tabSelected);
+  }
+
+  return (
+    <UserInfoContainer>
+      <TopBar page="userInfo" />
+      {isLoading ? (
+        <>Carregando..</>
+      ) : (
+        <UserWrapper>
+          <UserContent>
+            <AvatarAndNameAndButtonsContainer>
+              <AvatarAndNameContainer>
+                {user?.avatar === null ? (
+                  <>
+                    <RxAvatar size={55} color="" />
+                  </>
+                ) : (
+                  <AvatarImage
+                    urlImg={`http://localhost:3333/files/avatarImage/${user!
+                      .avatar!}`}
+                    avatarImgDimensions={6}
+                  />
+                )}
+                <h1>{user?.name}</h1>
+              </AvatarAndNameContainer>
+              <PostsOrCommentsButtonsContainer>
+                <PostsButton
+                  $variant={tabSelected}
+                  onClick={() => handleSetTabSelected("posts")}
+                >
+                  Posts
+                </PostsButton>
+                <CommentsButton
+                  $variant={tabSelected}
+                  onClick={() => handleSetTabSelected("comments")}
+                >
+                  Comentários
+                </CommentsButton>
+              </PostsOrCommentsButtonsContainer>
+            </AvatarAndNameAndButtonsContainer>
+            <PostsOrCommentsContainer>
+              {tabSelected === "posts" ? (
+                <>
+                  {posts && posts!.length >= 1 ? (
+                    <>
+                      {posts!.map((post) => (
+                        <CardPost post={post!} largecard="true" key={post.id} />
+                      ))}
+                    </>
+                  ) : (
+                    <PostsDontFoundContainer>
+                      Nenhum post publicado!
+                    </PostsDontFoundContainer>
+                  )}
+                </>
+              ) : (
+                <>
+                  {user && user!.comments!.length >= 1 ? (
+                    <CommentsContainer>
+                      {user.comments?.map((comment) => (
+                        <CommentContainer key={comment.id}>
+                          <CommentContent>
+                            {comment.media_post_id ? (
+                              <>
+                                <CommunityNameAndPostTitleContainer>
+                                  <CommunityNameContainer
+                                    onClick={() =>
+                                      router.push(
+                                        `/communityInfo/${
+                                          comment!.text_post!.community.id
+                                        }`
+                                      )
+                                    }
+                                  >
+                                    {comment.media_post?.community.name}
+                                  </CommunityNameContainer>
+                                  -
+                                  <PostNameContainer
+                                    onClick={() =>
+                                      router.push(
+                                        `/postInfo/${comment!.media_post!.id}`
+                                      )
+                                    }
+                                  >
+                                    {comment.media_post?.title}
+                                  </PostNameContainer>
+                                </CommunityNameAndPostTitleContainer>
+
+                                <CommentContentContainer
+                                  onClick={() =>
+                                    router.push(
+                                      `/postInfo/${comment!.media_post!.id}`
+                                    )
+                                  }
+                                >
+                                  {comment.content}
+                                </CommentContentContainer>
+                              </>
+                            ) : (
+                              <>
+                                <CommunityNameAndPostTitleContainer>
+                                  <CommunityNameContainer
+                                    onClick={() =>
+                                      router.push(
+                                        `/communityInfo/${
+                                          comment!.text_post!.community.id
+                                        }`
+                                      )
+                                    }
+                                  >
+                                    {comment.text_post?.community.name}
+                                  </CommunityNameContainer>
+                                  -
+                                  <PostNameContainer
+                                    onClick={() =>
+                                      router.push(
+                                        `/postInfo/${comment!.text_post!.id}`
+                                      )
+                                    }
+                                  >
+                                    {comment.text_post?.title}
+                                  </PostNameContainer>
+                                </CommunityNameAndPostTitleContainer>
+                                <CommentContentContainer
+                                  onClick={() =>
+                                    router.push(
+                                      `/postInfo/${comment!.text_post!.id}`
+                                    )
+                                  }
+                                >
+                                  {comment.content}
+                                </CommentContentContainer>
+                              </>
+                            )}
+                          </CommentContent>
+                        </CommentContainer>
+                      ))}
+                    </CommentsContainer>
+                  ) : (
+                    <>Nenhum comentário feito!</>
+                  )}
+                </>
+              )}
+            </PostsOrCommentsContainer>
+          </UserContent>
+        </UserWrapper>
+      )}
+    </UserInfoContainer>
+  );
+}

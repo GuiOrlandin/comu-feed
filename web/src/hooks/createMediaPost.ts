@@ -63,7 +63,7 @@ export function useCreateMediaPostMutate() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
       queryClient.invalidateQueries({ queryKey: ["community-info"] });
-      queryClient.invalidateQueries({ queryKey: ["user-info"] });
+      queryClient.invalidateQueries({ queryKey: ["user-authenticated"] });
     },
   });
   return mutate;

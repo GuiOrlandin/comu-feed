@@ -17,6 +17,7 @@ export default function AvatarImage({
         width={avatarImgDimensions * 16}
         height={avatarImgDimensions * 16}
         alt="Picture of the author"
+        quality={100}
       />
     </AvatarImageContainer>
   );
