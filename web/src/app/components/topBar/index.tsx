@@ -32,6 +32,15 @@ interface TopBarProps {
 }
 
 export interface CommunityResponse {
+  id: string;
+  created_at: Date;
+  community_image?: string | null;
+  email: string;
+  founder_id: string;
+  key_access: string;
+  name: string;
+}
+export interface CommunityResponseWithProps {
   props: {
     id: string;
     created_at: Date;
@@ -112,7 +121,7 @@ export default function TopBar({ page }: TopBarProps) {
   const [userAuthenticated, setUserAuthenticated] = useState<boolean>();
   const [communityName, setCommunityName] = useState<string>();
   const [communities, setCommunities] = useState<
-    CommunityResponse[] | null | undefined
+    CommunityResponseWithProps[] | null | undefined
   >();
   const token = tokenStore((state) => state.token);
   const setEmail = emailStore((state) => state.setEmail);
@@ -123,8 +132,8 @@ export default function TopBar({ page }: TopBarProps) {
   const removeUser = userStore((state) => state.removeUser);
   const setToken = tokenStore((state) => state.setToken);
   const removeToken = tokenStore((state) => state.removeToken);
-
-  const { data: session } = useSession();
+  const tokenStorage = localStorage.getItem("storeToken");
+  const emailStorage = localStorage.getItem("storeEmail");
 
   function handleRedirect(page: string) {
     router.push(`/${page}`);
@@ -148,11 +157,9 @@ export default function TopBar({ page }: TopBarProps) {
     queryKey: ["user-authenticated"],
 
     queryFn: async () => {
-      if (email) {
-        return axios
-          .get(`http://localhost:3333/users?email=${email}`)
-          .then((response) => response.data);
-      }
+      return axios
+        .get(`http://localhost:3333/users?email=${email}`)
+        .then((response) => response.data);
     },
   });
 
@@ -160,7 +167,7 @@ export default function TopBar({ page }: TopBarProps) {
     data: communitiesData,
     refetch: refetchFindCommunitiesByName,
     isSuccess: foundCommunities,
-  } = useQuery<CommunityResponse[]>({
+  } = useQuery<CommunityResponseWithProps[]>({
     queryKey: ["communities-info"],
 
     queryFn: async () => {
@@ -179,34 +186,32 @@ export default function TopBar({ page }: TopBarProps) {
   }
 
   useEffect(() => {
-    if (session) {
-      localStorage.setItem("storeToken", session.expires);
-      localStorage.setItem("storeEmail", session.user?.email as string);
-      setToken(session.expires);
-      setEmail(session.user?.email as string);
-    }
-
-    if (typeof window !== "undefined" && !session) {
-      const tokenStorage = localStorage.getItem("storeToken");
-      const emailStorage = localStorage.getItem("storeEmail");
+    if (
+      typeof window !== "undefined" &&
+      !token &&
+      !email &&
+      tokenStorage &&
+      emailStorage
+    ) {
       setToken(tokenStorage!);
       setEmail(emailStorage!);
     }
 
-    if (token && email) {
+    if (token && email && user === undefined) {
       refetch();
     }
 
-    if (user) {
+    if (isSuccess) {
       setUser(user!);
     }
 
     if (userStored!.name !== "") {
+      ("");
       setUserAuthenticated(true);
     } else {
       setUserAuthenticated(false);
     }
-  }, [token, session, isSuccess, email, user, userStored]);
+  }, [token, isSuccess, email, user, userStored]);
 
   useEffect(() => {
     if (communityName) {

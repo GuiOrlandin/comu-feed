@@ -6,6 +6,7 @@ import {
   CardsOfPostContainer,
   HomeContainer,
   TopBarContainer,
+  CenteredContent,
 } from "@/app/home/styles";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -96,22 +97,30 @@ export default function Home() {
       <TopBarContainer>
         <TopBar page="home" />
       </TopBarContainer>
-      {isLoading ? (
-        <CardsOfPostContainer>
-          <CardPostWithSkeleton />
-          <CardPostWithSkeleton />
-          <CardPostWithSkeleton />
-        </CardsOfPostContainer>
-      ) : (
-        <CardsOfPostContainer>
-          {Array.isArray(posts) &&
-            posts
-              ?.slice(0, 3)
-              .map((post) => (
-                <CardPost key={post.id} post={post} page="home" />
-              ))}
-        </CardsOfPostContainer>
-      )}
+      <CenteredContent>
+        {isLoading ? (
+          <CardsOfPostContainer>
+            <CardPostWithSkeleton />
+            <CardPostWithSkeleton />
+            <CardPostWithSkeleton />
+          </CardsOfPostContainer>
+        ) : (
+          <>
+            {posts && posts!.length > 0 ? (
+              <CardsOfPostContainer>
+                {Array.isArray(posts) &&
+                  posts
+                    ?.slice(0, 3)
+                    .map((post) => (
+                      <CardPost key={post.id} post={post} page="home" />
+                    ))}
+              </CardsOfPostContainer>
+            ) : (
+              <h1>Nenhum post publicado!</h1>
+            )}
+          </>
+        )}
+      </CenteredContent>
     </HomeContainer>
   );
 }

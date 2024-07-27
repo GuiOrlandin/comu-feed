@@ -15,6 +15,8 @@ import {
 } from "./styles";
 
 import { FcGoogle } from "react-icons/fc";
+import { useSession } from "next-auth/react";
+
 import { signIn } from "next-auth/react";
 import { ChangeEvent, useState, useEffect } from "react";
 import {
@@ -32,6 +34,9 @@ import { emailStore } from "@/store/emailStore";
 
 export default function Login() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const setEmail = emailStore((state) => state.setEmail);
+
   const [userAuthenticateCredentials, setUserAuthenticateCredentials] =
     useState<UserAuthenticationDetails>({
       email: "",
@@ -65,14 +70,26 @@ export default function Login() {
   useEffect(() => {
     if (isSuccess && data) {
       saveToken(data);
-      saveEmail(userAuthenticateCredentials!.email);
 
-      if (typeof window !== "undefined") {
-        localStorage.setItem("storeToken", data);
-        localStorage.setItem("storeEmail", userAuthenticateCredentials!.email);
+      if (session) {
+        saveEmail(session.user?.email as string);
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("storeToken", data);
+          localStorage.setItem("storeEmail", session.user?.email as string);
+        }
+      } else {
+        saveEmail(userAuthenticateCredentials!.email);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("storeToken", data);
+          localStorage.setItem(
+            "storeEmail",
+            userAuthenticateCredentials!.email
+          );
+        }
       }
 
-      router.back();
+      router.push("/");
     }
 
     if (error?.message === "Falha ao autenticar usuário") {
@@ -90,8 +107,18 @@ export default function Login() {
       return setErrorMessage("insira a Senha!");
     }
 
-    mutate(userAuthenticateCredentialsDetails);
+    mutate({ data: userAuthenticateCredentialsDetails });
   }
+
+  useEffect(() => {
+    if (session) {
+      mutate({
+        credentialOfUserLoggedWithGoogle: {
+          emailOfUserLoggedWithGoogle: session!.user!.email as string,
+        },
+      });
+    }
+  }, [session]);
 
   return (
     <LoginPageContainer>
@@ -133,9 +160,7 @@ export default function Login() {
               Entrar
             </LoginButton>
           </LoginButtonContainer>
-          <LoginWithGoogleButton
-            onClick={() => signIn("google", { callbackUrl: "/" })}
-          >
+          <LoginWithGoogleButton onClick={() => signIn("google")}>
             <FcGoogle />
             Entrar com Google
           </LoginWithGoogleButton>
