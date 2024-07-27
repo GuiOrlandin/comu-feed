@@ -13,6 +13,11 @@ export class SignInDTOValidateMiddleware implements NestMiddleware {
     const body = req.body;
 
     const signInBody = new SignInBody();
+
+    if (body.emailOfUserLoggedWithGoogle) {
+      return next();
+    }
+
     signInBody.email = body.email;
     signInBody.password_hash = body.password_hash;
 

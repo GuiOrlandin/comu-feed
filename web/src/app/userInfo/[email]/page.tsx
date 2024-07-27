@@ -85,8 +85,6 @@ export default function UserInfo({ params }: { params: { email: string } }) {
     }
   }, [allThePosts]);
 
-  console.log(user);
-
   function handleSetTabSelected(tabSelected: string) {
     setTabSelected(tabSelected);
   }

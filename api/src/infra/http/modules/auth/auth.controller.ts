@@ -3,7 +3,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Get,
+  Body,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -13,6 +13,7 @@ import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { Public } from "./decorators/isPublic";
 import { AuthenticatedRequestModel } from "./models/authenticatedRequestModel";
+import { SignInWithGoogleEmailBody } from "./dtos/singInWithGoogleEmailBody";
 
 @Controller()
 export class AuthController {
@@ -25,6 +26,17 @@ export class AuthController {
   async signIn(@Request() request: AuthRequestModel) {
     const access_token = await this.signInUseCase.execute({
       user: request.user,
+    });
+
+    return { access_token };
+  }
+
+  @Post("signInWithGoogle")
+  @Public()
+  async signInWithGoogle(@Body() body: SignInWithGoogleEmailBody) {
+    const { emailOfUserLoggedWithGoogle } = body;
+    const access_token = await this.signInUseCase.execute({
+      emailOfUserLoggedWithGoogle,
     });
 
     return { access_token };
