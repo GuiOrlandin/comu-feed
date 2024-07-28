@@ -132,8 +132,6 @@ export default function TopBar({ page }: TopBarProps) {
   const removeUser = userStore((state) => state.removeUser);
   const setToken = tokenStore((state) => state.setToken);
   const removeToken = tokenStore((state) => state.removeToken);
-  const tokenStorage = localStorage.getItem("storeToken");
-  const emailStorage = localStorage.getItem("storeEmail");
 
   function handleRedirect(page: string) {
     router.push(`/${page}`);
@@ -153,6 +151,7 @@ export default function TopBar({ page }: TopBarProps) {
     data: user,
     refetch,
     isSuccess,
+    isError,
   } = useQuery<UserResponse>({
     queryKey: ["user-authenticated"],
 
@@ -186,15 +185,20 @@ export default function TopBar({ page }: TopBarProps) {
   }
 
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      !token &&
-      !email &&
-      tokenStorage &&
-      emailStorage
-    ) {
-      setToken(tokenStorage!);
-      setEmail(emailStorage!);
+    if (typeof window !== "undefined") {
+      const tokenStorage = localStorage.getItem("storeToken");
+      const emailStorage = localStorage.getItem("storeEmail");
+
+      if (
+        typeof window !== "undefined" &&
+        !token &&
+        !email &&
+        tokenStorage &&
+        emailStorage
+      ) {
+        setToken(tokenStorage!);
+        setEmail(emailStorage!);
+      }
     }
 
     if (token && email && user === undefined) {
@@ -205,7 +209,7 @@ export default function TopBar({ page }: TopBarProps) {
       setUser(user!);
     }
 
-    if (userStored!.name !== "") {
+    if (userStored!.name !== "" && !isError) {
       ("");
       setUserAuthenticated(true);
     } else {
@@ -225,7 +229,7 @@ export default function TopBar({ page }: TopBarProps) {
     if (!communityName) {
       setCommunities(undefined);
     }
-  }, [communityName, communitiesData, foundCommunities]);
+  }, [communityName, communitiesData, foundCommunities, isError]);
 
   return (
     <TopBarContainer>

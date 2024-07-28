@@ -114,11 +114,13 @@ export class PrismaPostRepository implements PostRepository {
         },
       });
 
-      if (!user || community.founder_id !== user_id) {
+      if (!user && community.founder_id !== user_id) {
         throw new postWithoutPermissionException({
           actionName: "deletar",
         });
       }
+
+      console.log("chegou aqui");
 
       await this.prisma.textPost.delete({
         where: {
@@ -140,7 +142,7 @@ export class PrismaPostRepository implements PostRepository {
         },
       });
 
-      if (!user || community.founder_id !== user_id) {
+      if (!user && community.founder_id !== user_id) {
         throw new postWithoutPermissionException({
           actionName: "deletar",
         });

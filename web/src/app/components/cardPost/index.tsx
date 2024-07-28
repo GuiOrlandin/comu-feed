@@ -57,6 +57,7 @@ export default function CardPost({
               <AvatarImage
                 avatarImgDimensions={3.4}
                 urlImg={`http://localhost:3333/files/avatarImage/${post.user?.avatar}`}
+                userEmail={post!.user!.email}
               />
             )}
 

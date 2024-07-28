@@ -23,13 +23,13 @@ export const UserWrapper = styled.div`
   width: 100%;
   height: 100%;
 
-  margin-top: 2rem;
+  margin-top: 3rem;
 `;
 export const UserContent = styled.div`
   display: flex;
   flex-direction: column;
   background: #f5f5f5;
-  min-width: 58rem;
+  min-width: 60rem;
   min-height: 100vh;
   padding: 2rem;
 `;
@@ -42,6 +42,11 @@ export const AvatarAndNameAndButtonsContainer = styled.div`
 `;
 
 export const PostsDontFoundContainer = styled.h2`
+  margin-top: 1rem;
+  font-size: 2rem;
+  font-weight: 500;
+`;
+export const CommentsDontFoundContainer = styled.h2`
   margin-top: 1rem;
   font-size: 2rem;
   font-weight: 500;
@@ -127,3 +132,24 @@ export const CommentsButton = styled(PostsButton)<TapSelected>`
 `;
 
 export const SkeletonButtons = styled(Skeleton)``;
+
+export const EditUserInfoButton = styled.button`
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+  height: 2rem;
+  background: #cb4444;
+  color: #f5f5f5;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+
+  &:hover {
+    background: #cf6161;
+    cursor: pointer;
+  }
+`;
+export const AvatarNameAndEditUserButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;

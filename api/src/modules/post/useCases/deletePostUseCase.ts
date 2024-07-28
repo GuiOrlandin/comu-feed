@@ -15,6 +15,7 @@ export class DeletePostUseCase {
 
   async execute({ post_id, userId }: DeletePostRequest) {
     const post = await this.postRepository.findById(post_id);
+
     if (!post) {
       throw new PostNotFoundException();
     }

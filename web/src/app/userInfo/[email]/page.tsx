@@ -8,13 +8,16 @@ import { useQuery } from "@tanstack/react-query";
 import {
   AvatarAndNameAndButtonsContainer,
   AvatarAndNameContainer,
+  AvatarNameAndEditUserButtonContainer,
   CommentContainer,
   CommentContent,
   CommentContentContainer,
   CommentsButton,
   CommentsContainer,
+  CommentsDontFoundContainer,
   CommunityNameAndPostTitleContainer,
   CommunityNameContainer,
+  EditUserInfoButton,
   PostNameContainer,
   PostsButton,
   PostsDontFoundContainer,
@@ -47,9 +50,11 @@ import {
   SkeletonNameAndCommunityContainer,
 } from "@/app/news/styles";
 import { ProfileContent } from "@/app/components/cardPost/styles";
+import { userStore } from "@/store/userStore";
 
 export default function UserInfo({ params }: { params: { email: string } }) {
   const router = useRouter();
+  const userAuthenticated = userStore((state) => state.user);
   const [posts, setPosts] = useState<
     (TextPostWithUser | MediaPostWithUser)[] | undefined
   >();
@@ -156,20 +161,26 @@ export default function UserInfo({ params }: { params: { email: string } }) {
           ) : (
             <>
               <AvatarAndNameAndButtonsContainer>
-                <AvatarAndNameContainer>
-                  {user?.avatar === null ? (
-                    <>
-                      <RxAvatar size={55} color="" />
-                    </>
-                  ) : (
-                    <AvatarImage
-                      urlImg={`http://localhost:3333/files/avatarImage/${user!
-                        .avatar!}`}
-                      avatarImgDimensions={6}
-                    />
+                <AvatarNameAndEditUserButtonContainer>
+                  <AvatarAndNameContainer>
+                    {user?.avatar === null ? (
+                      <>
+                        <RxAvatar size={55} color="" />
+                      </>
+                    ) : (
+                      <AvatarImage
+                        urlImg={`http://localhost:3333/files/avatarImage/${user!
+                          .avatar!}`}
+                        avatarImgDimensions={6}
+                      />
+                    )}
+                    <h1>{user?.name}</h1>
+                  </AvatarAndNameContainer>
+
+                  {userAuthenticated!.id === user!.id && (
+                    <EditUserInfoButton>Editar Perfil</EditUserInfoButton>
                   )}
-                  <h1>{user?.name}</h1>
-                </AvatarAndNameContainer>
+                </AvatarNameAndEditUserButtonContainer>
                 <PostsOrCommentsButtonsContainer>
                   <PostsButton
                     $variant={tabSelected}
@@ -288,7 +299,9 @@ export default function UserInfo({ params }: { params: { email: string } }) {
                         ))}
                       </CommentsContainer>
                     ) : (
-                      <>Nenhum comentário feito!</>
+                      <CommentsDontFoundContainer>
+                        Nenhum comentário feito!
+                      </CommentsDontFoundContainer>
                     )}
                   </>
                 )}
