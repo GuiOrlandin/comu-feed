@@ -60,6 +60,11 @@ export const NameAndCommunity = styled.div`
       cursor: pointer;
     }
   }
+  h2 {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const ContentOfPostWithMedia = styled.div<{ $largecard: string }>`
@@ -76,6 +81,10 @@ export const AvatarContentWithoutImage = styled.div`
   flex-direction: column;
   margin-right: 1rem;
   margin-bottom: 1rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 export const LoveAndCommentContainer = styled.div`
   display: flex;

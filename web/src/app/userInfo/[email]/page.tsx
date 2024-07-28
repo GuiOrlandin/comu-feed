@@ -165,7 +165,7 @@ export default function UserInfo({ params }: { params: { email: string } }) {
                   <AvatarAndNameContainer>
                     {user?.avatar === null ? (
                       <>
-                        <RxAvatar size={55} color="" />
+                        <RxAvatar size={96} color="" />
                       </>
                     ) : (
                       <>

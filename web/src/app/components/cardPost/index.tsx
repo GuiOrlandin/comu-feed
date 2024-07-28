@@ -50,19 +50,35 @@ export default function CardPost({
         <ProfileContent>
           <NameCommunityAndAvatarContainer>
             {post.user?.avatar === null ? (
-              <AvatarContentWithoutImage>
+              <AvatarContentWithoutImage
+                onClick={() => router.push(`/userInfo/${post.user?.email}`)}
+              >
                 <RxAvatar size={60} />
               </AvatarContentWithoutImage>
             ) : (
-              <AvatarImage
-                avatarImgDimensions={3.4}
-                urlImg={`http://localhost:3333/files/avatarImage/${post.user?.avatar}`}
-                userEmail={post!.user!.email}
-              />
+              <>
+                {user!.avatar?.includes("https://lh3.googleusercontent.com") ? (
+                  <AvatarImage
+                    urlImg={post!.user!.avatar}
+                    avatarImgDimensions={3.5}
+                    userEmail={user!.email}
+                  />
+                ) : (
+                  <AvatarImage
+                    urlImg={`http://localhost:3333/files/avatarImage/${
+                      post!.user?.avatar
+                    }`}
+                    avatarImgDimensions={6}
+                    userEmail={user!.email}
+                  />
+                )}
+              </>
             )}
 
             <NameAndCommunity>
-              <h2>{post.user?.name}</h2>
+              <h2 onClick={() => router.push(`/userInfo/${post.user?.email}`)}>
+                {post.user?.name}
+              </h2>
               <span
                 onClick={() =>
                   router.push(`/communityInfo/${post.community_id}`)
