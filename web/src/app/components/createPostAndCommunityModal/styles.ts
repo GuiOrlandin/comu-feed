@@ -190,7 +190,7 @@ export const UploadMediaContainerOnHover = styled.div`
 export const UploadMediaContainer = styled.div`
   display: flex;
   margin-top: 1rem;
-  min-height: 10rem;
+  min-height: 20rem;
   justify-content: center;
   align-items: center;
   color: #2f1b7e;
@@ -301,12 +301,15 @@ export const ImageUploadContainer = styled.div`
     align-items: center;
     justify-content: center;
     position: absolute;
-    margin-top: -9.7rem;
-    right: 24.9rem;
+    margin-top: -19.4rem;
+    right: 31.9rem;
     border-radius: 9px;
     width: 1.3rem;
     height: 1.5rem;
     background: none;
     border: none;
+    color: #2f1b7e;
+    font-size: 1.3rem;
+    font-weight: 600;
   }
 `;

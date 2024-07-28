@@ -50,7 +50,8 @@ export default function createPostAndCommunityModal({
   const [tabType, setTabType] = useState("createCommunity");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [communityImage, setCommunityImage] = useState<File[] | null>();
-  const [media, setMedia] = useState<File[]>();
+  const [media, setMedia] = useState<File>();
+  const [mediaType, setMediaType] = useState("");
   const [mutateError, setMutateError] = useState<string>();
   const removeUser = userStore((state) => state.removeUser);
   const [open, setOpen] = useState(false);
@@ -83,10 +84,6 @@ export default function createPostAndCommunityModal({
   const { mutate: createMediaPost, isSuccess: mediaPostCreated } =
     useCreateMediaPostMutate();
 
-  function onDrop(media: File[]) {
-    setMedia(media);
-  }
-
   function handleChangeCreateCommunityDetails(
     event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
     inputTitle: string
@@ -97,6 +94,8 @@ export default function createPostAndCommunityModal({
       [inputTitle]: value,
     }));
   }
+
+  console.log(imagePreview);
 
   function handleChangeCreateTextPostDetails(
     event:
@@ -126,8 +125,8 @@ export default function createPostAndCommunityModal({
     }));
   }
 
-  const dropzone = useDropzone({
-    onDrop,
+  const postImageOrVideoUploaded = useDropzone({
+    onDrop: onDropPostImageOrVideoUploaded,
     accept: {
       "image/*": [],
       "video/*": [],
@@ -138,6 +137,27 @@ export default function createPostAndCommunityModal({
     const file = acceptedFiles[0];
     setCommunityImage(acceptedFiles);
     setImagePreview(URL.createObjectURL(file));
+  }
+  function onDropPostImageOrVideoUploaded(acceptedFiles: File[]) {
+    const file = acceptedFiles[0];
+    setMedia(file);
+
+    const imageTypes = ["jpg", "jpeg", "png", "gif"];
+    const videoTypes = ["mp4", "webm", "ogg"];
+
+    if (file.name) {
+      const fileParts = file.name.split(".");
+      const fileExtension =
+        fileParts.length > 1 ? fileParts.pop()?.toLowerCase() : "";
+
+      if (imageTypes.includes(fileExtension!)) {
+        setMediaType("image");
+        setImagePreview(URL.createObjectURL(file));
+      } else if (videoTypes.includes(fileExtension!)) {
+        setMediaType("video");
+        setImagePreview(URL.createObjectURL(file));
+      }
+    }
   }
 
   const communityImageUpload = useDropzone({
@@ -152,19 +172,35 @@ export default function createPostAndCommunityModal({
   }
 
   function handleCreateCommunity(data: CreateCommunityDetails) {
-    if (data.password === "") {
+    if (data!.password === undefined) {
       setCreateCommunityDetails((prevDetails) => ({
         ...prevDetails!,
         key_access: "false",
       }));
-    } else {
-      setCreateCommunityDetails((prevDetails) => ({
-        ...prevDetails!,
-        key_access: "true",
-      }));
-    }
 
-    mutate({ data: createCommunityDetails!, file: communityImage! });
+      return mutate({
+        data: {
+          description: createCommunityDetails!.description,
+          key_access: "false",
+          name: createCommunityDetails!.name,
+        },
+        file: communityImage!,
+      });
+    } else {
+      return mutate({
+        data: {
+          description: createCommunityDetails!.description,
+          key_access: "true",
+          name: createCommunityDetails!.name,
+          password: createCommunityDetails!.password,
+        },
+        file: communityImage!,
+      });
+    }
+  }
+
+  function isImage(filePath: string): boolean {
+    return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
   }
 
   function handleCreateTextPost() {
@@ -323,22 +359,63 @@ export default function createPostAndCommunityModal({
                   id=""
                   placeholder="descrição do post"
                 ></textarea>
-                {dropzone.isDragActive ? (
-                  <UploadMediaContainerOnHover {...dropzone.getRootProps()}>
+                {postImageOrVideoUploaded.isDragActive ? (
+                  <UploadMediaContainerOnHover
+                    {...postImageOrVideoUploaded.getRootProps()}
+                  >
                     <label>
                       <IoCloudUploadOutline height={24} />
                       <p>Arraste e solte o arquivo</p>
                     </label>
-                    <input type="" {...dropzone.getInputProps()} />
+                    <input
+                      type=""
+                      {...postImageOrVideoUploaded.getInputProps()}
+                    />
                   </UploadMediaContainerOnHover>
                 ) : (
-                  <UploadMediaContainer {...dropzone.getRootProps()}>
-                    <label>
-                      <IoCloudUploadOutline height={24} />
-                      <p>Arraste e solte o arquivo</p>
-                    </label>
-                    <input type="" {...dropzone.getInputProps()} />
-                  </UploadMediaContainer>
+                  <>
+                    <UploadMediaContainer
+                      {...postImageOrVideoUploaded.getRootProps()}
+                    >
+                      <label>
+                        {imagePreview ? (
+                          <>
+                            {mediaType === "image" ? (
+                              <ImageUploadContainer>
+                                <img
+                                  src={imagePreview!}
+                                  alt="Preview"
+                                  style={{ width: "495px", height: "320px" }}
+                                />
+                                <button onClick={() => setImagePreview("")}>
+                                  x
+                                </button>
+                              </ImageUploadContainer>
+                            ) : (
+                              <ImageUploadContainer>
+                                <video
+                                  src={imagePreview!}
+                                  style={{ width: "480px", height: "300px" }}
+                                />
+                                <button onClick={() => setImagePreview("")}>
+                                  x
+                                </button>
+                              </ImageUploadContainer>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <IoCloudUploadOutline height={24} />
+                            <p>Arraste e solte o arquivo</p>
+                          </>
+                        )}
+                      </label>
+                      <input
+                        type=""
+                        {...postImageOrVideoUploaded.getInputProps()}
+                      />
+                    </UploadMediaContainer>
+                  </>
                 )}
                 <SendPostButton onClick={() => handleCreateMediaPost()}>
                   Enviar

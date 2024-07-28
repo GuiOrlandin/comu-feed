@@ -13,7 +13,7 @@ export interface CreateMediaPostRequest {
 async function postData(
   data: CreateMediaPostRequest,
   authToken: string,
-  file: File[]
+  file: File
 ) {
   if (authToken) {
     const config = {
@@ -29,9 +29,8 @@ async function postData(
     formData.append("description", data.description);
     formData.append("postType", data.postType);
     formData.append("title", data.title);
-    file.forEach((file) => {
-      formData.append(`file`, file);
-    });
+
+    formData.append(`file`, file);
 
     await axios.post("http://localhost:3333/post/mediaPost", formData, config);
   }
@@ -58,7 +57,7 @@ export function useCreateMediaPostMutate() {
       file,
     }: {
       data: CreateMediaPostRequest;
-      file: File[];
+      file: File;
     }) => postData(data, authToken, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts-info"] });
