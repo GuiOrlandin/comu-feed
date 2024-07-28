@@ -168,11 +168,22 @@ export default function UserInfo({ params }: { params: { email: string } }) {
                         <RxAvatar size={55} color="" />
                       </>
                     ) : (
-                      <AvatarImage
-                        urlImg={`http://localhost:3333/files/avatarImage/${user!
-                          .avatar!}`}
-                        avatarImgDimensions={6}
-                      />
+                      <>
+                        {user!.avatar?.includes(
+                          "https://lh3.googleusercontent.com"
+                        ) ? (
+                          <AvatarImage
+                            urlImg={user!.avatar}
+                            avatarImgDimensions={6}
+                          />
+                        ) : (
+                          <AvatarImage
+                            urlImg={`http://localhost:3333/files/avatarImage/${user!
+                              .avatar!}`}
+                            avatarImgDimensions={6}
+                          />
+                        )}
+                      </>
                     )}
                     <h1>{user?.name}</h1>
                   </AvatarAndNameContainer>

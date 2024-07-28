@@ -20,6 +20,10 @@ export class CreateUserBody {
   @IsNotEmpty()
   password_hash: string;
 
+  @IsString()
+  @IsOptional()
+  avatar?: string;
+
   @IsDate()
   @IsOptional()
   created_at?: Date;

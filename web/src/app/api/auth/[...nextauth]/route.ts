@@ -25,6 +25,7 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           password_hash: randomUUID(),
+          avatar: user.image,
         });
       } catch (error) {
         if (
