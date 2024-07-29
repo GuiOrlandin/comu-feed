@@ -7,6 +7,10 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+
+import { FiEyeOff } from "react-icons/fi";
+import { FaRegEye } from "react-icons/fa6";
 
 import {
   EmailInputContainer,
@@ -19,16 +23,32 @@ import {
   RegisterContentContainer,
   RegisterPageContainer,
   RegisterWithGoogleButton,
+  ShowPasswordContentButton,
 } from "./styles";
 import {
   UserRegisterDetails,
   useUserRegisterMutate,
 } from "@/hooks/createUserHook";
+import { useAuthenticateMutate } from "@/hooks/userAuthenticateHook";
+import { tokenStore } from "@/store/tokenStore";
+import { emailStore } from "@/store/emailStore";
 
 export default function Register() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
+  const [inputType, setInputType] = useState("password");
+  const [showPassword, setShowPassword] = useState(true);
+
+  const saveToken = tokenStore((state) => state.setToken);
+  const saveEmail = emailStore((state) => state.setEmail);
+  const { data: session } = useSession();
+
   const { mutate, isSuccess, error } = useUserRegisterMutate();
+  const {
+    mutate: authenticateUser,
+    isSuccess: userAuthenticated,
+    data,
+  } = useAuthenticateMutate();
   const [userRegisterDetails, setUserRegisterDetails] =
     useState<UserRegisterDetails>({
       name: "",
@@ -61,15 +81,55 @@ export default function Register() {
     mutate(userRegisterDetails);
   }
 
+  function handleChangeShowPassword() {
+    setShowPassword(!showPassword);
+    setInputType((prevInputType) =>
+      prevInputType === "password" ? "text" : "password"
+    );
+  }
+
   useEffect(() => {
     if (isSuccess) {
-      router.back();
+      authenticateUser({
+        data: {
+          email: userRegisterDetails.email,
+          password_hash: userRegisterDetails.password_hash,
+        },
+      });
+    }
+    if (session) {
+      authenticateUser({
+        credentialOfUserLoggedWithGoogle: {
+          emailOfUserLoggedWithGoogle: session!.user!.email as string,
+        },
+      });
+    }
+
+    if (userAuthenticated) {
+      saveToken(data);
+
+      if (session) {
+        saveEmail(session.user?.email as string);
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("storeToken", data);
+          localStorage.setItem("storeEmail", session.user?.email as string);
+        }
+      } else {
+        saveEmail(userRegisterDetails!.email);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("storeToken", data);
+          localStorage.setItem("storeEmail", userRegisterDetails!.email);
+        }
+      }
+
+      router.push("/");
     }
 
     if (error?.message === "Request failed with status code 401") {
       setErrorMessage("Email ja em uso!");
     }
-  }, [error, isSuccess]);
+  }, [error, isSuccess, session, userAuthenticated]);
 
   return (
     <RegisterPageContainer>
@@ -98,11 +158,20 @@ export default function Register() {
           <PasswordInputContainer>
             <span>Senha</span>
             <input
-              type="text"
+              type={inputType}
               onChange={(value) =>
                 handleChangeUserDetailsForRegister(value, "password_hash")
               }
             />
+            <ShowPasswordContentButton
+              onClick={() => handleChangeShowPassword()}
+            >
+              {showPassword ? (
+                <FiEyeOff size={24} color="#2f1b7e" />
+              ) : (
+                <FaRegEye size={24} color="#2f1b7e" />
+              )}
+            </ShowPasswordContentButton>
           </PasswordInputContainer>
           {errorMessage && <ErrorContainer>{errorMessage}</ErrorContainer>}
           <RegisterButtonContainer>
@@ -110,9 +179,7 @@ export default function Register() {
               Cadastrar
             </RegisterButton>
           </RegisterButtonContainer>
-          <RegisterWithGoogleButton
-            onClick={() => signIn("google", { callbackUrl: "/" })}
-          >
+          <RegisterWithGoogleButton onClick={() => signIn("google")}>
             <FcGoogle />
             Cadastrar com Google
           </RegisterWithGoogleButton>

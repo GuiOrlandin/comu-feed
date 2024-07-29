@@ -285,9 +285,6 @@ export const CreateCommunityButton = styled.button`
   }
 `;
 
-export const PasswordInput = styled.input`
-  margin-top: 1rem;
-`;
 export const ImageUploadContainer = styled.div`
   img {
     display: flex;
@@ -312,4 +309,17 @@ export const ImageUploadContainer = styled.div`
     font-size: 1.3rem;
     font-weight: 600;
   }
+`;
+
+export const PasswordInput = styled.input`
+  margin-top: 1rem;
+  position: relative;
+`;
+
+export const ShowPasswordContentButton = styled.button`
+  background: none;
+  border: none;
+  position: absolute;
+  left: 33rem;
+  top: 11.4rem;
 `;

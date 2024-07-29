@@ -57,11 +57,11 @@ export default function CardPost({
               </AvatarContentWithoutImage>
             ) : (
               <>
-                {user!.avatar?.includes("https://lh3.googleusercontent.com") ? (
+                {post!.user?.avatar!.includes("https://lh3.") ? (
                   <AvatarImage
                     urlImg={post!.user!.avatar}
                     avatarImgDimensions={3.5}
-                    userEmail={user!.email}
+                    userEmail={post!.user?.email}
                   />
                 ) : (
                   <AvatarImage
@@ -69,7 +69,7 @@ export default function CardPost({
                       post!.user?.avatar
                     }`}
                     avatarImgDimensions={6}
-                    userEmail={user!.email}
+                    userEmail={post!.user?.email}
                   />
                 )}
               </>

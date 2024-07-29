@@ -14,12 +14,16 @@ import {
   Overlay,
   PasswordInput,
   SendPostButton,
+  ShowPasswordContentButton,
   TextPost,
   TextPostContainer,
   UploadCommunityImage,
   UploadMediaContainer,
   UploadMediaContainerOnHover,
 } from "./styles";
+
+import { FiEyeOff } from "react-icons/fi";
+import { FaRegEye } from "react-icons/fa6";
 
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -51,6 +55,8 @@ export default function createPostAndCommunityModal({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [communityImage, setCommunityImage] = useState<File[] | null>();
   const [media, setMedia] = useState<File>();
+  const [inputType, setInputType] = useState("password");
+  const [showPassword, setShowPassword] = useState(true);
   const [mediaType, setMediaType] = useState("");
   const [mutateError, setMutateError] = useState<string>();
   const removeUser = userStore((state) => state.removeUser);
@@ -95,7 +101,12 @@ export default function createPostAndCommunityModal({
     }));
   }
 
-  console.log(imagePreview);
+  function handleChangeShowPassword() {
+    setShowPassword(!showPassword);
+    setInputType((prevInputType) =>
+      prevInputType === "password" ? "text" : "password"
+    );
+  }
 
   function handleChangeCreateTextPostDetails(
     event:
@@ -455,13 +466,22 @@ export default function createPostAndCommunityModal({
                         handleChangeCreateCommunityDetails(value, "name")
                       }
                     />
-                    <PasswordInput
-                      type="password"
-                      placeholder="Senha da comunidade (opcional)"
-                      onChange={(value) =>
-                        handleChangeCreateCommunityDetails(value, "password")
-                      }
-                    />
+                    <>
+                      <PasswordInput
+                        type={inputType}
+                        placeholder="Senha da comunidade (opcional)"
+                        onChange={(value) =>
+                          handleChangeCreateCommunityDetails(value, "password")
+                        }
+                      />
+                      <button onClick={() => handleChangeShowPassword()}>
+                        {showPassword ? (
+                          <FiEyeOff size={15} color="#2f1b7e" />
+                        ) : (
+                          <FaRegEye size={15} color="#2f1b7e" />
+                        )}
+                      </button>
+                    </>
                     <textarea
                       name=""
                       id=""

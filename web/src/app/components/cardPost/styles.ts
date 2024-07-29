@@ -95,6 +95,10 @@ export const LoveAndCommentContainer = styled.div`
 
 export const NameCommunityAndAvatarContainer = styled.div`
   display: flex;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 export const ProfileAndPostContainer = styled.div`
   display: flex;

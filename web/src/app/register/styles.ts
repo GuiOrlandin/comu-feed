@@ -52,9 +52,6 @@ export const EmailInputContainer = styled.div`
   }
 `;
 
-export const PasswordInputContainer = styled(EmailInputContainer)`
-  margin-top: 2rem;
-`;
 export const NameInputContainer = styled(EmailInputContainer)`
   margin-top: 2rem;
 `;
@@ -103,4 +100,17 @@ export const RegisterWithGoogleButton = styled.button`
     width: 1.5rem;
     height: 1.5rem;
   }
+`;
+
+export const PasswordInputContainer = styled(EmailInputContainer)`
+  margin-top: 2rem;
+  position: relative;
+`;
+
+export const ShowPasswordContentButton = styled.button`
+  background: none;
+  border: none;
+  position: absolute;
+  left: 28rem;
+  top: 3.5rem;
 `;

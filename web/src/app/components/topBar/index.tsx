@@ -16,11 +16,11 @@ import {
 } from "./styles";
 import { useRouter } from "next/navigation";
 import CreatePostModal from "../createPostAndCommunityModal";
+
 import { signOut } from "next-auth/react";
 import { useState, useEffect, ChangeEvent } from "react";
 import { tokenStore } from "@/store/tokenStore";
 import { emailStore } from "@/store/emailStore";
-import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { userStore } from "@/store/userStore";
