@@ -57,19 +57,25 @@ export default function UserInfo({ params }: { params: { email: string } }) {
   const userAuthenticated = userStore((state) => state.user);
   const [posts, setPosts] = useState<
     (TextPostWithUser | MediaPostWithUser)[] | undefined
-  >();
+  >(undefined);
   const [tabSelected, setTabSelected] = useState<string>("posts");
-  const { data: user, isLoading } = useQuery<UserResponse>({
+  const {
+    data: user,
+    isLoading,
+    isSuccess,
+  } = useQuery<UserResponse>({
     queryKey: ["user-info"],
 
     queryFn: async () => {
-      return axios
-        .get(`http://localhost:3333/users?email=${params.email}`)
-        .then((response) => response.data);
+      if (params.email) {
+        return axios
+          .get(`http://localhost:3333/users?email=${params.email}`)
+          .then((response) => response.data);
+      }
     },
   });
 
-  const { data: allThePosts, isLoading: allThePostsLoading } = useQuery<
+  const { data: allThePosts } = useQuery<
     (TextPostWithUser | MediaPostWithUser)[]
   >({
     queryKey: ["posts-info"],
@@ -81,14 +87,18 @@ export default function UserInfo({ params }: { params: { email: string } }) {
   });
 
   useEffect(() => {
-    if (allThePosts) {
-      const allPosts = allThePosts.filter(
-        (posts) => posts.user_id === user?.id
+    if (isSuccess && user && allThePosts) {
+      const filteredPosts = allThePosts.filter(
+        (post) => post.user_id === user.id
       );
 
-      setPosts(allPosts);
+      if (filteredPosts.length > 0) {
+        setPosts(filteredPosts);
+      } else {
+        setPosts(undefined);
+      }
     }
-  }, [allThePosts]);
+  }, [isSuccess, user, allThePosts]);
 
   function handleSetTabSelected(tabSelected: string) {
     setTabSelected(tabSelected);
@@ -99,7 +109,7 @@ export default function UserInfo({ params }: { params: { email: string } }) {
       <TopBar page="userInfo" />
       <UserWrapper>
         <UserContent>
-          {isLoading ? (
+          {isLoading && !user ? (
             <>
               <AvatarAndNameAndButtonsContainer>
                 <AvatarAndNameContainer>
@@ -163,17 +173,24 @@ export default function UserInfo({ params }: { params: { email: string } }) {
               <AvatarAndNameAndButtonsContainer>
                 <AvatarNameAndEditUserButtonContainer>
                   <AvatarAndNameContainer>
-                    {user?.avatar === null ? (
+                    {user && user?.avatar === null ? (
                       <>
                         <RxAvatar size={96} color="" />
                       </>
                     ) : (
                       <>
-                        {user!.avatar?.includes(
+                        {user &&
+                        user.avatar &&
+                        user!.avatar?.includes(
                           "https://lh3.googleusercontent.com"
                         ) ? (
                           <AvatarImage
-                            urlImg={user!.avatar}
+                            urlImg={
+                              user!.avatar?.includes("https://lh3.")
+                                ? user!.avatar!
+                                : `http://localhost:3333/files/avatarImage/${user!
+                                    .avatar!}`
+                            }
                             avatarImgDimensions={6}
                           />
                         ) : (
