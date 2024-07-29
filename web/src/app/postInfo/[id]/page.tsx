@@ -199,12 +199,24 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                       <RxAvatar size={60} />
                     </AvatarContentWithoutImage>
                   ) : (
-                    <AvatarImage
-                      urlImg={`http://localhost:3333/files/avatarImage/${
-                        post!.user?.avatar
-                      }`}
-                      avatarImgDimensions={6}
-                    />
+                    <>
+                      {post?.user?.avatar &&
+                      post!.user?.avatar!.includes("https://lh3.") ? (
+                        <AvatarImage
+                          urlImg={post!.user!.avatar}
+                          avatarImgDimensions={3.5}
+                          userEmail={post!.user?.email}
+                        />
+                      ) : (
+                        <AvatarImage
+                          urlImg={`http://localhost:3333/files/avatarImage/${
+                            post!.user?.avatar
+                          }`}
+                          avatarImgDimensions={6}
+                          userEmail={post!.user?.email}
+                        />
+                      )}
+                    </>
                   )}
                 </AvatarContentWithoutImage>
                 <NameAndCommunity>
@@ -305,20 +317,42 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                     <ProfileContent>
                       <AvatarContentInComment>
                         {comment!.user?.avatar === null ? (
-                          <AvatarContentWithoutImage>
+                          <AvatarContentWithoutImage
+                            onClick={() =>
+                              router.push(`/userInfo/${comment!.user?.email}`)
+                            }
+                          >
                             <RxAvatar size={44} />
                           </AvatarContentWithoutImage>
                         ) : (
-                          <AvatarImage
-                            urlImg={`http://localhost:3333/files/avatarImage/${
-                              comment!.user?.avatar
-                            }`}
-                            avatarImgDimensions={2.8}
-                          />
+                          <>
+                            {comment!.user?.avatar &&
+                            comment!.user?.avatar.includes("https://lh3.") ? (
+                              <AvatarImage
+                                urlImg={comment!.user?.avatar}
+                                avatarImgDimensions={2.8}
+                                userEmail={comment!.user?.email}
+                              />
+                            ) : (
+                              <AvatarImage
+                                urlImg={`http://localhost:3333/files/avatarImage/${
+                                  comment!.user?.avatar
+                                }`}
+                                avatarImgDimensions={6}
+                                userEmail={comment!.user?.email}
+                              />
+                            )}
+                          </>
                         )}
                       </AvatarContentInComment>
                       <NameAndContentOfComment>
-                        <h2>{comment?.user?.name}</h2>
+                        <h2
+                          onClick={() =>
+                            router.push(`/userInfo/${comment!.user?.email}`)
+                          }
+                        >
+                          {comment?.user?.name}
+                        </h2>
                         <p>{comment.content}</p>
                       </NameAndContentOfComment>
                     </ProfileContent>

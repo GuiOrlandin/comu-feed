@@ -11,6 +11,7 @@ import {
   CommunityWithoutPostsContainer,
   JoinCommunityButton,
   JoinCommunityConfirmButton,
+  LeaveCommunityButton,
   NameAndDescription,
   PasswordInput,
   PostAndCommunityInfoContainer,
@@ -242,58 +243,62 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                 )}
 
                 {userFiltered !== user.id &&
-                  communityInfoById?.founder_id !== user.id &&
-                  user.name !== "" && (
-                    <>
-                      {communityInfoById?.key_access === "true" ? (
-                        <Dialog.Root>
-                          <DialogTrigger asChild>
-                            <JoinCommunityButton>Entrar</JoinCommunityButton>
-                          </DialogTrigger>
-                          <Dialog.Portal>
-                            <Overlay />
-                            <Content>
-                              <DialogTitle>
-                                Digite a senha para entrar na comunidade
-                              </DialogTitle>
-                              <PasswordInput
-                                type="text"
-                                onChange={(value) =>
-                                  setCommunityPassword(value.target.value)
-                                }
-                              />
-                              <DialogDeleteCommentContainer>
-                                <ButtonsOfDialogContainer>
-                                  <JoinCommunityConfirmButton
-                                    onClick={() =>
-                                      handleJoinCommunityWithPassword(
-                                        communityInfoById.id
-                                      )
-                                    }
-                                  >
-                                    Confirmar
-                                  </JoinCommunityConfirmButton>
-                                  <CancelJoinCommunityButton>
-                                    Cancelar
-                                  </CancelJoinCommunityButton>
-                                </ButtonsOfDialogContainer>
-                              </DialogDeleteCommentContainer>
-                            </Content>
-                          </Dialog.Portal>
-                        </Dialog.Root>
-                      ) : (
-                        <JoinCommunityButton
-                          onClick={() =>
-                            handleJoinCommunityWithoutPassword(
-                              communityInfoById!.id
-                            )
-                          }
-                        >
-                          Entrar
-                        </JoinCommunityButton>
-                      )}
-                    </>
-                  )}
+                communityInfoById?.founder_id !== user.id &&
+                user.name !== "" ? (
+                  <>
+                    {communityInfoById?.key_access === "true" ? (
+                      <Dialog.Root>
+                        <DialogTrigger asChild>
+                          <JoinCommunityButton>Entrar</JoinCommunityButton>
+                        </DialogTrigger>
+                        <Dialog.Portal>
+                          <Overlay />
+                          <Content>
+                            <DialogTitle>
+                              Digite a senha para entrar na comunidade
+                            </DialogTitle>
+                            <PasswordInput
+                              type="text"
+                              onChange={(value) =>
+                                setCommunityPassword(value.target.value)
+                              }
+                            />
+                            <DialogDeleteCommentContainer>
+                              <ButtonsOfDialogContainer>
+                                <JoinCommunityConfirmButton
+                                  onClick={() =>
+                                    handleJoinCommunityWithPassword(
+                                      communityInfoById.id
+                                    )
+                                  }
+                                >
+                                  Confirmar
+                                </JoinCommunityConfirmButton>
+                                <CancelJoinCommunityButton>
+                                  Cancelar
+                                </CancelJoinCommunityButton>
+                              </ButtonsOfDialogContainer>
+                            </DialogDeleteCommentContainer>
+                          </Content>
+                        </Dialog.Portal>
+                      </Dialog.Root>
+                    ) : (
+                      <JoinCommunityButton
+                        onClick={() =>
+                          handleJoinCommunityWithoutPassword(
+                            communityInfoById!.id
+                          )
+                        }
+                      >
+                        Entrar
+                      </JoinCommunityButton>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <LeaveCommunityButton>Sair</LeaveCommunityButton>
+                  </>
+                )}
               </CommunityInfoContentWithOutButton>
               {communityInfoById?.key_access === "false" ||
               (communityInfoById?.key_access === "true" &&

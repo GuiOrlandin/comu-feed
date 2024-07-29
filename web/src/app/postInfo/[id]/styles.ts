@@ -35,7 +35,6 @@ export const PostWrapper = styled.div`
 
 export const AvatarContentWithoutImage = styled.div`
   display: flex;
-  margin-left: 0.5rem;
 `;
 
 export const NameAndCommunity = styled.div`
@@ -67,7 +66,7 @@ export const ProfileContent = styled.div`
 export const ContentOfPost = styled.div`
   display: flex;
   border: 8px;
-  padding: 1rem;
+  padding: 1rem 1rem 1rem 0;
 `;
 export const TitleAndContentOfPost = styled.div`
   display: flex;
@@ -107,6 +106,9 @@ export const CommentsContainer = styled.div`
 
   h2 {
     font-size: 1.1rem;
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   p {
@@ -162,6 +164,10 @@ export const SendCommentButton = styled.button`
 
 export const AvatarContentInComment = styled.div`
   display: flex;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   img {
     margin-right: 1rem;

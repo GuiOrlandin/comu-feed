@@ -101,6 +101,18 @@ export const JoinCommunityButton = styled.button`
     background: #554986;
   }
 `;
+export const LeaveCommunityButton = styled.button`
+  padding: 0.5rem;
+  background: #2f1b7e;
+  color: #f5f5f5;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+
+  &:hover {
+    background: #554986;
+  }
+`;
 export const DeleteCommunityButton = styled(JoinCommunityButton)`
   background: #cb4444;
 

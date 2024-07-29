@@ -235,9 +235,20 @@ export default function TopBar({ page }: TopBarProps) {
     <TopBarContainer>
       {page === "home" && (
         <>
-          <TwoOptionsRedirectOnBarContainerInHome>
-            <Link href="/news">Novidades</Link>
-          </TwoOptionsRedirectOnBarContainerInHome>
+          {userAuthenticated && user ? (
+            <>
+              <TwoOptionsRedirectOnBarContainerInHome>
+                <Link href="/news">Novidades</Link>
+                <Link href={`/userInfo/${user.email}`}>Perfil</Link>
+              </TwoOptionsRedirectOnBarContainerInHome>
+            </>
+          ) : (
+            <>
+              <TwoOptionsRedirectOnBarContainerInHome>
+                <Link href="/news">Novidades</Link>
+              </TwoOptionsRedirectOnBarContainerInHome>
+            </>
+          )}
 
           <SearchCommunityContainer>
             <SearchCommunity
@@ -323,9 +334,20 @@ export default function TopBar({ page }: TopBarProps) {
 
       {page === "news" && (
         <>
-          <TwoOptionsRedirectOnBarContainerInOthersPages>
-            <Link href="/home">Home</Link>
-          </TwoOptionsRedirectOnBarContainerInOthersPages>
+          {userAuthenticated && user ? (
+            <>
+              <TwoOptionsRedirectOnBarContainerInOthersPages>
+                <Link href="/">Home</Link>
+                <Link href={`/userInfo/${user.email}`}>Perfil</Link>
+              </TwoOptionsRedirectOnBarContainerInOthersPages>
+            </>
+          ) : (
+            <>
+              <TwoOptionsRedirectOnBarContainerInOthersPages>
+                <Link href="/">Home</Link>
+              </TwoOptionsRedirectOnBarContainerInOthersPages>
+            </>
+          )}
           <SearchCommunityContainer>
             <SearchCommunity
               $variant={communities ? "true" : "false"}
@@ -364,7 +386,7 @@ export default function TopBar({ page }: TopBarProps) {
               </SearchCommunityCompleteContainer>
             )}
           </SearchCommunityContainer>
-          {userAuthenticated ? (
+          {userAuthenticated && user ? (
             <ButtonsOnBarContainer>
               <CreatePostModal user={user!} />
 
@@ -389,10 +411,23 @@ export default function TopBar({ page }: TopBarProps) {
         page === "communityInfo" ||
         page === "userInfo") && (
         <>
-          <TwoOptionsRedirectOnBarContainerInOthersPages>
-            <Link href="/home">Home</Link>
-            <Link href="/news">Novidades</Link>
-          </TwoOptionsRedirectOnBarContainerInOthersPages>
+          {userAuthenticated && user ? (
+            <>
+              <TwoOptionsRedirectOnBarContainerInOthersPages>
+                <Link href="/home">Home</Link>
+                <Link href="/news">Novidades</Link>
+                <Link href={`/userInfo/${user.email}`}>Perfil</Link>
+              </TwoOptionsRedirectOnBarContainerInOthersPages>
+            </>
+          ) : (
+            <>
+              <TwoOptionsRedirectOnBarContainerInOthersPages>
+                <Link href="/home">Home</Link>
+                <Link href="/news">Novidades</Link>
+              </TwoOptionsRedirectOnBarContainerInOthersPages>
+            </>
+          )}
+
           <SearchCommunityContainer>
             <SearchCommunity
               $variant={communities ? "true" : "false"}
