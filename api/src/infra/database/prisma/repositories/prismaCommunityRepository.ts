@@ -70,7 +70,6 @@ export class PrismaCommunityRepository implements CommunityRepository {
       },
     });
 
-    console.log(user);
     if (!user) {
       throw new UserNotFoundException();
     }

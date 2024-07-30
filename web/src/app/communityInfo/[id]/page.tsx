@@ -342,14 +342,24 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                 (userFiltered === user.id ||
                   communityInfoById?.founder_id === user.id)) ? (
                 <PostsOfCommunityContainer>
-                  {communityInfoById?.allPosts.map((post) => (
-                    <CardPost
-                      key={post.id}
-                      post={post}
-                      largecard={"true"}
-                      userIsFounder={userIsFounder}
-                    />
-                  ))}
+                  <>
+                    {communityInfoById.allPosts.length > 0 ? (
+                      <>
+                        {communityInfoById?.allPosts.map((post) => (
+                          <CardPost
+                            key={post.id}
+                            post={post}
+                            largecard={"true"}
+                            userIsFounder={userIsFounder}
+                          />
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <h1>Nenhum post publicado!</h1>
+                      </>
+                    )}
+                  </>
                 </PostsOfCommunityContainer>
               ) : (
                 <CommunityWithoutPostsContainer>
