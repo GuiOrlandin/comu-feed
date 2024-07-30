@@ -12,9 +12,12 @@ import {
   Overlay,
 } from "./style";
 
+import { useState, useEffect } from "react";
+
 interface DeleteDialogProps {
   title: string;
   deleteButtonText: string;
+  isSuccess: boolean;
   handleDeleteAction: () => void;
 }
 
@@ -22,10 +25,19 @@ export default function DeleteDialog({
   title,
   deleteButtonText,
   handleDeleteAction,
+  isSuccess,
 }: DeleteDialogProps) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setOpen(false);
+    }
+  }, [isSuccess]);
+
   return (
-    <Dialog.Root>
-      <DialogTrigger asChild>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <DialogTrigger onClick={() => setOpen(true)} asChild>
         <DeleteButton>{deleteButtonText}</DeleteButton>
       </DialogTrigger>
       <Dialog.Portal>

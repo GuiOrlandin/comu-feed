@@ -8,7 +8,6 @@ import {
   Put,
 } from "@nestjs/common";
 import { AuthRequestModel } from "../auth/models/authRequestModel";
-import { DeleteLoveInThePostUseCase } from "src/modules/love/useCases/DeleteLoveInThePostUseCase";
 import { CreateCommentBody } from "./dtos/commentBody";
 import { CreateCommentInThePostUseCase } from "src/modules/comments/useCases/createCommentUseCase";
 import { DeleteCommentInThePostUseCase } from "src/modules/comments/useCases/deleteCommentInPostUseCase";

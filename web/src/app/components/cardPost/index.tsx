@@ -38,7 +38,7 @@ export default function CardPost({
   const router = useRouter();
   const user = userStore((state) => state.user);
 
-  const { mutate } = useDeletePostMutate();
+  const { mutate, isSuccess } = useDeletePostMutate();
 
   function isImage(filePath: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(filePath);
@@ -95,6 +95,7 @@ export default function CardPost({
                   title="Deseja deletar o post?"
                   handleDeleteAction={() => mutate(post.id)}
                   deleteButtonText="X"
+                  isSuccess={isSuccess}
                 />
               )}
             </>

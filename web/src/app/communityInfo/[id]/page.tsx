@@ -58,6 +58,7 @@ import { useJoinCommunityMutate } from "@/hooks/joinCommunity";
 import DeleteDialog from "@/app/components/deleteDialog";
 import { emailStore } from "@/store/emailStore";
 import { tokenStore } from "@/store/tokenStore";
+import { useLeaveCommunityMutate } from "@/hooks/leaveCommunity";
 
 export interface CommunityResponse {
   id: string;
@@ -86,6 +87,8 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
 
   const removeUser = userStore((state) => state.removeUser);
   const { mutate, isSuccess, error } = useDeleteCommunityMutate();
+  const { mutate: leaveCommunityMutate, isSuccess: leaveCommunitySuccess } =
+    useLeaveCommunityMutate();
   const { mutate: joinCommunity } = useJoinCommunityMutate();
   const {
     data: communityInfoById,
@@ -103,6 +106,12 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
 
   function handleDeleteCommunity(community_id: string) {
     mutate(community_id);
+  }
+
+  function handleLeaveCommunity(community_id: string) {
+    leaveCommunityMutate({
+      community_id,
+    });
   }
 
   function handleJoinCommunityWithoutPassword(community_id: string) {
@@ -147,11 +156,33 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
         }
       }
     }
+    if (leaveCommunitySuccess) {
+      const userFilteredArray = communityInfoById!.User_Members.filter(
+        (userInCommunity) => userInCommunity.id === user.id
+      );
+
+      if (userFilteredArray.length > 0) {
+        const userId = userFilteredArray[0].id;
+
+        if (userId) {
+          setUserFiltered(userId!);
+        }
+      } else {
+        setUserFiltered("");
+      }
+    }
 
     if (user && communityInfoById?.founder_id === user.id) {
       setUserIsFounder(true);
     }
-  }, [isSuccess, error, communityError, communityInfoById, user]);
+  }, [
+    isSuccess,
+    error,
+    communityError,
+    communityInfoById,
+    user,
+    leaveCommunitySuccess,
+  ]);
 
   return (
     <CommunityInfoContainer>
@@ -237,6 +268,7 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                       handleDeleteCommunity(communityInfoById.id)
                     }
                     deleteButtonText="Deletar"
+                    isSuccess={isSuccess}
                   />
                 )}
 
@@ -294,7 +326,14 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                   </>
                 ) : (
                   <>
-                    <LeaveCommunityButton>Sair</LeaveCommunityButton>
+                    <DeleteDialog
+                      title=" Você deseja sair da comunidade?"
+                      handleDeleteAction={() =>
+                        handleLeaveCommunity(communityInfoById!.id)
+                      }
+                      deleteButtonText="Sair"
+                      isSuccess={leaveCommunitySuccess}
+                    />
                   </>
                 )}
               </CommunityInfoContentWithOutButton>

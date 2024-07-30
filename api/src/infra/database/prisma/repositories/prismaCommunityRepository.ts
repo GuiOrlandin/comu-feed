@@ -12,6 +12,7 @@ import {
 } from "src/modules/post/repositories/postRepository";
 import * as fs from "fs";
 import * as path from "path";
+import { UserNotFoundException } from "src/modules/user/exceptions/userNotFound";
 
 @Injectable()
 export class PrismaCommunityRepository implements CommunityRepository {
@@ -60,6 +61,47 @@ export class PrismaCommunityRepository implements CommunityRepository {
         id,
       },
     });
+  }
+
+  async leaveCommunity(userId: string, communityId: string): Promise<void> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+    console.log(user);
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    const isMember = await this.prisma.community.findFirst({
+      where: {
+        id: communityId,
+        User_Members: {
+          some: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
+    if (!isMember) {
+      throw new Error("Não faz parte da comunidade!");
+    }
+
+    if (isMember) {
+      await this.prisma.community.update({
+        where: {
+          id: communityId,
+        },
+        data: {
+          User_Members: {
+            disconnect: { id: userId },
+          },
+        },
+      });
+    }
   }
 
   async findById(id: string): Promise<CommunityResponseForIdRequest | null> {

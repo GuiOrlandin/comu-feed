@@ -83,6 +83,16 @@ export class Community {
     this.props.description = description;
   }
 
+  addUser(user: User) {
+    this.props.User_Members.push(user);
+  }
+
+  removeUser(userId: string) {
+    this.props.User_Members = this.props.User_Members.filter(
+      (member) => member.id !== userId,
+    );
+  }
+
   get created_at(): Date {
     return this.props.created_at;
   }

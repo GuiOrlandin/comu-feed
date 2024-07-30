@@ -30,4 +30,5 @@ export abstract class CommunityRepository {
     communityId: string,
     password?: string,
   ): Promise<void>;
+  abstract leaveCommunity(userId: string, communityId: string): Promise<void>;
 }

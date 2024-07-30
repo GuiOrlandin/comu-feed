@@ -85,27 +85,43 @@ export class CommunityRepositoryInMemory implements CommunityRepository {
     }
 
     if (community.key_access === "true" && community.password === password) {
-      community.User_Members.push(user);
+      community.addUser(user);
     }
 
     if (community.key_access === "false" && !password) {
-      community.User_Members.push(user);
+      community.addUser(user);
     }
   }
 
-  //   findManyPostsByCommunity(
-  //     communityId: string,
-  //     page: number,
-  //     perPage: number,
-  //   ): Promise<Community[]> {
-  //     const community = this.communities.find(
-  //       (community) => community.id === communityId,
-  //     );
+  async leaveCommunity(userId: string, communityId: string): Promise<void> {
+    const community = this.communities.find(
+      (community) => community.id === communityId,
+    );
 
-  //     if (!community) {
-  //       return null;
-  //     }
+    const communityIndex = this.communities.findIndex(
+      (community) => community.id === communityId,
+    );
 
-  //     return community;
-  //   }
+    if (!community) {
+      throw new Error("A comunidade não existe!");
+    }
+
+    const user = this.users.find((user) => user.id === userId);
+
+    if (!user) {
+      throw new Error("Usuário não existe!");
+    }
+
+    const isMember = community.User_Members.find(
+      (member) => member.id === user.id,
+    );
+
+    if (!isMember) {
+      throw new Error("Não faz parte da comunidade!");
+    }
+
+    community.removeUser(user.id);
+
+    this.communities[communityIndex] = community;
+  }
 }

@@ -235,6 +235,7 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                   deleteButtonText="Deletar"
                   handleDeleteAction={() => deletePost(post.id)}
                   title="Deseja deletar o post?"
+                  isSuccess={postDeletedSuccessfully}
                 />
               )}
             </ProfileContent>

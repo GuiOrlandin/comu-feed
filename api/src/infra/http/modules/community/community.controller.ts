@@ -25,6 +25,7 @@ import { DeleteCommunityUseCase } from "src/modules/community/useCases/deleteCom
 import { FindCommunityByIdUseCase } from "src/modules/community/useCases/findCommunityByIdUseCase";
 import { Public } from "../auth/decorators/isPublic";
 import { FindCommunityByNameUseCase } from "src/modules/community/useCases/findCommunityByNameUseCase";
+import { LeaveCommunityUseCase } from "src/modules/community/useCases/leaveCommunityUseCase";
 
 @Controller("community")
 export class CommunityController {
@@ -33,6 +34,7 @@ export class CommunityController {
     private findCommunityById: FindCommunityByIdUseCase,
     private findCommunityByName: FindCommunityByNameUseCase,
     private joinTheCommunityUseCase: JoinTheCommunityUseCase,
+    private leaveCommunityUseCase: LeaveCommunityUseCase,
     private deleteTheCommunityUseCase: DeleteCommunityUseCase,
   ) {}
 
@@ -83,6 +85,18 @@ export class CommunityController {
       password,
     });
   }
+
+  @Put()
+  async leaveCommunity(
+    @Request() request: AuthRequestModel,
+    @Query("id") id: string,
+  ) {
+    await this.leaveCommunityUseCase.execute({
+      communityId: id,
+      userId: request.user.id,
+    });
+  }
+
   @Get(":id")
   @Public()
   async getCommunityById(@Param("id") communityId: string) {
