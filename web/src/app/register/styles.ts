@@ -76,8 +76,8 @@ export const RegisterButton = styled.button`
 `;
 export const ErrorContainer = styled.div`
   display: flex;
-  position: absolute;
-  bottom: 12rem;
+  position: relative;
+  bottom: -0.4rem;
   color: #cb4444;
 `;
 

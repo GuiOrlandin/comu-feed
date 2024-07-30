@@ -78,6 +78,10 @@ export default function Register() {
       return setErrorMessage("insira a Senha!");
     }
 
+    if (userRegisterDetails.password_hash.length <= 5) {
+      return setErrorMessage("A senha deve conter no mínimo 6 caracteres.");
+    }
+
     mutate(userRegisterDetails);
   }
 
@@ -144,7 +148,6 @@ export default function Register() {
                 handleChangeUserDetailsForRegister(event, "email")
               }
             />
-            {errorMessage && <ErrorContainer>{errorMessage}</ErrorContainer>}
           </EmailInputContainer>
           <NameInputContainer>
             <span>Nome</span>

@@ -66,8 +66,8 @@ export const LoginButtonContainer = styled.div`
 `;
 export const ErrorContainer = styled.div`
   display: flex;
-  position: absolute;
-  bottom: 20rem;
+  position: relative;
+  bottom: -0.3rem;
   color: #cb4444;
 `;
 

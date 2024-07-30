@@ -15,6 +15,7 @@ export class EditUserUseCase {
   constructor(private userRepository: UserRepository) {}
 
   async execute({ avatarUrl, name, user_id }: EditUserRequest) {
+    console.log(avatarUrl, name, user_id);
     const user = await this.userRepository.findById(user_id);
 
     if (!user) {

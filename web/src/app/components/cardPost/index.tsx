@@ -68,7 +68,7 @@ export default function CardPost({
                     urlImg={`http://localhost:3333/files/avatarImage/${
                       post!.user?.avatar
                     }`}
-                    avatarImgDimensions={6}
+                    avatarImgDimensions={3.5}
                     userEmail={post!.user?.email}
                   />
                 )}

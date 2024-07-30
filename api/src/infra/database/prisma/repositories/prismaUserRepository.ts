@@ -126,7 +126,33 @@ export class PrismaUserRepository implements UserRepository {
       },
     });
 
-    if (user.avatar !== null && userUnmodified.avatar !== null) {
+    if (
+      userRaw.avatar &&
+      userUnmodified.avatar &&
+      userUnmodified.avatar.includes("https://lh3.googleusercontent.com")
+    ) {
+      await this.prisma.user.update({
+        data: userRaw,
+        where: {
+          id: userUnmodified.id,
+        },
+      });
+    }
+
+    if (
+      userRaw.avatar !== null &&
+      userUnmodified.avatar !== null &&
+      !userUnmodified.avatar.includes("https://lh3.googleusercontent.com")
+    ) {
+      if (userUnmodified.avatar.includes("https://lh3.googleusercontent.com")) {
+        await this.prisma.user.update({
+          data: userRaw,
+          where: {
+            id: userUnmodified.id,
+          },
+        });
+      }
+
       await this.deleteFile(userUnmodified.avatar);
 
       await this.prisma.user.update({
@@ -137,7 +163,16 @@ export class PrismaUserRepository implements UserRepository {
       });
     }
 
-    if (userUnmodified.avatar === null) {
+    if (userRaw.avatar === null && userRaw.name) {
+      await this.prisma.user.update({
+        data: { ...userRaw, avatar: userUnmodified.avatar },
+        where: {
+          id: userUnmodified.id,
+        },
+      });
+    }
+
+    if (userUnmodified.avatar === null && userRaw.avatar) {
       await this.prisma.user.update({
         data: userRaw,
         where: {
@@ -145,12 +180,5 @@ export class PrismaUserRepository implements UserRepository {
         },
       });
     }
-
-    await this.prisma.user.update({
-      data: { ...userRaw, avatar: userUnmodified.avatar },
-      where: {
-        id: userUnmodified.id,
-      },
-    });
   }
 }

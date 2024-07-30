@@ -6,6 +6,8 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 import {
+  InputOfNameContainer,
+  AvatarAndIconForUploadImageContainer,
   AvatarAndNameAndButtonsContainer,
   AvatarAndNameContainer,
   AvatarNameAndEditUserButtonContainer,
@@ -27,12 +29,19 @@ import {
   UserContent,
   UserInfoContainer,
   UserWrapper,
+  AvatarWithoutImageAndIconForUploadImageContainer,
+  UploadIconSvg,
 } from "./styles";
 import AvatarImage from "@/app/components/avatarImg";
 import { RxAvatar } from "react-icons/rx";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
+
+import { useDropzone } from "react-dropzone";
+
+import { MdFileUpload } from "react-icons/md";
+
 import CardPost from "@/app/components/cardPost";
 import { MediaPostWithUser, TextPostWithUser } from "@/app/home/page";
 import {
@@ -51,6 +60,7 @@ import {
 } from "@/app/news/styles";
 import { ProfileContent } from "@/app/components/cardPost/styles";
 import { userStore } from "@/store/userStore";
+import { useEditUserMutate } from "@/hooks/editUserHook";
 
 export default function UserInfo({ params }: { params: { email: string } }) {
   const router = useRouter();
@@ -59,6 +69,11 @@ export default function UserInfo({ params }: { params: { email: string } }) {
     (TextPostWithUser | MediaPostWithUser)[] | undefined
   >(undefined);
   const [tabSelected, setTabSelected] = useState<string>("posts");
+  const [nameEdited, setNameEdited] = useState<string>("");
+  const [avatarImage, setAvatarImage] = useState<File[] | null>();
+  const [imagePreview, setImagePreview] = useState<string | null>();
+  const { mutate, isSuccess: userEditedSuccess } = useEditUserMutate();
+  const [toggleEditPerfil, setToggleEditPerfil] = useState<boolean>(false);
   const {
     data: user,
     isLoading,
@@ -86,11 +101,45 @@ export default function UserInfo({ params }: { params: { email: string } }) {
     },
   });
 
+  function onDropAvatarImage(acceptedFiles: File[]) {
+    const file = acceptedFiles[0];
+    setAvatarImage(acceptedFiles);
+    setImagePreview(URL.createObjectURL(file));
+  }
+
+  const avatarImageUpload = useDropzone({
+    onDrop: onDropAvatarImage,
+    accept: {
+      "image/*": [],
+    },
+  });
+
+  function handleSetTabSelected(tabSelected: string) {
+    setTabSelected(tabSelected);
+  }
+
+  function handleToggleSettingsForEditPerfil() {
+    setToggleEditPerfil(true);
+  }
+
+  function handleEditPerfil() {
+    mutate({
+      data: {
+        name: nameEdited,
+      },
+      file: avatarImage!,
+    });
+  }
+  console.log(nameEdited.length);
   useEffect(() => {
     if (isSuccess && user && allThePosts) {
       const filteredPosts = allThePosts.filter(
         (post) => post.user_id === user.id
       );
+
+      if (user && nameEdited!.length <= 0) {
+        setNameEdited(user?.name);
+      }
 
       if (filteredPosts.length > 0) {
         setPosts(filteredPosts);
@@ -98,11 +147,12 @@ export default function UserInfo({ params }: { params: { email: string } }) {
         setPosts(undefined);
       }
     }
-  }, [isSuccess, user, allThePosts]);
 
-  function handleSetTabSelected(tabSelected: string) {
-    setTabSelected(tabSelected);
-  }
+    if (userEditedSuccess) {
+      setToggleEditPerfil(false);
+      setImagePreview("");
+    }
+  }, [isSuccess, user, allThePosts, userEditedSuccess]);
 
   return (
     <UserInfoContainer>
@@ -173,40 +223,162 @@ export default function UserInfo({ params }: { params: { email: string } }) {
               <AvatarAndNameAndButtonsContainer>
                 <AvatarNameAndEditUserButtonContainer>
                   <AvatarAndNameContainer>
-                    {user && user?.avatar === null ? (
-                      <>
-                        <RxAvatar size={96} color="" />
-                      </>
-                    ) : (
-                      <>
-                        {user &&
-                        user.avatar &&
-                        user!.avatar?.includes(
-                          "https://lh3.googleusercontent.com"
-                        ) ? (
-                          <AvatarImage
-                            urlImg={
-                              user!.avatar?.includes("https://lh3.")
-                                ? user!.avatar!
-                                : `http://localhost:3333/files/avatarImage/${user!
-                                    .avatar!}`
-                            }
-                            avatarImgDimensions={6}
+                    <>
+                      {toggleEditPerfil === false ? (
+                        <>
+                          {user &&
+                          user.avatar &&
+                          user!.avatar?.includes(
+                            "https://lh3.googleusercontent.com"
+                          ) ? (
+                            <AvatarImage
+                              urlImg={
+                                user!.avatar?.includes("https://lh3.")
+                                  ? user!.avatar!
+                                  : `http://localhost:3333/files/avatarImage/${user!
+                                      .avatar!}`
+                              }
+                              avatarImgDimensions={6}
+                            />
+                          ) : (
+                            <>
+                              {user?.avatar === null ? (
+                                <>
+                                  <RxAvatar size={96} />
+                                </>
+                              ) : (
+                                <>
+                                  <AvatarImage
+                                    urlImg={`http://localhost:3333/files/avatarImage/${user!
+                                      .avatar!}`}
+                                    avatarImgDimensions={6}
+                                  />
+                                </>
+                              )}
+                            </>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {user &&
+                          user.avatar &&
+                          user!.avatar?.includes(
+                            "https://lh3.googleusercontent.com"
+                          ) ? (
+                            <>
+                              {imagePreview ? (
+                                <>
+                                  <AvatarAndIconForUploadImageContainer
+                                    {...avatarImageUpload.getRootProps()}
+                                  >
+                                    <AvatarImage
+                                      urlImg={imagePreview!}
+                                      avatarImgDimensions={6}
+                                    />
+
+                                    <button onClick={() => setImagePreview("")}>
+                                      x
+                                    </button>
+                                  </AvatarAndIconForUploadImageContainer>
+                                </>
+                              ) : (
+                                <>
+                                  <AvatarAndIconForUploadImageContainer
+                                    {...avatarImageUpload.getRootProps()}
+                                  >
+                                    <AvatarImage
+                                      urlImg={user!.avatar!}
+                                      avatarImgDimensions={6}
+                                    />
+                                    <MdFileUpload height={24} />
+                                  </AvatarAndIconForUploadImageContainer>
+                                </>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              {imagePreview ? (
+                                <>
+                                  <AvatarAndIconForUploadImageContainer
+                                    {...avatarImageUpload.getRootProps()}
+                                  >
+                                    <AvatarImage
+                                      urlImg={imagePreview!}
+                                      avatarImgDimensions={6}
+                                    />
+
+                                    <button onClick={() => setImagePreview("")}>
+                                      x
+                                    </button>
+                                  </AvatarAndIconForUploadImageContainer>
+                                </>
+                              ) : (
+                                <>
+                                  {user?.avatar === null ? (
+                                    <AvatarWithoutImageAndIconForUploadImageContainer
+                                      {...avatarImageUpload.getRootProps()}
+                                    >
+                                      <RxAvatar size={90} />
+                                      <UploadIconSvg>
+                                        <MdFileUpload height={24} />
+                                      </UploadIconSvg>
+                                    </AvatarWithoutImageAndIconForUploadImageContainer>
+                                  ) : (
+                                    <AvatarAndIconForUploadImageContainer
+                                      {...avatarImageUpload.getRootProps()}
+                                    >
+                                      <AvatarImage
+                                        urlImg={`http://localhost:3333/files/avatarImage/${user!
+                                          .avatar!}`}
+                                        avatarImgDimensions={6}
+                                      />
+                                      <MdFileUpload height={24} />
+                                    </AvatarAndIconForUploadImageContainer>
+                                  )}
+                                </>
+                              )}
+                            </>
+                          )}
+                        </>
+                      )}
+                    </>
+
+                    <>
+                      {toggleEditPerfil === false ? (
+                        <InputOfNameContainer>
+                          <h1>{user?.name}</h1>
+                        </InputOfNameContainer>
+                      ) : (
+                        <InputOfNameContainer>
+                          <input
+                            type="text"
+                            value={nameEdited}
+                            onChange={(e) => setNameEdited(e.target.value)}
                           />
-                        ) : (
-                          <AvatarImage
-                            urlImg={`http://localhost:3333/files/avatarImage/${user!
-                              .avatar!}`}
-                            avatarImgDimensions={6}
-                          />
-                        )}
-                      </>
-                    )}
-                    <h1>{user?.name}</h1>
+                        </InputOfNameContainer>
+                      )}
+                    </>
                   </AvatarAndNameContainer>
 
-                  {userAuthenticated!.id === user!.id && (
-                    <EditUserInfoButton>Editar Perfil</EditUserInfoButton>
+                  {userAuthenticated!.id === user!.id &&
+                  toggleEditPerfil === false ? (
+                    <EditUserInfoButton
+                      onClick={() => handleToggleSettingsForEditPerfil()}
+                    >
+                      Editar Perfil
+                    </EditUserInfoButton>
+                  ) : (
+                    <>
+                      {userAuthenticated!.id === user!.id && (
+                        <>
+                          <EditUserInfoButton
+                            onClick={() => handleEditPerfil()}
+                          >
+                            Salvar Alterações
+                          </EditUserInfoButton>
+                        </>
+                      )}
+                    </>
                   )}
                 </AvatarNameAndEditUserButtonContainer>
                 <PostsOrCommentsButtonsContainer>

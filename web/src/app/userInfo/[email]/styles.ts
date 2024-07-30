@@ -62,6 +62,64 @@ export const AvatarAndNameContainer = styled.div`
   display: flex;
   gap: 2rem;
 `;
+export const AvatarAndIconForUploadImageContainer = styled.div`
+  display: flex;
+
+  svg {
+    margin-left: -1.1rem;
+    margin-top: 5rem;
+  }
+
+  button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    margin-left: -1rem;
+    margin-top: -6.2rem;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const AvatarWithoutImageAndIconForUploadImageContainer = styled.div`
+  display: flex;
+
+  svg {
+    margin-left: -1rem;
+  }
+
+  button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    margin-left: -1rem;
+    margin-top: -6.2rem;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const UploadIconSvg = styled.div`
+  display: flex;
+  margin-top: 4rem;
+`;
+
+export const InputOfNameContainer = styled.div`
+  display: flex;
+
+  input {
+    font-weight: 700;
+    font-size: 2rem;
+    padding: 1rem 1rem 1rem 0.5rem;
+    border-radius: 8px;
+    border: none;
+    height: 2.5rem;
+  }
+`;
 export const PostsOrCommentsButtonsContainer = styled.div`
   display: flex;
   margin-top: 1rem;
@@ -138,7 +196,7 @@ export const EditUserInfoButton = styled.button`
   padding: 1rem;
   align-items: center;
   height: 2rem;
-  background: #cb4444;
+  background: #2f1b7e;
   color: #f5f5f5;
   font-weight: 700;
   border: none;
