@@ -23,8 +23,6 @@ export function useDeleteCommunityMutate() {
   const authToken = tokenStore((state) => state.token);
   const queryClient = useQueryClient();
 
-  console.log(authToken);
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storeToken = localStorage.getItem("storeToken");

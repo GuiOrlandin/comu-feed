@@ -120,8 +120,6 @@ export class PrismaPostRepository implements PostRepository {
         });
       }
 
-      console.log("chegou aqui");
-
       await this.prisma.textPost.delete({
         where: {
           id,

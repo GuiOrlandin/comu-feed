@@ -13,6 +13,7 @@ import {
   OptionsOfPostContainer,
   Overlay,
   PasswordInput,
+  PasswordInputContainer,
   SendPostButton,
   ShowPasswordContentButton,
   TextPost,
@@ -466,7 +467,7 @@ export default function createPostAndCommunityModal({
                         handleChangeCreateCommunityDetails(value, "name")
                       }
                     />
-                    <>
+                    <PasswordInputContainer>
                       <PasswordInput
                         type={inputType}
                         placeholder="Senha da comunidade (opcional)"
@@ -481,7 +482,7 @@ export default function createPostAndCommunityModal({
                           <FaRegEye size={15} color="#2f1b7e" />
                         )}
                       </button>
-                    </>
+                    </PasswordInputContainer>
                     <textarea
                       name=""
                       id=""

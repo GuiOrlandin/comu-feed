@@ -130,7 +130,6 @@ export default function UserInfo({ params }: { params: { email: string } }) {
       file: avatarImage!,
     });
   }
-  console.log(nameEdited.length);
   useEffect(() => {
     if (isSuccess && user && allThePosts) {
       const filteredPosts = allThePosts.filter(

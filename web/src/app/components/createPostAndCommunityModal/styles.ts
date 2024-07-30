@@ -315,6 +315,17 @@ export const PasswordInput = styled.input`
   margin-top: 1rem;
   position: relative;
 `;
+export const PasswordInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  button {
+    margin: 1.8rem 0 3rem 18rem;
+    background: none;
+    border: none;
+    position: absolute;
+  }
+`;
 
 export const ShowPasswordContentButton = styled.button`
   background: none;

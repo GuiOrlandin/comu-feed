@@ -118,8 +118,6 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
       router.push("/");
     }
     if (error?.message === "Request failed with status code 401") {
-      console.log(error?.message);
-
       if (typeof window !== "undefined") {
         localStorage.removeItem("storeToken");
         localStorage.removeItem("storeEmail");

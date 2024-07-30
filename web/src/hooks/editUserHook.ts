@@ -29,8 +29,6 @@ async function putData(
       });
     }
 
-    console.log(file);
-
     await axios.put("http://localhost:3333/users", formData, config);
   }
 }
