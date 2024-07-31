@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface UserAuthenticationDetails {
   email: string;
@@ -32,6 +32,8 @@ async function postData(
 }
 
 export function useAuthenticateMutate() {
+  const queryClient = useQueryClient();
+
   const mutate = useMutation({
     mutationFn: ({
       data,
@@ -40,6 +42,11 @@ export function useAuthenticateMutate() {
       data?: UserAuthenticationDetails;
       credentialOfUserLoggedWithGoogle?: UserAuthenticationDetailsWithGoogleEmail;
     }) => postData(data, credentialOfUserLoggedWithGoogle),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts-info"] });
+      queryClient.invalidateQueries({ queryKey: ["community-info"] });
+      queryClient.invalidateQueries({ queryKey: ["user-authenticated"] });
+    },
   });
 
   return mutate;

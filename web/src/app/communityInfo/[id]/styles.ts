@@ -26,10 +26,6 @@ export const CommunityInfoContentWithOutButton = styled.div`
   gap: 1rem;
   padding-bottom: 2rem;
   border-bottom: 2px solid #f0edf6;
-
-  h2 {
-    font-weight: 400;
-  }
 `;
 export const CommunityInfoContent = styled.div`
   display: flex;

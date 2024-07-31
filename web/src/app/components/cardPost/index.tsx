@@ -9,6 +9,7 @@ import {
   AvatarContentWithoutImage,
   ContentOfPost,
   ContentOfPostWithMedia,
+  LikeAndCommentContainer,
   NameAndCommunity,
   NameCommunityAndAvatarContainer,
   PostCardContainer,
@@ -77,7 +78,7 @@ export default function CardPost({
 
             <NameAndCommunity>
               <h2 onClick={() => router.push(`/userInfo/${post.user?.email}`)}>
-                {post.user?.name}
+                {post.user?.name.split(" ").slice(0, 2).join(" ")}
               </h2>
               <span
                 onClick={() =>
@@ -106,30 +107,41 @@ export default function CardPost({
           onClick={() => router.push(`/postInfo/${post.id}`)}
         >
           {"content" in post ? (
-            <TextContentContainer $largecard={largecard!}>
-              <p>{post.content}</p>
-            </TextContentContainer>
+            <>
+              <h2>{post.title}</h2>
+              <TextContentContainer $largecard={largecard!}>
+                <p>{post.content}</p>
+              </TextContentContainer>
+            </>
           ) : isImage(post.media) ? (
-            <Image
-              src={`http://localhost:3333/files/${post.media}`}
-              width={20 * 16}
-              height={12 * 16}
-              alt="Media content"
-              quality={100}
-            />
-          ) : (
-            <ContentOfPostWithMedia $largecard={largecard!}>
-              <video
+            <>
+              <h2>{post.title}</h2>
+              <Image
                 src={`http://localhost:3333/files/${post.media}`}
                 width={20 * 16}
                 height={12 * 16}
-                controls
+                alt="Media content"
+                quality={100}
               />
-            </ContentOfPostWithMedia>
+            </>
+          ) : (
+            <>
+              <h2>{post.title}</h2>
+              <ContentOfPostWithMedia $largecard={largecard!}>
+                <video
+                  src={`http://localhost:3333/files/${post.media}`}
+                  width={20 * 16}
+                  height={12 * 16}
+                  controls
+                />
+              </ContentOfPostWithMedia>
+            </>
           )}
         </ContentOfPost>
       </ProfileAndPostContainer>
-      <LikeAndComments post={post} />
+      <LikeAndCommentContainer $largecard={largecard!}>
+        <LikeAndComments post={post} />
+      </LikeAndCommentContainer>
     </PostCardContainer>
   );
 }

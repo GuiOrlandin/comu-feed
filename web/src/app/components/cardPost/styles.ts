@@ -6,7 +6,7 @@ export const PostCardContainer = styled.div<{ $largecard: string }>`
   display: flex;
   flex-direction: column;
   max-height: ${(props) =>
-    props.$largecard === "true" ? "53rem" : "18.6875rem"};
+    props.$largecard === "true" ? "53rem" : "20.6875rem"};
   width: ${(props) => (props.$largecard === "true" ? "56rem" : "24.5625rem")};
   border: 2px solid #f0edf6;
   border-radius: 10px;
@@ -26,6 +26,16 @@ export const ContentOfPost = styled.div<{ $largecard: string }>`
 
   &:hover {
     cursor: pointer;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+
+    white-space: ${(props) => (props.$largecard === "true" ? "" : "nowrap")};
+    overflow: ${(props) => (props.$largecard === "true" ? "" : "hidden")};
+    text-overflow: ${(props) =>
+      props.$largecard === "true" ? "" : "ellipsis"};
+    max-width: 100%;
   }
 
   video {
@@ -56,11 +66,14 @@ export const NameAndCommunity = styled.div`
   flex-direction: column;
 
   span {
+    font-weight: 600;
+
     &:hover {
       cursor: pointer;
     }
   }
   h2 {
+    font-size: 1.3rem;
     &:hover {
       cursor: pointer;
     }
@@ -72,6 +85,7 @@ export const ContentOfPostWithMedia = styled.div<{ $largecard: string }>`
   flex-direction: column;
   height: ${(props) => (props.$largecard === "true" ? "30rem" : "9rem")};
   border-radius: 10px;
+  margin-top: 0.4rem;
   overflow: scroll;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
@@ -95,6 +109,7 @@ export const LoveAndCommentContainer = styled.div`
 
 export const NameCommunityAndAvatarContainer = styled.div`
   display: flex;
+  margin-bottom: -0.1rem;
 
   &:hover {
     cursor: pointer;
@@ -105,8 +120,11 @@ export const ProfileAndPostContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
 `;
+export const LikeAndCommentContainer = styled.div<{ $largecard: string }>``;
 export const TextContentContainer = styled.div<{ $largecard: string }>`
   display: flex;
+  position: relative;
 
+  margin-top: 0.1rem;
   height: ${(props) => (props.$largecard === "true" ? "" : "9rem")};
 `;

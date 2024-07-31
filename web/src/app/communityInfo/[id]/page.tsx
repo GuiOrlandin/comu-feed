@@ -325,14 +325,20 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                   </>
                 ) : (
                   <>
-                    <DeleteDialog
-                      title=" Você deseja sair da comunidade?"
-                      handleDeleteAction={() =>
-                        handleLeaveCommunity(communityInfoById!.id)
-                      }
-                      deleteButtonText="Sair"
-                      isSuccess={leaveCommunitySuccess}
-                    />
+                    {user.id !== communityInfoById?.founder_id &&
+                      user.name !== "" &&
+                      userFiltered === user.id && (
+                        <>
+                          <DeleteDialog
+                            title=" Você deseja sair da comunidade?"
+                            handleDeleteAction={() =>
+                              handleLeaveCommunity(communityInfoById!.id)
+                            }
+                            deleteButtonText="Sair"
+                            isSuccess={leaveCommunitySuccess}
+                          />
+                        </>
+                      )}
                   </>
                 )}
               </CommunityInfoContentWithOutButton>

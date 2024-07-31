@@ -212,7 +212,7 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                           urlImg={`http://localhost:3333/files/avatarImage/${
                             post!.user?.avatar
                           }`}
-                          avatarImgDimensions={6}
+                          avatarImgDimensions={5}
                           userEmail={post!.user?.email}
                         />
                       )}
@@ -339,7 +339,7 @@ export default function PostInfo({ params }: { params: { id: string } }) {
                                 urlImg={`http://localhost:3333/files/avatarImage/${
                                   comment!.user?.avatar
                                 }`}
-                                avatarImgDimensions={6}
+                                avatarImgDimensions={2.8}
                                 userEmail={comment!.user?.email}
                               />
                             )}

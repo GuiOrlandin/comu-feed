@@ -6,7 +6,7 @@ export const RegisterContentContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 7rem;
+  min-height: 100vh;
 `;
 export const RegisterPageContainer = styled.div`
   display: flex;
