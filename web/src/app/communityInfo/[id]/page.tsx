@@ -11,7 +11,6 @@ import {
   CommunityWithoutPostsContainer,
   JoinCommunityButton,
   JoinCommunityConfirmButton,
-  LeaveCommunityButton,
   NameAndDescription,
   PasswordInput,
   PostAndCommunityInfoContainer,
@@ -288,7 +287,7 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
                               Digite a senha para entrar na comunidade
                             </DialogTitle>
                             <PasswordInput
-                              type="text"
+                              type="password"
                               onChange={(value) =>
                                 setCommunityPassword(value.target.value)
                               }
