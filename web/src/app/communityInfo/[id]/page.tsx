@@ -142,20 +142,25 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
       router.push("/");
     }
 
-    if (communityInfoById?.User_Members) {
-      const userFilteredArray = communityInfoById.User_Members.filter(
-        (userInCommunity) => userInCommunity.id === user.id
-      );
+    if (communityInfoById) {
+      if (communityInfoById.User_Members && user) {
+        const userFilteredArray = communityInfoById.User_Members.filter(
+          (userInCommunity) => userInCommunity.id === user.id
+        );
 
-      if (userFilteredArray.length > 0) {
-        const userId = userFilteredArray[0].id;
-
-        if (userId) {
-          setUserFiltered(userId!);
+        if (userFilteredArray.length > 0) {
+          const userId = userFilteredArray[0].id;
+          setUserFiltered(userId);
+        } else {
+          setUserFiltered("");
         }
       }
+
+      if (user && communityInfoById.founder_id === user.id) {
+        setUserIsFounder(true);
+      }
     }
-    if (leaveCommunitySuccess) {
+    if (leaveCommunitySuccess && user.id) {
       const userFilteredArray = communityInfoById!.User_Members.filter(
         (userInCommunity) => userInCommunity.id === user.id
       );
@@ -169,10 +174,6 @@ export default function CommunityInfo({ params }: { params: { id: string } }) {
       } else {
         setUserFiltered("");
       }
-    }
-
-    if (user && communityInfoById?.founder_id === user.id) {
-      setUserIsFounder(true);
     }
   }, [
     isSuccess,
